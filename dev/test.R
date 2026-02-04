@@ -1,0 +1,11 @@
+library(diffIRT)
+
+data(extraversion)
+x=extraversion[,1:10]
+rt=extraversion[,11:20]
+
+# fit an unconstrained D-diffusion model
+ # item-specific a, item-specific v, item-specific Ter
+ # pupulation soecific parameters: omega(gamma), omega 7theta
+
+res1=diffIRT(rt,x,model="D")

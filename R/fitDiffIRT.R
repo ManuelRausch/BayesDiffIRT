@@ -1,0 +1,43 @@
+#' @title Fit Bayesian diffusion item-response theory models
+
+#' @description `fitDiffIRT` function fits
+#' @param data  a `data.frame` with different row indicating respones to different items
+#' @param rt
+#' @param response
+#' @param id
+#' @param model
+#' @return
+#' #' @author
+#' Manuel Rausch, \email{manuel.rausch@aau.at}
+#' @details
+#' @references
+#' Alexandrowicz, R. W. (2020). The diffusion model visualizer: An interactive tool to understand the diffusion model parameters. Psychological Research, 84(4), 1157-1165. https://doi.org/10.1007/s00426-018-1112-6
+#' Molenaar, D., Tuerlinckx, F., & Maas, H. L. J. V. D. (2015). Fitting Diffusion Item Response Theory Models for Responses and Response Times Using the R Package diffIRT. Journal of Statistical Software, 66(4). https://doi.org/10.18637/jss.v066.i04
+#' Van Der Maas, H. L. J., Molenaar, D., Maris, G., Kievit, R. A., & Borsboom, D. (2011). Cognitive psychology meets psychometric theory: On the relation between process models for decision making and latent variable models for individual differences. Psychological Review, 118(2), 339-356. https://doi.org/10.1037/a0022749
+
+#' @export
+fitDiffIRT <- function(data, rt = "rt", resp = "resp", id = "id",
+                       item = "item", model = "Q", priors = NULL
+                       ){
+  print(paste0("Compiling the ", model, "-diffusion IRT model"))
+
+
+  print(paste0("Sampling the posterior of the ", model, "-diffusion IRT model"))
+
+}
+
+
+new_DiffIRTfit <- function(fit, stan_data, data_map, model, call, diagnostics) {
+  structure(
+    list(
+      fit = fit,                 # cmdstanr fit object
+      stan_data = stan_data,     # list passed to Stan
+      model = model,             # model name/version/hash
+      call = call,               # match.call()
+      diagnostics = diagnostics  # divergences, rhats, etc.
+    ),
+    class = "DiffIRTfit"
+  )
+}
+
+

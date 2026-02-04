@@ -1,0 +1,6 @@
+#' @export
+print.DiffIRTfit <- function(x, ...) {
+  cat("<DiffIRTfit>\n")
+  cat("Model:", x$model$name, "\n")
+  invisible(x)
+}
