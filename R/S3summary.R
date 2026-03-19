@@ -1,5 +1,5 @@
 #' @export
-summary.DiffIRTfit <- function(object, ...) {
+summary.BayesDiffIRTfit <- function(object, ...) {
   validate_diffirt_fit(object)
   # Return a summary object (often a list) with its own class
   out <- list(
@@ -12,7 +12,7 @@ summary.DiffIRTfit <- function(object, ...) {
 }
 
 #' @export
-print.summary.DiffIRTfit <- function(x, ...) {
+print.summary.BayesDiffIRTfit <- function(x, ...) {
   cat("<summary.diffirt_fit>\n")
   cat("Model:", x$model$name, "\n")
   # print diagnostics, parameter summaries etc.

@@ -1,12 +1,12 @@
 #' @title Fit Bayesian diffusion item-response theory models
 
-#' @description `fitDiffIRT` function fits
+#' @description  fitDiffIRT` function fits
 #' @param data  a `data.frame` with different row indicating respones to different items
 #' @param rt
 #' @param response
 #' @param id
 #' @param model
-#' @return
+#' @return An object of class `BayesDiffIRTfit`. Available methods include print, summary,
 #' #' @author
 #' Manuel Rausch, \email{manuel.rausch@aau.at}
 #' @details
@@ -16,28 +16,51 @@
 #' Van Der Maas, H. L. J., Molenaar, D., Maris, G., Kievit, R. A., & Borsboom, D. (2011). Cognitive psychology meets psychometric theory: On the relation between process models for decision making and latent variable models for individual differences. Psychological Review, 118(2), 339-356. https://doi.org/10.1037/a0022749
 
 #' @export
-fitDiffIRT <- function(data, rt = "rt", resp = "resp", id = "id",
-                       item = "item", model = "Q", priors = NULL
+fitDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
+                       item = "item", model = "Q", priors = NULL,
+                       seed = 42, chains = 3, parallel_chains = 1,
+                       iter_warmup =  1000,
+                       iter_sampling = 2000
                        ){
-  print(paste0("Compiling the ", model, "-diffusion IRT model"))
+  call <- match.call()
 
+  # 1) Preprocessing. Prios should be included int othe data to be passed to STAN
+  priors <- complete_priors(priors, model)
+  stan_data <- make_stan_data(data, rt, resp, sbj, item, priors)
 
-  print(paste0("Sampling the posterior of the ", model, "-diffusion IRT model"))
+  # 2) Compile + sample (cmdstanr)
+  stanfile = switch(model, "q" = "qdiffusion.stan",
+                    "p" = "pdiffusion.stan",
+                    stop("Error. Unknown model. Please select one out of the followng: c('d', 'q')"))
+  mod <- cmdstan_model(stanfile)
+  fit <- mod$sample(data = stan_data, seed = seed, chains = chains,
+                    parallel_chains = parallel_chains,
+                    iter_warmup = iter_warmup,
+                    iter_sampling = iter_sampling)
 
-}
+  # 3) Postprocess
+  # diagnostics <- collect_diagnostics(fit)   # don't know if model diagnostics can are created automatically.
 
-
-new_DiffIRTfit <- function(fit, stan_data, data_map, model, call, diagnostics) {
-  structure(
-    list(
-      fit = fit,                 # cmdstanr fit object
-      stan_data = stan_data,     # list passed to Stan
-      model = model,             # model name/version/hash
-      call = call,               # match.call()
-      diagnostics = diagnostics  # divergences, rhats, etc.
-    ),
-    class = "DiffIRTfit"
+  # 4) Construct return object
+  new_BayesDiffIRTfit(
+    fit = fit,
+    stan_data = stan_data,
+    call = call#,
+    #  diagnostics = diagnostics # divergences, rhats, etc.
   )
 }
 
+new_BayesDiffIRTfit <- function(fit, stan_data, model, call, diagnostics = NULL) {
+  structure(
+    list(
+      fit = fit,
+      stan_data = stan_data,
+      model = model,
+      call = call,
+      diagnostics = diagnostics
+    ),
+    class = "BayesDiffIRTfit"
+  )
+}
+#' @examples
 

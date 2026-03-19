@@ -1,6 +1,6 @@
 #' @export
-print.DiffIRT <- function(x, ...) {
-  cat("<DiffIRT>\n")
+print.BayesDiffIRTfit <- function(x, ...) {
+  cat("<DiffIRTfit>\n")
   cat("Model:", x$model$name, "\n")
   invisible(x)
 }
