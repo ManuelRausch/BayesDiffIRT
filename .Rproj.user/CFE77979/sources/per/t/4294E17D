@@ -3,7 +3,7 @@
     "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/README.Rmd",
     "project_path": "README.Rmd",
     "type": "r_markdown",
-    "hash": "3584106082",
+    "hash": "293608468",
     "contents": "",
     "dirty": false,
     "created": 1776338581528.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "32,191",
-        "scrollLine": "37"
+        "cursorPosition": "35,145",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1776511757,
+    "lastKnownWriteTime": 1776513816,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1776511757384,
+    "last_content_update": 1776513816935,
     "read_only": false,
     "read_only_alternatives": []
 }

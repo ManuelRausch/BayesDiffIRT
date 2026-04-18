@@ -9,14 +9,14 @@ make_stan_data <- function(rt, resp, sbj, item, model, priors){
     rt = as.numeric(rt),
     resp = as.integer(resp)
   )
-  prior <- complete_priors(prior, model = model)
+  priors <- complete_priors(priors, model = model)
 
-  c(stan_data,  priors_to_stan_data(prior))
+  c(stan_data,  priors_to_stan_data(priors))
 }
 
-priors_to_stan_data <- function(prior){
+priors_to_stan_data <- function(priors){
   out <- list()
-  for (pr in prior) {
+  for (pr in priors) {
     parsed <- parse_dist(pr$dist)
     cls <- pr$class
     out[[paste0(cls, "_prior_family")]] <- prior_family_code(parsed$family)
@@ -65,3 +65,13 @@ parse_dist <- function(dist_call) {
   }
   stop("Unsupported prior family: ", fam, call. = FALSE)
 }
+
+prior_family_code <- function(family) {
+  switch(family,
+         normal = 1L,
+         lognormal = 2L,
+         gamma = 3L,
+         stop("Unsupported prior family: ", family, call. = FALSE)
+  )
+}
+

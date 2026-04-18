@@ -1,0 +1,26 @@
+{
+    "id": "B43C6E44",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/inst/stan/ddiffusion.stan",
+    "project_path": "inst/stan/ddiffusion.stan",
+    "type": "stan",
+    "hash": "1357644706",
+    "contents": "",
+    "dirty": false,
+    "created": 1776520899814.0,
+    "source_on_save": false,
+    "relative_order": 12,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "59,14",
+        "scrollLine": "57"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1776528843,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1776528843070,
+    "read_only": false,
+    "read_only_alternatives": []
+}

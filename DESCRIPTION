@@ -19,7 +19,8 @@ BugReports: https://github.com/ManuelRausch/BayesDiffIRT/issues
 Depends:
     R (>= 4.5.0)
 Imports:
-    cmdstanr
+    cmdstanr, Rdpack
+RdMacros: Rdpack
 Suggests:
     tidyr 
 Encoding: UTF-8

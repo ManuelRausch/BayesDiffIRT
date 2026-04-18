@@ -1,8 +1,8 @@
 #' @title Fit Bayesian diffusion item-response theory models
 #'
-#' @description `fitBayesDiffIR` samples item and subject parameters
+#' @description `fitBayesDiffIRT` samples item and subject parameters
 #' from the posterior distributions for diffusion item response theory
-#' models. For this purpose, NUTS sampling is used. See Details for the mathematical specification of the implemented models and
+#' models. For this purpose, NUTS sampling as implemented in STAN is used. See Details for the mathematical specification of the implemented models and
 #' their parameters.
 #'
 #' @param data  a `data.frame` with different row indicating responses to different items.
@@ -14,11 +14,11 @@
 #'    - For questionnaires, the value should be 0 for rejected items and 1 for accepted items.
 #' @param rt `character` the name of the column in data that provides reaction times.
 #' @param response `character` the name of the column in data that provides reaction times.
-#' @param id `character` the name of the column in data in which responses are foundedn.
+#' @param id `character` the name of the column in data in which responses are found.
 #' @param model `character` the name of the model of which the parameters should be sampled. So far,
-#' the following models have been implemented:  Models implemented so far: 'D', 'Q'
-#' @param prior BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects, created with prior().
-#' @param seed A seed for the random number generators to pass to Stan.
+#' The following models have been implemented:  'D', 'Q'
+#' @param priors BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects, created with prior().
+#' @param seed A seed for the random number generators to be passed to Stan.
 #' @param chains `integer` the number of Markov chains to be run.
 #' @param parallel_chains `integer` The maximum number of MCMC chains to run in parallel.
 #' @param iter_warmup `integer` number of warmup (aka burnin) iterations.
@@ -31,7 +31,8 @@
 #' @details
 #' `BayesDiffIRT` samples from the posterior distributions of item and subject parameters
 #' and from posterior predictive distributions of responses and reaction times for
-#' diffusion item response theory models (REFERENCE MISSING).
+#' diffusion item response theory models
+#' \insertCite{van_der_maas_cognitive_2011,molenaar_fitting_2015,tuerlinckx_two_2005}{BayesDiffIRT}.
 #' ## Mathematical description of models
 #' According to the drift diffusion decision model, in each moment, the sensory
 #' system generates new sensory evidence about which of the two possible choice options
@@ -39,50 +40,18 @@
 #' distributions and accumulated over time, i.e. the newly
 #' acquired evidence is constantly added to the evidence collected up
 #'  to that moment. This accumulation process is bounded by an upper
-#'
 
-
-#'
 #' @examples
-#' # 1) Prepare dataset
-#' data(extraversion, package="diffIRT")
-#' x=extraversion[,1:10]
-#' x <- cbind(1:nrow(x), x)
-#' colnames(x) <- c("sbj", paste0("Item", 1:10))
-#' x <- tidyr::pivot_longer(as.data.frame(x), cols=Item1:Item10,
-#'                          names_to="item",
-#'                          values_to = "resp")
-#'
-#' rt=extraversion[,11:20]
-#' rt <-  cbind(1:nrow(rt), rt)
-#' colnames(rt) <- c("sbj", paste0("Item", 1:10))
-#' rt <- tidyr::pivot_longer(as.data.frame(rt), cols=Item1:Item10,
-#'                           names_to="item",
-#'                           values_to = "rt")
-#' Extra <- merge(x, rt)
-#'
-#' # 2) sample from the posterior
-#' samples <-
-#'   fitBayesDiffIRT(Extra,
-#'                   rt = "rt", resp = "resp", sbj = "sbj",
-#'                   item = "item", model = "d",
-#'                   prior = NULL,
-#'                   seed = 42, chains = 1,
-#'                   parallel_chains = 1,
-#'                   iter_warmup =  1000,
-#'                   iter_sampling = 1000)
-#' summary(samples)
+#' print("Coming!")
 
 #' @import cmdstanr
+#' @importFrom Rdpack reprompt
 
-#' @references Alexandrowicz, R. W. (2020). The diffusion model visualizer: An interactive tool to understand the diffusion model parameters. Psychological Research, 84(4), 1157-1165. https://doi.org/10.1007/s00426-018-1112-6
-#' @references Molenaar, D., Tuerlinckx, F., & Maas, H. L. J. V. D. (2015). Fitting Diffusion Item Response Theory Models for Responses and Response Times Using the R Package diffIRT. Journal of Statistical Software, 66(4). https://doi.org/10.18637/jss.v066.i04
-#' @references Van Der Maas, H. L. J., Molenaar, D., Maris, G., Kievit, R. A., & Borsboom, D. (2011). Cognitive psychology meets psychometric theory: On the relation between process models for decision making and latent variable models for individual differences. Psychological Review, 118(2), 339-356. https://doi.org/10.1037/a0022749
-
+#' @references \insertAllCited{}
 
 #' @export
 fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
-                            item = "item", model = "d", prior = NULL,
+                            item = "item", model = "d", priors = NULL,
                             seed = 42, chains = 3, parallel_chains = 1,
                             iter_warmup =  1000,
                             iter_sampling = 2000){
@@ -120,7 +89,7 @@ fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
     stop("Stan file not found. Package installation may be corrupted.")
   }
 
-  mod <- cmdstan_model(stanfile)
+  mod <- cmdstan_model(fullNameStanFile)
   fit <- mod$sample(data = stan_data, seed = seed, chains = chains,
                     parallel_chains = parallel_chains,
                     iter_warmup = iter_warmup,
@@ -145,14 +114,13 @@ new_BayesDiffIRTfit <- function(fit, stan_data, model, call, diagnostics = NULL)
       fit = fit,
       stan_data = stan_data,
       model = model,
-      call = call,
-      diagnostics = diagnostics
+      call = call
+    # , diagnostics = diagnostics
     ),
     class = "BayesDiffIRTfit"
   )
 }
 
-#' keyword internal
 print.BayesDiffIRTfit <- function(object){
   cat("Call:\n")
   print(object$call)

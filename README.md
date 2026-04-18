@@ -1,4 +1,4 @@
-<!-- Dieses RMarkdown Dokument dient dazu, ein Readme-Markdown-Dokument zu knitten.  Das Read-me wird dann auf Github angezeigt wird, wenn auf die Website des Pakets geht -->
+<!-- Dieses RMarkdown Dokument dient dazu, ein Readme-Markdown-Dokument zu knitten.  Dieses Read-me wird man sehen, wenn man auf die Paket Development Page of Github geht.  -->
 
 # 1 The BayesDiffIRT for R
 
@@ -8,7 +8,7 @@ diffusion item response theory models for responses and reaction times
 Tuerlinckx and Boeck (2005) `BayesDiffIRT` also provides functions to
 visualize posterior distributions of Diffusion item response theory
 model parameters and construct HDIs. Under the hood, the package relies
-on NUTS sampling with STAN (Carpenter et al. 2017). Up to know, the
+on NUTS sampling with STAN (**carpenter_stan_2017?**). Up to know, the
 following diffusion item response theory models have been implemented:
 
 - D-Diffusion model (Tuerlinckx and Boeck 2005),
@@ -17,18 +17,19 @@ following diffusion item response theory models have been implemented:
 # 2 Mathematical description of diffusion item response theory models
 
 All models included in the `BayesDiffIRT` package are all based on the
-drift diffusion model of decision making Ratcliff et al. (2016).
+drift diffusion model of decision making (**stone_models_1960?**; Link
+and Heath 1975; Ratcliff et al. 2016).
 
 To visualize the resulting reaction time distributions, interactive
 tools such as the [diffusion model visualizer](https://osf.io/4en3b) are
-openly available (Alexandrowicz (2020)).
+openly available (Alexandrowicz 2020).
 
 # 3 Contributing to the package
 
-The package is under active development. We are planning to implement
-new models of decision confidence when they are published. Please feel
-free to [contact us](mailto:manuel.rausch@aau.at) to suggest new models
-to implement in the package, or to volunteer adding additional models.
+The package is under active development. Please feel free to [contact
+us](mailto:manuel.rausch@aau.at) to suggest diffusion item response
+theory models that we might have not yet implemented, or to volunteer
+adding additional features.
 
 # 4 Contact
 
@@ -47,16 +48,6 @@ Alexandrowicz, Rainer W. 2020. “The Diffusion Model Visualizer: An
 Interactive Tool to Understand the Diffusion Model Parameters.”
 *Psychological Research* 84 (4): 1157–65.
 <https://doi.org/10.1007/s00426-018-1112-6>.
-
-</div>
-
-<div id="ref-carpenter_stan_2017" class="csl-entry">
-
-Carpenter, Bob, Andrew Gelman, Matthew D. Hoffman, Daniel Lee, Ben
-Goodrich, Michael Betancourt, Marcus Brubaker, Jiqiang Guo, Peter Li,
-and Allen Riddell. 2017. “*Stan* : A Probabilistic Programming
-Language.” *Journal of Statistical Software* 76 (1).
-<https://doi.org/10.18637/jss.v076.i01>.
 
 </div>
 
@@ -83,13 +74,6 @@ Ratcliff, Roger, Philip L Smith, Scott D Brown, and Gail McKoon. 2016.
 “Diffusion Decision Model : Current Issues and History.” *Trends in
 Cognitive Sciences* 20 (4): 260–81.
 <https://doi.org/10.1016/j.tics.2016.01.007>.
-
-</div>
-
-<div id="ref-stone_models_1960" class="csl-entry">
-
-Stone, Mervyn. 1960. “Models for Choice-Reaction Time.” *Psychometrika*
-25 (3): 251–60. <https://doi.org/10.1007/BF02289729>.
 
 </div>
 
