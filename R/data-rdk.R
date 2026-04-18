@@ -1,0 +1,20 @@
+#' Example dataset for diffusion IRT models
+#'
+#' Data of 16 participants in a random-dot-motion discrimination task (a subset of participants of Hellmann et al., 2023, Exp. 2)
+#' In each trial, participants were shown a random dot motion kinematogramm, which a subset of dots moving coherently either to the left or to the right.
+#' Participants were instructed to report the perceived direction of motion.
+#' (In the original experiment, participants also reported their degree of confidence, but the confidecne data is not included in the R package)
+#'
+#' @format A data frame with 19200 rows and 4 variables:
+#' \describe{
+#'   \item{sbj}{Subject ID}
+#'   \item{item}{difficulty levels of the RDK discrimination task, 1=hardest, 5=easiest}
+#'   \item{resp}{response correctness (0/1)}
+#'   \item{rt}{Response time in seconds}
+#' }
+#' @references Hellmann, S., Zehetleitner, M., & Rausch, M. (2023). Simultaneous modeling of choice, confidence, and response time in visual perception. Psychological Review. 130(6), 1521-1543. doi:10.1037/rev0000411
+#' @source https://github.com/SeHellmann/SeqSamplingConfidenceModels
+#' @examples
+#' data(RDK)
+#' summary(RDK)
+"RDK"

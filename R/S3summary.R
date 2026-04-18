@@ -1,6 +1,6 @@
 #' @export
 summary.BayesDiffIRTfit <- function(object, ...) {
-  validate_diffirt_fit(object)
+  #validate_diffirt_fit(object)
   # Return a summary object (often a list) with its own class
   out <- list(
     model = object$model,

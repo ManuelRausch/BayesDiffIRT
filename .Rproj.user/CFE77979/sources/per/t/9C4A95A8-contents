@@ -1,4 +1,0 @@
-library(statcheck)
-setwd("C:/Users/marausch/AAU/Reviews")
-myCheck <- checkPDF("BR-Org-25-985_Proof_hi.pdf")
-myCheck
