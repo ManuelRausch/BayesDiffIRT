@@ -8,8 +8,12 @@ Rdpack::viewRd("man/fitBayesDiffIRT.Rd")
 
 # Build and check a package
 devtools::check()
+devtools::check(manual = TRUE) # necessary for CRAN, tedious in the beginning,
 
+# remove the old package
 remove.packages("BayesDiffIRT")
+
+# install the new package
 devtools::install()
 
 

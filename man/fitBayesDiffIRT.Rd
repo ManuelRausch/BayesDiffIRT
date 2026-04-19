@@ -16,7 +16,8 @@ fitBayesDiffIRT(
   chains = 3,
   parallel_chains = 1,
   iter_warmup = 1000,
-  iter_sampling = 2000
+  iter_sampling = 2000,
+  na.rm = TRUE
 )
 }
 \arguments{

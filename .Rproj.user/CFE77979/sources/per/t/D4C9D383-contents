@@ -13,6 +13,7 @@ rt <- tidyr::pivot_longer(as.data.frame(rt), cols=Item1:Item10,
                            names_to="item",
                            values_to = "rt")
 Extra <- merge(x, rt)
+Extra$item <- factor(Extra$item)
 
 # 2) sample from the posterior
 samples <-

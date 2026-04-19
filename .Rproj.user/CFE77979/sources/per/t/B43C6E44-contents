@@ -2,10 +2,6 @@ functions {
   real resp_sign(int r) {
     return (r == 1) ? 1.0 : -1.0;
   }
-
-  real resp_beta(int r, real beta) {
-    return (r == 1) ? beta : 1.0 - beta;
-  }
 }
 
 data {
@@ -52,7 +48,7 @@ parameters {
   real<lower=0> omega_gamma; // standard deviation of person boundary effects (on the log scale)
 
   // Nondecision time
-  real<lower=0>[nPerson] tau; // non-decision time is a person parameter
+  vector<lower=0>[nPerson] tau; // non-decision time is a person parameter
 }
 
 model {
@@ -64,7 +60,7 @@ model {
   }else if (omega_theta_prior_family == 3) {
     omega_theta ~ uniform(omega_theta_prior_par1, omega_theta_prior_par2);
   }
-  theta ~ normal(0, omega_theta)
+  theta ~ normal(0, omega_theta);
 
   // Priors for person boundary
   if (omega_gamma_prior_family == 1) {
@@ -74,7 +70,7 @@ model {
   }else if (omega_gamma_prior_family == 3) {
     omega_gamma ~ uniform(omega_gamma_prior_par1, omega_gamma_prior_par2);
   }
-  gamma ~ lognormal(0, omega_gamma)
+  gamma ~ lognormal(0, omega_gamma);
 
   // Prior for nondecision time
   if (tnd_prior_family == 1) {
@@ -100,19 +96,6 @@ model {
   }else if (a_prior_family == 3) {
     a ~ uniform(a_prior_par1, a_prior_par2);
   }
-
-
-
-  // Priors for boundary part
-  sigma_log_gamma ~ normal(0, 1);
-  sigma_log_a     ~ normal(0, 1);
-  mu_log_a        ~ normal(0, 1);
-
-  log_gamma ~ normal(0, sigma_log_gamma);
-  log_a     ~ normal(mu_log_a, sigma_log_a);
-
-
-
   // Likelihood
   for (n in 1:nObs) {
     int p = person[n];
@@ -121,34 +104,21 @@ model {
     real delta = theta[p] - nu[i];
     real alpha = gamma[p] / a[i];
     real delta_eff = resp_sign(resp[n]) * delta;
-    real beta_eff = resp_beta(resp[n], beta);
 
-    rt[n] ~ wiener(alpha, tau[p], beta_eff, delta_eff);
+    rt[n] ~ wiener(alpha, tau[p], 0.5, delta_eff);
   }
 }
 
 generated quantities {
   vector[nObs] log_lik;
-  vector<lower=0>[nPerson] gamma;
-  vector<lower=0>[nItem] a;
-
-  for (p in 1:nPerson) {
-    gamma[p] = exp(log_gamma[p]);
-  }
-
-  for (i in 1:nItem) {
-    a[i] = exp(log_a[i]);
-  }
 
   for (n in 1:nObs) {
     int p = person[n];
     int i = item[n];
 
     real delta = theta[p] - nu[i];
-    real alpha = exp(log_gamma[p] - log_a[i]);
+    real alpha = gamma[p] / a[i];
     real delta_eff = resp_sign(resp[n]) * delta;
-    real beta_eff = resp_beta(resp[n], beta);
-
-    log_lik[n] = wiener_lpdf(rt[n] | alpha, tau, beta_eff, delta_eff);
+    log_lik[n] = wiener_lpdf(rt[n] | alpha, tau[p], .5, delta_eff);
   }
 }

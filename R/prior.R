@@ -8,8 +8,9 @@
 #' * \code{a} item time pressure,
 #' * \code{tnd} person-specific non-decision time.
 #' @param  description coef currently not implemented.
-#' @export
 
+
+#' @export
 prior <- function(dist, class, coef = NULL) {
   if (!class %in% c("omega_theta",
                     "omega_gamma",
@@ -57,11 +58,11 @@ default_priors <- function(model = "d") {
   if (model == "d"){
     # to do: Think hard about weakly informative values
     return(list(
-      prior(normal(1, .01), "omega_theta"),
-      prior(normal(1, .01), "omega_gamma"),
-      prior(normal(.01, 100), "nu"),
-      prior(uniform(.01, .50), "a"),
-      prior(lognormal(0, 1), "tnd")))
+      prior(lognormal(0, 1/2), "omega_theta"),
+      prior(lognormal(0, 1/2), "omega_gamma"),
+      prior(normal(0, 5), "nu"),
+      prior(lognormal(0, .2), "a"),
+      prior(lognormal(-1, 0.25), "tnd")))
   }
   if (model == "q"){
     # to do: Think hard about weakly informative values

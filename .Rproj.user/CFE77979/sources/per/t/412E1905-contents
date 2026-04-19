@@ -53,35 +53,37 @@
 fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
                             item = "item", model = "d", priors = NULL,
                             seed = 42, chains = 3, parallel_chains = 1,
-                            iter_warmup =  1000,
-                            iter_sampling = 2000){
+                            iter_warmup = 1000,
+                            iter_sampling = 2000,
+                            na.rm = TRUE){
   call <- match.call()
 
   # 0) Check stan
-  # According to CRAN guidelines, the fail should happen when the function is used, not when the package is loaded.
+
+    # the fail should happen when the function is used,
+    # not when the package is loaded.
   check_cmdstan()
 
-  # 1) Preprocessing.
+  # 1) validate data
+  data <- validate_data(data, rt, resp, sbj, item, na.rm = na.rm)
 
-  # Complete priors
+  # 2) Complete priors
 
   priors <- complete_priors(priors, model=model)
 
-  if (!rt %in% colnames(data)) stop(paste0("No column ", rt, "found in data" ),call. = FALSE)
-  if (!resp %in% colnames(data)) stop(paste0("No column ", resp, "found in data" ),call. = FALSE)
-  if (!sbj %in% colnames(data)) stop(paste0("No column ", sbj, "found in data" ),call. = FALSE)
-  if (!item %in% colnames(data)) stop(paste0("No column ", item, "found in data" ),call. = FALSE)
-
-  # transform the data into stan-friedly format & append priors
+  # 3) transform the data into stan-friendly format & append priors
 
   stan_data <- make_stan_data(rt = data[,rt], resp = data[,resp],
                               sbj = data[,sbj], item = data[,item],
                               model = model, priors = priors)
 
-  # 2) Compile + sample (cmdstanr)
-  stanfile = switch(model, "q" = "qdiffusion.stan",
+  # 4) Compile + sample (cmdstanr)
+
+  stanfile = switch(model,
+                    "q" = "qdiffusion.stan",
                     "d" = "ddiffusion.stan",
-                    stop("Error. Unknown model. Please select one out of the followng: c('d', 'q')"), .call=FALSE)
+                    stop("Error. Unknown model.\nPlease select one out of the followng: c('d', 'q')"), .call=FALSE)
+
   fullNameStanFile <-
     system.file("stan", stanfile,
                 package = "BayesDiffIRT")
@@ -95,11 +97,11 @@ fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
                     iter_warmup = iter_warmup,
                     iter_sampling = iter_sampling)
 
-  # 3) Postprocess
+  # 5) Postprocess:
   # diagnostics <- collect_diagnostics(fit)
   # don't know if model diagnostics can are created automatically.
 
-  # 4) Construct return object
+  # 6) Construct return object
   new_BayesDiffIRTfit(
     fit = fit,
     stan_data = stan_data,
