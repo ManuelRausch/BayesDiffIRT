@@ -117,7 +117,7 @@ new_BayesDiffIRTfit <- function(fit, stan_data, model, call, diagnostics = NULL)
       stan_data = stan_data,
       model = model,
       call = call
-    # , diagnostics = diagnostics
+    # , diagnostics = diagnostics - die müssen noch hinzugefügt werden.
     ),
     class = "BayesDiffIRTfit"
   )
