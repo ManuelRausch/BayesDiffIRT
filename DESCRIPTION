@@ -22,7 +22,7 @@ Imports:
     cmdstanr, Rdpack
 RdMacros: Rdpack
 Suggests:
-    tidyr 
+    tidyr, diffIRT 
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
