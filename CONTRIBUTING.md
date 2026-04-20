@@ -1,16 +1,16 @@
 ## Contributing
 
-Contributions are welcome! Please open an issue to discuss major changes before submitting a pull request.
+Contributions are welcome! 
 
 ## Project structure
 
-DESCRIPTION : overall metadata about the package
-README.rmd  : Rmarkdown to create the READMe.md. 
-README.md   : langing page on github
-BayesDiffIRT.Rproj: R project
-NAMESPACE   : created automatically by Roxygen2
-paper.md    : mansuscript to be subitted to Journal of Open Science Software
-paper.bib   : BibTex document for references in paper.md
+- DESCRIPTION : overall metadata about the package
+- README.rmd  : Rmarkdown to create the READMe.md. 
+- README.md   : langing page on github
+- BayesDiffIRT.Rproj: R project
+- NAMESPACE   : created automatically by Roxygen2
+- paper.md    : mansuscript to be submitted to Journal of Open Science Software
+- paper.bib   : BibTex document for references in paper.md
 - R/        : core model functions
 - R/fitBayesDiffIRT.R: Workhorse function
 - R/prior.R : set prior function
