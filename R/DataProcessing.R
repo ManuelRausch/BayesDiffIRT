@@ -1,16 +1,44 @@
-make_stan_data <- function(rt, resp, sbj, item, model, priors){
+make_stan_data <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
 
-  stan_data <- list(
-    nObs = length(rt),
-    nPerson = length(unique(sbj)),
-    nItem = length(unique(item)),
-    person = as.integer(sbj),
-    item = as.integer(item),
-    rt = as.numeric(rt),
-    resp = as.integer(resp)
+  person_levels <- unique(data[[sbj]])
+  item_levels   <- unique(data[[item]])
+
+  person_id <- match(data[[sbj]], person_levels)
+  item_id   <- match(data[[item]], item_levels)
+
+  tau_upper <- vapply(seq_along(person_levels), function(p) {
+    min(data[[rt]][person_id == p]) - eps
+  }, numeric(1))
+
+  if (any(tau_upper <= 0)) {
+    stop("Some tau_upper values are non-positive.", call. = FALSE)
+  }
+
+  # Critical consistency check
+  if (!all(tau_upper[person_id] < data[[rt]])) {
+    bad <- which(!(tau_upper[person_id] < data[[rt]]))
+    stop(
+      "Subject indexing mismatch between 'person' and 'tau_upper'. ",
+      "First failing row: ", bad[1],
+      call. = FALSE
+    )
+  }
+
+  c(
+    list(
+      nObs = as.integer(nrow(data)),
+      nPerson = as.integer(length(person_levels)),
+      nItem = as.integer(length(item_levels)),
+      person = as.integer(person_id),
+      item = as.integer(item_id),
+      rt = as.numeric(data[[rt]]),
+      resp = as.integer(data[[resp]]),
+      tau_upper = as.numeric(tau_upper)
+    ),
+    priors_to_stan_data(priors)
   )
-  c(stan_data,  priors_to_stan_data(priors))
 }
+
 
 priors_to_stan_data <- function(priors){
   out <- list()
@@ -21,7 +49,8 @@ priors_to_stan_data <- function(priors){
     cls <- pr$class
     validate_prior_family(cls, parsed$family)
 
-    out[[paste0(cls, "_prior_family")]] <- prior_family_code(parsed$family)
+    out[[paste0(cls, "_prior_family")]] <-
+      prior_family_code(parsed$family, class = cls)
     out[[paste0(cls, "_prior_par1")]] <- parsed$par1
     out[[paste0(cls, "_prior_par2")]] <- parsed$par2
   }
@@ -65,25 +94,49 @@ parse_dist <- function(dist_call) {
       par2 = num(args[[2]])
     ))
   }
+  if (fam == "uniform") {
+    if (length(args) != 2) {
+      stop("uniform() must have two arguments: min and max", call. = FALSE)
+    }
+    return(list(
+      family = "uniform",
+      par1 = num(args[[1]]),
+      par2 = num(args[[2]])
+    ))
+  }
+
   stop("Unsupported prior family: ", fam, call. = FALSE)
 }
 
-prior_family_code <- function(family) {
-  switch(family,
-         normal = 1L,
-         lognormal = 2L,
-         gamma = 3L,
-         stop("Unsupported prior family: ", family, call. = FALSE)
-  )
+prior_family_code <- function(family, class) {
+
+  if (class %in% c("omega_theta", "omega_gamma", "tnd", "a")) {
+    return(
+      switch(family,
+             lognormal = 1L,
+             normal    = 2L,
+             uniform   = 3L,
+             stop(paste0("Unsupported prior family: ",
+                  family, " for ", class), call. = FALSE)))
+  }
+  if (class %in% c("nu")) {
+    return(
+      switch(family,
+             normal  = 1L,
+             uniform = 2L,
+             stop(paste0("Unsupported prior family: ",
+                         family, " for ", class), call. = FALSE)))
+    }
+  stop("Unsupported prior class: ", class, call. = FALSE)
 }
 
 allowed_prior_families <- function(class) {
   switch(class,
-         omega_theta = c("lognormal", "halfnormal", "uniform"),
-         omega_gamma = c("lognormal", "halfnormal", "uniform"),
+         omega_theta = c("lognormal", "normal", "uniform"),
+         omega_gamma = c("lognormal", "normal", "uniform"),
          nu          = c("normal", "uniform"),
-         a           = c("lognormal", "halfnormal", "uniform"),
-         tnd         = c("lognormal", "halfnormal", "uniform"),
+         a           = c("lognormal", "normal", "uniform"),
+         tnd         = c("lognormal", "normal", "uniform"),
          stop("Unknown prior class: ", class, call. = FALSE)
   )
 }
@@ -133,15 +186,23 @@ validate_data <- function(data, rt, resp, sbj, item, na.rm = TRUE){
 
   # 4. Check data Type types
 
-    # RT must be numeric and > 0
+  # RT must be numeric and > 0
   if (!is.numeric(df[[rt]])) {
     stop("'", rt, "' must be numeric.", call. = FALSE)
   }
-  if (any(df[[rt]] <= 0)) {
-    stop("'", rt, "' must contain only positive values.", call. = FALSE)
+  if (any(df[[rt]] <= 1e-3)) {
+    stop("'", rt, "' must contain only positive values larger than 1e-3.", call. = FALSE)
   }
 
-    # Response must be 0/1 or logical
+  if (any(df[[rt]] < 0.1)) {
+    warning(
+      "Some response times are below 0.1 seconds. ",
+      "This may cause instability for person-specific non-decision times.",
+      " Consider filtering fast response times. "
+    )
+  }
+
+  # Response must be 0/1 or logical
   if (is.logical(df[[resp]])) {
     df[[resp]] <- as.integer(df[[resp]])
   }
@@ -154,7 +215,7 @@ validate_data <- function(data, rt, resp, sbj, item, na.rm = TRUE){
     stop("'", resp, "' must contain only 0 and 1.", call. = FALSE)
   }
 
-    # sbj and item: allow anything coercible to factor
+  # sbj and item: allow anything coercible to factor
   df[[sbj]]  <- as.factor(df[[sbj]])
   df[[item]] <- as.factor(df[[item]])
 

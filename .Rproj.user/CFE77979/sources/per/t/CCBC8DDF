@@ -1,27 +1,27 @@
 {
-    "id": "B5972A28",
-    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/prior.R",
-    "project_path": "R/prior.R",
+    "id": "CCBC8DDF",
+    "path": "C:/Users/marausch/AAU/Lehre/SS-2026/Datenmanagement mit R/ChatCHPt über fehlende Werte.R",
+    "project_path": null,
     "type": "r_source",
-    "hash": "424749396",
+    "hash": "3839306285",
     "contents": "",
     "dirty": false,
-    "created": 1776350777387.0,
+    "created": 1777281293637.0,
     "source_on_save": false,
     "relative_order": 4,
     "properties": {
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "64,30",
-        "scrollLine": "53"
+        "cursorPosition": "174,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1776610629,
+    "lastKnownWriteTime": 1777282421,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1776610629470,
+    "last_content_update": 1777282421952,
     "read_only": false,
     "read_only_alternatives": []
 }

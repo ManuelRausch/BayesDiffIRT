@@ -1,0 +1,4 @@
+"2","r error 4 (Fehler in eval(ele) : Objekt 'params' nicht gefunden
+)"
+"0","plot(dat$study_hours, dat$test_score, col = as.numeric(factor(dat$school)), "
+"0","     xlab = ""Lernzeit pro Woche"", ylab = ""Testleistung"")"

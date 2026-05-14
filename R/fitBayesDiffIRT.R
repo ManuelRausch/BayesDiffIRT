@@ -60,8 +60,8 @@ fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
 
   # 0) Check stan
 
-    # the fail should happen when the function is used,
-    # not when the package is loaded.
+  # the fail should happen when the function is used,
+  # not when the package is loaded.
   check_cmdstan()
 
   # 1) validate data
@@ -69,13 +69,13 @@ fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
 
   # 2) Complete priors
 
-  priors <- complete_priors(priors, model=model)
+  priors <- complete_priors(priors, model = model)
 
   # 3) transform the data into stan-friendly format & append priors
 
-  stan_data <- make_stan_data(rt = data[,rt], resp = data[,resp],
-                              sbj = data[,sbj], item = data[,item],
-                              model = model, priors = priors)
+  stan_data <- make_stan_data(data,
+                              rt = rt, resp = resp, sbj = sbj, item = item,
+                              priors = priors)
 
   # 4) Compile + sample (cmdstanr)
 
@@ -105,6 +105,7 @@ fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
   new_BayesDiffIRTfit(
     fit = fit,
     stan_data = stan_data,
+    model = model,
     call = call#,
     #  diagnostics = diagnostics # divergences, rhats, etc.
   )
@@ -116,15 +117,159 @@ new_BayesDiffIRTfit <- function(fit, stan_data, model, call, diagnostics = NULL)
       fit = fit,
       stan_data = stan_data,
       model = model,
-      call = call
-    # , diagnostics = diagnostics - die müssen noch hinzugefügt werden.
+      call = call,
+    diagnostics = diagnostics
     ),
     class = "BayesDiffIRTfit"
   )
 }
 
-print.BayesDiffIRTfit <- function(object){
-  cat("Call:\n")
-  print(object$call)
-  summary(object)
+#' @export
+print.BayesDiffIRTfit <- function(x, ...) {
+
+  cat("BayesDiffIRT model fit\n")
+  cat("-----------------------\n")
+
+  # Model
+  cat("Model:", switch(x$model,
+                       "d" = "D-Diffusion model",
+                       "q" = "Q-diffusion model",
+                       x$model), "\n")
+
+  # Data
+  cat("\nData:\n")
+  cat("  Observations:", x$stan_data$nObs, "\n")
+  cat("  Persons:     ", x$stan_data$nPerson, "\n")
+  cat("  Items:       ", x$stan_data$nItem, "\n")
+
+  # Sampling info
+  fit <- x$fit
+  meta <- fit$metadata()
+
+  cat("\nSampling:\n")
+  cat("  Chains:      ", meta$chains, "\n")
+  cat("  Iter (warmup):", meta$iter_warmup, "\n")
+  cat("  Iter (sample):", meta$iter_sampling, "\n")
+
+  # Call
+  cat("\nCall:\n")
+  print(x$call)
+
+  cat("\nUse summary() for posterior summaries and diagnostics.\n")
+
+  invisible(x)
+}
+
+#' @export
+summary.BayesDiffIRTfit <- function(object, ...) {
+
+  fit_summary <- object$fit$summary()
+  fit_summary <-
+    fit_summary[fit_summary$variable != "lp__", ,
+                drop = FALSE]
+
+  out <- list(
+    call = object$call,
+    model = object$model,
+    data_info = list(
+      nObs = object$stan_data$nObs,
+      nPerson = object$stan_data$nPerson,
+      nItem = object$stan_data$nItem
+    ),
+    sampling_info = object$fit$metadata(),
+    variables = fit_summary
+  )
+
+  class(out) <- "summary.BayesDiffIRTfit"
+  out
+}
+
+
+#' @export
+print.summary.BayesDiffIRTfit <- function(x,
+                                          digits = 2,
+                                          n_subject = NULL,
+                                          n_item = NULL,
+                                          n_hyper = NULL,
+                                          ...) {
+
+  cat("Summary of BayesDiffIRT model fit\n")
+  cat("---------------------------------\n")
+
+  cat("Model:", switch(x$model,
+                       "d" = "D-diffusion model",
+                       "q" = "Q-diffusion model",
+                       x$model), "\n")
+
+  cat("\nData:\n")
+  cat("  Observations:", x$data_info$nObs, "\n")
+  cat("  Persons:     ", x$data_info$nPerson, "\n")
+  cat("  Items:       ", x$data_info$nItem, "\n")
+
+  cat("\nCall:\n")
+  print(x$call)
+
+  vars <- x$variables
+
+  keep <- intersect(
+    c("variable", "mean", "median", "sd",
+      "q5", "q95", "q2.5", "q97.5",
+      "rhat", "ess_bulk", "ess_tail"),
+    names(vars)
+  )
+
+  vars <- vars[, keep, drop = FALSE]
+  vars <- round_df(vars, digits = digits)
+
+  # classify parameters
+  is_hyper <- vars$variable %in% c("omega_theta", "omega_gamma")
+  is_item <- grepl("^(nu|a)\\[", vars$variable)
+  is_subject <- grepl("^(theta|gamma|tnd)\\[", vars$variable)
+
+  vars_hyper <- vars[is_hyper, , drop = FALSE]
+  vars_item <- vars[is_item, , drop = FALSE]
+  vars_subject <- vars[is_subject, , drop = FALSE]
+  vars_other <- vars[!(is_hyper | is_item | is_subject), , drop = FALSE]
+
+  head_n <- function(df, n) {
+    if (nrow(df) == 0) {
+      return(df)
+    }
+    if (is.null(n) || n >= nrow(df)) {
+      return(df)
+    }
+    df[seq_len(n), , drop = FALSE]
+  }
+
+  print_section <- function(title, df, n) {
+    if (nrow(df) == 0) {
+      return(invisible(NULL))
+    }
+
+    cat("\n", title, ":\n", sep = "")
+    print(head_n(df, n), row.names = FALSE)
+
+    if (!is.null(n) && nrow(df) > n) {
+      cat("... (", nrow(df) - n, " more)\n", sep = "")
+    }
+
+    invisible(NULL)
+  }
+
+  cat("\nPosterior summaries:\n")
+
+  print_section("Hyperparameters", vars_hyper, n_hyper)
+  print_section("Item parameters", vars_item, n_item)
+  print_section("Subject parameters", vars_subject, n_subject)
+  print_section("Other parameters", vars_other, NULL)
+
+  invisible(x)
+}
+
+
+round_df <- function(df, digits = 2) {
+  out <- df
+  is_num <- vapply(out, is.numeric, logical(1))
+  out[is_num] <- lapply(out[is_num], round, digits = digits)
+  out
 }

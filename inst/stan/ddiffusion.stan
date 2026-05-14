@@ -9,6 +9,8 @@ data {
   int<lower=1> nPerson;    // number of persons
   int<lower=1> nItem;      // number of items
 
+  vector<lower=0>[nPerson] tau_upper;
+
   array[nObs] int<lower=1, upper=nPerson> person; // Subject identifier
   array[nObs] int<lower=1, upper=nItem> item; // item identifier
   vector<lower=0>[nObs] rt; // reaction times vector
@@ -44,11 +46,13 @@ parameters {
 
   // Boundary separation parameterization on log scale
   vector<lower=0>[nPerson] gamma; // person boundary effects, assumed to be lognormal, logmean set to 0
-  vector<lower=0>[nItem] a;     // item boundary effects
+  vector<lower=0.01>[nItem] a;     // item boundary effects
   real<lower=0> omega_gamma; // standard deviation of person boundary effects (on the log scale)
 
   // Nondecision time
-  vector<lower=0>[nPerson] tau; // non-decision time is a person parameter
+ //  vector<lower=0>[nPerson] tau; // non-decision time is a person parameter
+  vector<lower=0, upper=tau_upper>[nPerson] tnd;
+
 }
 
 model {
@@ -73,12 +77,14 @@ model {
   gamma ~ lognormal(0, omega_gamma);
 
   // Prior for nondecision time
-  if (tnd_prior_family == 1) {
-    tau ~ lognormal(tnd_prior_par1, tnd_prior_par2);
-  } else if (tnd_prior_family == 2) {
-    tau ~ normal(tnd_prior_par1, tnd_prior_par2);
-  }else if (tnd_prior_family == 3) {
-    tau ~ uniform(tnd_prior_par1, tnd_prior_par2);
+   for (p in 1:nPerson) {
+    if (tnd_prior_family == 1) {
+      tnd[p] ~ lognormal(tnd_prior_par1, tnd_prior_par2); //T[0, tnd_upper[p]];
+    } else if (tnd_prior_family == 2) {
+      tnd[p] ~ normal(tnd_prior_par1, tnd_prior_par2); //T[0, tnd_upper[p]];
+    } else if (tnd_prior_family == 3) {
+      tnd[p] ~ uniform(tnd_prior_par1, tnd_prior_par2); //T[0, tnd_upper[p]];
+    }
   }
 
   // Priors for item drift
@@ -105,20 +111,20 @@ model {
     real alpha = gamma[p] / a[i];
     real delta_eff = resp_sign(resp[n]) * delta;
 
-    rt[n] ~ wiener(alpha, tau[p], 0.5, delta_eff);
+    rt[n] ~ wiener(alpha, tnd[p], 0.5, delta_eff);
   }
 }
 
-generated quantities {
-  vector[nObs] log_lik;
+// generated quantities {
+//   vector[nObs] log_lik;
+//
+//   for (n in 1:nObs) {
+//     int p = person[n];
+//     int i = item[n];
+//
+//     real delta = theta[p] - nu[i];
+//     real alpha = gamma[p] / a[i];
+//     real delta_eff = resp_sign(resp[n]) * delta;
+//     log_lik[n] = wiener_lpdf(rt[n] | alpha, tnd[p], .5, delta_eff);
+//   }}
 
-  for (n in 1:nObs) {
-    int p = person[n];
-    int i = item[n];
-
-    real delta = theta[p] - nu[i];
-    real alpha = gamma[p] / a[i];
-    real delta_eff = resp_sign(resp[n]) * delta;
-    log_lik[n] = wiener_lpdf(rt[n] | alpha, tau[p], .5, delta_eff);
-  }
-}

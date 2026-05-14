@@ -1,0 +1,174 @@
+Das passt gut, weil die Coverstory klar MAR-plausibel ist: Dropout hängt von einer beobachteten Variable ab, nämlich Baseline-Depression.
+
+Vorschlag: Arbeitsblattstruktur
+Coverstory
+
+Eine Studie untersucht die Wirksamkeit einer Depressionstherapie. Teilnehmende werden zufällig einer von zwei Gruppen zugeteilt:
+
+  Therapiegruppe
+Kontrollgruppe / Warteliste
+
+Depressivität wird zu zwei Zeitpunkten erhoben:
+
+  dep_pre: Depressionswert vor Beginn der Studie
+dep_post: Depressionswert nach der Therapie
+
+Problem: Personen mit höheren Baseline-Werten brechen häufiger ab. Deshalb fehlen bei einigen Personen die Post-Werte.
+
+Lernziele des Arbeitsblatts
+
+Studierende sollen:
+
+  fehlende Werte in R erkennen
+fehlende Werte pro Variable und pro Person zählen
+prüfen, ob Missingness mit beobachteten Variablen zusammenhängt
+den Unterschied zwischen MCAR/MAR/MNAR praktisch interpretieren
+eine einfache Multiple Imputation mit mice durchführen
+Ergebnisse mit und ohne Imputation vergleichen
+Datensatzvariablen
+
+Ein kleiner, überschaubarer Datensatz, z. B. therapy_data.csv:
+
+  Variable	Bedeutung
+id	Versuchsperson
+group	therapy vs. control
+age	Alter
+gender	Geschlecht
+dep_pre	Depressionswert vor Behandlung
+dep_post	Depressionswert nach Behandlung
+dropout	1 = Post-Wert fehlt, 0 = vollständig
+
+Optional:
+
+  motivation
+stress
+sessions_attended
+Aufgabenblock 1: Daten einlesen und inspizieren
+dat <- read.csv("therapy_data.csv")
+
+head(dat)
+str(dat)
+summary(dat)
+
+Aufgaben:
+
+  Welche Variablen enthält der Datensatz?
+  Welche Variablen enthalten fehlende Werte?
+  Ist group korrekt als Faktor kodiert?
+  Aufgabenblock 2: Fehlende Werte zählen
+
+Base R:
+
+  colSums(is.na(dat))
+rowSums(is.na(dat))
+
+Tidyverse:
+
+  library(dplyr)
+
+dat |>
+  summarise(across(everything(), ~ sum(is.na(.))))
+
+Relative Häufigkeiten:
+
+  dat |>
+  summarise(across(everything(), ~ mean(is.na(.))))
+Aufgabenblock 3: Missing-Indikator erstellen
+dat <- dat |>
+  mutate(missing_post = is.na(dep_post))
+
+Dann:
+
+  table(dat$missing_post)
+
+Leitfrage:
+
+  Wie viele Personen haben keinen Post-Wert?
+  Aufgabenblock 4: Ist Missingness systematisch?
+
+  Prüfen, ob Personen mit fehlendem dep_post höhere Baseline-Werte haben:
+
+  dat |>
+  group_by(missing_post) |>
+  summarise(
+    n = n(),
+    mean_dep_pre = mean(dep_pre, na.rm = TRUE),
+    sd_dep_pre = sd(dep_pre, na.rm = TRUE)
+  )
+
+Optional mit Boxplot:
+
+  boxplot(dep_pre ~ missing_post, data = dat)
+
+Leitfragen:
+
+  Haben Personen mit fehlendem Post-Wert höhere dep_pre-Werte?
+  Spricht das eher für MCAR oder MAR?
+  Warum wäre MNAR trotzdem nicht vollständig ausgeschlossen?
+  Aufgabenblock 5: Complete-case Analyse
+dat_complete <- dat |>
+  filter(!is.na(dep_post))
+
+mod_cc <- lm(dep_post ~ group + dep_pre, data = dat_complete)
+summary(mod_cc)
+
+Leitfragen:
+
+  Wie viele Fälle gehen verloren?
+  Was sagt der Effekt von group?
+  Warum könnte diese Analyse verzerrt oder ineffizient sein?
+  Aufgabenblock 6: Multiple Imputation mit mice
+library(mice)
+
+imp <- mice(dat, m = 20, seed = 123)
+
+Überblick:
+
+  imp
+summary(imp)
+
+Analyse auf imputierten Datensätzen:
+
+  fit_imp <- with(imp, lm(dep_post ~ group + dep_pre))
+pooled <- pool(fit_imp)
+
+summary(pooled)
+
+Leitfragen:
+
+  Welche Variable wurde imputiert?
+  Warum verwenden wir mehrere imputierte Datensätze?
+  Wie unterscheiden sich die Ergebnisse von der Complete-case Analyse?
+  Aufgabenblock 7: Imputierte Werte ansehen
+imp$imp$dep_post
+
+Oder einen vollständigen imputierten Datensatz extrahieren:
+
+  dat_imp1 <- complete(imp, 1)
+head(dat_imp1)
+
+Wichtige Interpretationsfrage:
+
+  Warum sollten imputierte Werte nicht als „wahre“ Werte betrachtet werden?
+  Aufgabenblock 8: Dokumentation
+
+Kurzer Reflexionsteil:
+
+  Die Studierenden sollen 3–4 Sätze schreiben:
+
+  Welche fehlenden Werte gab es?
+  Warum war MAR plausibel?
+  Welche Methode wurde verwendet?
+  Welche Einschränkung bleibt bestehen?
+  Didaktischer Kern
+
+Der Datensatz sollte so konstruiert sein, dass:
+
+  dep_post fehlt
+Missingness von dep_pre abhängt
+Complete-case Analyse den Therapieeffekt etwas anders schätzt als MI
+MI aber nicht wie „magische Reparatur“ wirkt
+
+Merksatz für das Arbeitsblatt:
+
+  Multiple Imputation ersetzt fehlende Werte nicht durch sichere Werte, sondern berücksichtigt mehrere plausible Möglichkeiten.
