@@ -28,41 +28,44 @@ prior <- function(dist, class, coef = NULL) {
   )
 }
 
-normalize_priors <- function(priors) {
+normalizePriors <- function(priors) {
   if (is.null(priors)) {
     return(list())
   }
   if (inherits(priors, "BayesDiffIRTPrior")) {
     return(list(priors))
   }
-  if (is.list(priors) && all(vapply(priors, inherits, logical(1), "BayesDiffIRTPrior"))) {
+  if (is.list(priors) &&
+      all(vapply(priors, inherits, logical(1), "BayesDiffIRTPrior"))) {
     return(priors)
   }
   stop("priors must be NULL, a BayesDiffIRTPrior, or a list of BayesDiffIRTPrior objects",
        call. = FALSE)
 }
 
-complete_priors <- function(priors, model = "d") {
-  priors <- normalize_priors(priors)
-  defaults <- default_priors(model = model)
+completePriors <- function(priors, model = "d") {
+  priors <- normalizePriors(priors)
+  defaults <- defaultPriors(model = model)
 
-  user_classes <- vapply(priors, function(x) x$class, character(1))
-  default_classes <- vapply(defaults, function(x) x$class, character(1)) # extract the potentially available classes from the default because you don't know if you want to add a model later on with different defaults
+  userClasses <-
+    vapply(priors, function(x) x$class, character(1))
+  defaultClasses <-
+    vapply(defaults, function(x) x$class, character(1)) # extract the potentially available classes from the default because you don't know if you want to add a model later on with different defaults
 
-  missing <- !(default_classes %in% user_classes)
+  missing <- !(defaultClasses %in% userClasses)
 
   c(priors, defaults[missing])
 }
 
-default_priors <- function(model = "d") {
+defaultPriors <- function(model = "d") {
   if (model == "d"){
     # to do: Think hard about weakly informative values
     return(list(
-      prior(normal(0, 1.25), "omega_theta"),
-      prior(normal(0, 1.25), "omega_gamma"),
-      prior(normal(0, 5), "nu"),
-      prior(uniform(0.2, 5), "a"),
-      prior(uniform(0.1, 0.5), "tnd")))
+      prior(normal(0, 2.5), "omega_theta"),
+      prior(normal(0, 0.5), "omega_gamma"),
+      prior(normal(0, 2.5), "nu"),
+      prior(lognormal(0, .25), "a"),
+      prior(lognormal(-1.25, 0.3), "tnd")))
   }
   if (model == "q"){
     # to do: Think hard about weakly informative values

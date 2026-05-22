@@ -1,24 +1,26 @@
-make_stan_data <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
+makeStanData <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
 
-  person_levels <- unique(data[[sbj]])
-  item_levels   <- unique(data[[item]])
+  personLevels <- unique(data[[sbj]])
+  itemLevels   <- unique(data[[item]])
 
-  person_id <- match(data[[sbj]], person_levels)
-  item_id   <- match(data[[item]], item_levels)
+  personId <- match(data[[sbj]], personLevels)
+  itemId   <- match(data[[item]], itemLevels)
 
-  tau_upper <- vapply(seq_along(person_levels), function(p) {
-    min(data[[rt]][person_id == p]) - eps
+  tauUpper <-
+    vapply(seq_along(personLevels),
+           function(p) {
+    min(data[[rt]][personId == p]) - eps
   }, numeric(1))
 
-  if (any(tau_upper <= 0)) {
-    stop("Some tau_upper values are non-positive.", call. = FALSE)
+  if (any(tauUpper <= 0)) {
+    stop("Some tauUpper values are non-positive.", call. = FALSE)
   }
 
   # Critical consistency check
-  if (!all(tau_upper[person_id] < data[[rt]])) {
-    bad <- which(!(tau_upper[person_id] < data[[rt]]))
+  if (!all(tauUpper[personId] < data[[rt]])) {
+    bad <- which(!(tauUpper[personId] < data[[rt]]))
     stop(
-      "Subject indexing mismatch between 'person' and 'tau_upper'. ",
+      "Subject indexing mismatch between 'person' and 'tauUpper'. ",
       "First failing row: ", bad[1],
       call. = FALSE
     )
@@ -27,39 +29,39 @@ make_stan_data <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
   c(
     list(
       nObs = as.integer(nrow(data)),
-      nPerson = as.integer(length(person_levels)),
-      nItem = as.integer(length(item_levels)),
-      person = as.integer(person_id),
-      item = as.integer(item_id),
+      nPerson = as.integer(length(personLevels)),
+      nItem = as.integer(length(itemLevels)),
+      person = as.integer(personId),
+      item = as.integer(itemId),
       rt = as.numeric(data[[rt]]),
       resp = as.integer(data[[resp]]),
-      tau_upper = as.numeric(tau_upper)
+      tauUpper = as.numeric(tauUpper)
     ),
-    priors_to_stan_data(priors)
+    priorsToStanData(priors)
   )
 }
 
 
-priors_to_stan_data <- function(priors){
+priorsToStanData <- function(priors){
   out <- list()
 
   for (pr in priors) {
 
-    parsed <- parse_dist(pr$dist)
+    parsed <- parseDist(pr$dist)
     cls <- pr$class
-    validate_prior_family(cls, parsed$family)
+    validatePriorFamily(cls, parsed$family)
 
     out[[paste0(cls, "_prior_family")]] <-
-      prior_family_code(parsed$family, class = cls)
+      priorFamilyCode(parsed$family, class = cls)
     out[[paste0(cls, "_prior_par1")]] <- parsed$par1
     out[[paste0(cls, "_prior_par2")]] <- parsed$par2
   }
   out
 }
 
-parse_dist <- function(dist_call) {
-  fam <- as.character(dist_call[[1]])
-  args <- as.list(dist_call[-1])
+parseDist <- function(distDall) {
+  fam <- as.character(distDall[[1]])
+  args <- as.list(distDall[-1])
   num <- function(x) {
     if (is.numeric(x)) return(as.numeric(x))
     eval(x, envir = baseenv())
@@ -108,7 +110,7 @@ parse_dist <- function(dist_call) {
   stop("Unsupported prior family: ", fam, call. = FALSE)
 }
 
-prior_family_code <- function(family, class) {
+priorFamilyCode <- function(family, class) {
 
   if (class %in% c("omega_theta", "omega_gamma", "tnd", "a")) {
     return(
@@ -130,7 +132,7 @@ prior_family_code <- function(family, class) {
   stop("Unsupported prior class: ", class, call. = FALSE)
 }
 
-allowed_prior_families <- function(class) {
+allowedPriorFamilies <- function(class) {
   switch(class,
          omega_theta = c("lognormal", "normal", "uniform"),
          omega_gamma = c("lognormal", "normal", "uniform"),
@@ -141,8 +143,8 @@ allowed_prior_families <- function(class) {
   )
 }
 
-validate_prior_family <- function(class, family) {
-  allowed <- allowed_prior_families(class)
+validatePriorFamily <- function(class, family) {
+  allowed <- allowedPriorFamilies(class)
   if (!family %in% allowed) {
     stop(
       "Prior family '", family, "' is not supported for class '", class,
@@ -153,15 +155,15 @@ validate_prior_family <- function(class, family) {
   }
 }
 
-validate_data <- function(data, rt, resp, sbj, item, na.rm = TRUE){
+validateData <- function(data, rt, resp, sbj, item, na.rm = TRUE){
   # 1. Check if  columns exist
   vars <- c(rt, resp, sbj, item)
 
-  missing_vars <- vars[!vars %in% names(data)]
-  if (length(missing_vars) > 0) {
+  missingVars <- vars[!vars %in% names(data)]
+  if (length(missingVars) > 0) {
     stop(
       "The following variables are missing in 'data': ",
-      paste(missing_vars, collapse = ", "),
+      paste(missingVars, collapse = ", "),
       call. = FALSE
     )
   }
@@ -170,11 +172,11 @@ validate_data <- function(data, rt, resp, sbj, item, na.rm = TRUE){
   df <- data[, vars, drop = FALSE]
 
   # 3. Check for NA values
-  na_rows <- !stats::complete.cases(df)
+  naRows <- !stats::complete.cases(df)
 
-  if (any(na_rows)) {
+  if (any(naRows)) {
     if (na.rm) {
-      df <- df[!na_rows, , drop = FALSE]
+      df <- df[!naRows, , drop = FALSE]
     } else {
       stop(
         "Missing values detected in the data. ",

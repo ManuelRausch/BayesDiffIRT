@@ -9,50 +9,58 @@ data {
   int<lower=1> nPerson;    // number of persons
   int<lower=1> nItem;      // number of items
 
-  vector<lower=0>[nPerson] tau_upper;
+  vector<lower=1e-6>[nPerson] tauUpper;
 
   array[nObs] int<lower=1, upper=nPerson> person; // Subject identifier
   array[nObs] int<lower=1, upper=nItem> item; // item identifier
-  vector<lower=0>[nObs] rt; // reaction times vector
+  vector<lower=1e-6>[nObs] rt; // reaction times vector
   array[nObs] int<lower=0, upper=1> resp; // 0 = rejected, 1 = accepted
 
   int<lower=1, upper=3> omega_theta_prior_family; // prior on omega_theta
   real omega_theta_prior_par1;
-  real<lower=0> omega_theta_prior_par2;
+  real<lower=1e-6> omega_theta_prior_par2;
 
   int<lower=1, upper=3> omega_gamma_prior_family;
   real omega_gamma_prior_par1;
-  real<lower=0> omega_gamma_prior_par2;
+  real<lower=1e-6> omega_gamma_prior_par2;
 
   int<lower=1, upper=2> nu_prior_family;
   real nu_prior_par1;
-  real<lower=0> nu_prior_par2;
+  real<lower=1e-6> nu_prior_par2;
 
   int<lower=1, upper=3> a_prior_family;
   real a_prior_par1;
-  real<lower=0> a_prior_par2;
+  real<lower=1e-6> a_prior_par2;
 
   int<lower=1, upper=3> tnd_prior_family;
   real tnd_prior_par1;
-  real<lower=0> tnd_prior_par2;
+  real<lower=1e-6> tnd_prior_par2;
 
 }
 
 parameters {
   // Drift parameterization
-  vector[nPerson] theta;     // person drift effects, assumed to be Gaussian, mean set to 0.
+  vector[nPerson] z_theta; // z-standardized
   vector[nItem] nu;          // item drift effects
-  real<lower=0> omega_theta; // standard deviation of person drift effects (on the log scale)
+  real<lower=1e-6> omega_theta; // standard deviation of person drift effects (on the log scale)
 
   // Boundary separation parameterization on log scale
-  vector<lower=0>[nPerson] gamma; // person boundary effects, assumed to be lognormal, logmean set to 0
+  vector[nPerson] z_gamma; // sample
   vector<lower=0.01>[nItem] a;     // item boundary effects
-  real<lower=0> omega_gamma; // standard deviation of person boundary effects (on the log scale)
+  real<lower=1e-6> omega_gamma; // standard deviation of person boundary effects (on the log scale)
 
   // Nondecision time
  //  vector<lower=0>[nPerson] tau; // non-decision time is a person parameter
-  vector<lower=0, upper=tau_upper>[nPerson] tnd;
+  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;
+}
 
+transformed parameters{
+  vector[nPerson] theta;
+  theta = omega_theta * z_theta; //  person drift
+  vector[nPerson] log_gamma;
+  vector<lower=1e-6>[nPerson] gamma;
+  log_gamma = omega_gamma * z_gamma;
+  gamma = exp(log_gamma); // boundary effects, assumed to be lognormal, logmean set to 0
 }
 
 model {
@@ -64,7 +72,7 @@ model {
   }else if (omega_theta_prior_family == 3) {
     omega_theta ~ uniform(omega_theta_prior_par1, omega_theta_prior_par2);
   }
-  theta ~ normal(0, omega_theta);
+  z_theta ~ normal(0, 1);
 
   // Priors for person boundary
   if (omega_gamma_prior_family == 1) {
@@ -74,7 +82,7 @@ model {
   }else if (omega_gamma_prior_family == 3) {
     omega_gamma ~ uniform(omega_gamma_prior_par1, omega_gamma_prior_par2);
   }
-  gamma ~ lognormal(0, omega_gamma);
+  z_gamma ~ normal(0, omega_gamma);  // Vielleicht doch lieber Gauss?
 
   // Prior for nondecision time
    for (p in 1:nPerson) {

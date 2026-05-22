@@ -19,12 +19,19 @@
 #' The following models have been implemented:  'D', 'Q'
 #' @param priors BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects, created with prior().
 #' @param seed A seed for the random number generators to be passed to Stan.
-#' @param chains `integer` the number of Markov chains to be run.
-#' @param parallel_chains `integer` The maximum number of MCMC chains to run in parallel.
-#' @param iter_warmup `integer` number of warmup (aka burnin) iterations.
-#' @param iter_sampling `integer The number of post-warmup iterations to run per chain.
+#' @param n.chains Number of Markov chains.
+#' @param n.cores Number of chains to run in parallel.
+#' @param n.warmup Number of warmup iterations per chain.
+#' @param n.samples Number of post-warmup sampling iterations per chain.
+#' @param ... Additional arguments passed to `cmdstanr::CmdStanModel$sample()`.
+#'   This is intended for advanced users. Common sampling controls such as
+#'   `chains`, `parallel_chains`, `iter_warmup`, `iter_sampling`,
+#'   `adapt_delta`, `max_treedepth`, and `init` should be supplied via the
+#'   corresponding arguments of `fitBayesDiffIRT()`.
+
+
 #' @return An object of class `BayesDiffIRTfit`. Available methods include `print`, `summary`, and `plot`.
-#'
+
 #' @author
 #' Manuel Rausch, \email{manuel.rausch@aau.at}
 #'
@@ -50,226 +57,135 @@
 #' @references \insertAllCited{}
 
 #' @export
-fitBayesDiffIRT <- function(data, rt = "rt", resp = "resp", sbj = "sbj",
-                            item = "item", model = "d", priors = NULL,
-                            seed = 42, chains = 3, parallel_chains = 1,
-                            iter_warmup = 1000,
-                            iter_sampling = 2000,
-                            na.rm = TRUE){
+fitBayesDiffIRT <- function(
+    data, rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+    model = "d",
+    priors = NULL,
+    seed = NULL,
+    n.chains = 4,
+    n.cores = n.chains,
+    n.warmup = 1000,
+    n.samples = 1000,
+    adapt.delta = 0.95,
+    max.treedepth = 12,
+    init = NULL,
+    refresh = 200,
+    diagnostic.warnings = TRUE,
+    na.rm = TRUE,
+    ...
+){
   call <- match.call()
 
   # 0) Check stan
 
   # the fail should happen when the function is used,
   # not when the package is loaded.
-  check_cmdstan()
+  checkCmdstan()
 
   # 1) validate data
-  data <- validate_data(data, rt, resp, sbj, item, na.rm = na.rm)
+  data <- validateData(data, rt, resp,
+                        sbj, item, na.rm = na.rm)
 
   # 2) Complete priors
 
-  priors <- complete_priors(priors, model = model)
+  priors <- completePriors(priors, model = model)
 
   # 3) transform the data into stan-friendly format & append priors
 
-  stan_data <- make_stan_data(data,
-                              rt = rt, resp = resp, sbj = sbj, item = item,
-                              priors = priors)
+  stanData <-
+    makeStanData(data, rt = rt, resp = resp,
+                   sbj = sbj, item = item,
+                   priors = priors)
 
   # 4) Compile + sample (cmdstanr)
 
-  stanfile = switch(model,
-                    "q" = "qdiffusion.stan",
-                    "d" = "ddiffusion.stan",
-                    stop("Error. Unknown model.\nPlease select one out of the followng: c('d', 'q')"), .call=FALSE)
+  stanFile <- switch(
+    model,
+    "q" = "qdiffusion.stan",
+    "d" = "ddiffusion.stan",
+    stop("Error. Unknown model.\nPlease select one out of the followng: c('d', 'q')"), .call=FALSE)
 
   fullNameStanFile <-
-    system.file("stan", stanfile,
+    system.file("stan", stanFile,
                 package = "BayesDiffIRT")
   if (fullNameStanFile == "") {
     stop("Stan file not found. Package installation may be corrupted.")
   }
 
-  mod <- cmdstan_model(fullNameStanFile)
-  fit <- mod$sample(data = stan_data, seed = seed, chains = chains,
-                    parallel_chains = parallel_chains,
-                    iter_warmup = iter_warmup,
-                    iter_sampling = iter_sampling)
+  mod <- cmdstan_model(fullNameStanFile,
+                       compile = TRUE, quiet = TRUE)
+  fit <- mod$sample(data = stanData,
+                    seed = seed,
+                    chains = n.chains,
+                    parallel_chains = n.cores,
+                    iter_warmup = n.warmup,
+                    iter_sampling = n.samples,
+                    adapt_delta = adapt.delta,
+                    max_treedepth = max.treedepth,
+                    init = init,
+                    refresh = refresh, ...)
 
   # 5) Postprocess:
-  # diagnostics <- collect_diagnostics(fit)
-  # don't know if model diagnostics can are created automatically.
+  diag <- checkStanDiagnostics(fit, max.treedepth)
+  if(diagnostic.warnings) warnStanDiagnostics(diag)
 
   # 6) Construct return object
-  new_BayesDiffIRTfit(
+  newBayesDiffIRTfit(
     fit = fit,
-    stan_data = stan_data,
+    stanData = stanData,
     model = model,
-    call = call#,
-    #  diagnostics = diagnostics # divergences, rhats, etc.
+    call = call,
+    diag = diag # divergences, rhats, etc.
   )
 }
 
-new_BayesDiffIRTfit <- function(fit, stan_data, model, call, diagnostics = NULL) {
-  structure(
-    list(
-      fit = fit,
-      stan_data = stan_data,
-      model = model,
-      call = call,
-    diagnostics = diagnostics
-    ),
+newBayesDiffIRTfit <- function(
+    fit, stanData, model, call, diag) {
+  structure(list(
+    fit = fit,
+    stanData = stanData,
+    model = model,
+    call = call,
+    diag = diag),
     class = "BayesDiffIRTfit"
   )
 }
 
-#' @export
-print.BayesDiffIRTfit <- function(x, ...) {
 
-  cat("BayesDiffIRT model fit\n")
-  cat("-----------------------\n")
+warnStanDiagnostics <- function(x) {
+  problems <- character()
+  nDiv <- sum(x$divergences$nDivergent)
 
-  # Model
-  cat("Model:", switch(x$model,
-                       "d" = "D-Diffusion model",
-                       "q" = "Q-diffusion model",
-                       x$model), "\n")
-
-  # Data
-  cat("\nData:\n")
-  cat("  Observations:", x$stan_data$nObs, "\n")
-  cat("  Persons:     ", x$stan_data$nPerson, "\n")
-  cat("  Items:       ", x$stan_data$nItem, "\n")
-
-  # Sampling info
-  fit <- x$fit
-  meta <- fit$metadata()
-
-  cat("\nSampling:\n")
-  cat("  Chains:      ", meta$chains, "\n")
-  cat("  Iter (warmup):", meta$iter_warmup, "\n")
-  cat("  Iter (sample):", meta$iter_sampling, "\n")
-
-  # Call
-  cat("\nCall:\n")
-  print(x$call)
-
-  cat("\nUse summary() for posterior summaries and diagnostics.\n")
-
-  invisible(x)
-}
-
-#' @export
-summary.BayesDiffIRTfit <- function(object, ...) {
-
-  fit_summary <- object$fit$summary()
-  fit_summary <-
-    fit_summary[fit_summary$variable != "lp__", ,
-                drop = FALSE]
-
-  out <- list(
-    call = object$call,
-    model = object$model,
-    data_info = list(
-      nObs = object$stan_data$nObs,
-      nPerson = object$stan_data$nPerson,
-      nItem = object$stan_data$nItem
-    ),
-    sampling_info = object$fit$metadata(),
-    variables = fit_summary
-  )
-
-  class(out) <- "summary.BayesDiffIRTfit"
-  out
-}
-
-
-#' @export
-print.summary.BayesDiffIRTfit <- function(x,
-                                          digits = 2,
-                                          n_subject = NULL,
-                                          n_item = NULL,
-                                          n_hyper = NULL,
-                                          ...) {
-
-  cat("Summary of BayesDiffIRT model fit\n")
-  cat("---------------------------------\n")
-
-  cat("Model:", switch(x$model,
-                       "d" = "D-diffusion model",
-                       "q" = "Q-diffusion model",
-                       x$model), "\n")
-
-  cat("\nData:\n")
-  cat("  Observations:", x$data_info$nObs, "\n")
-  cat("  Persons:     ", x$data_info$nPerson, "\n")
-  cat("  Items:       ", x$data_info$nItem, "\n")
-
-  cat("\nCall:\n")
-  print(x$call)
-
-  vars <- x$variables
-
-  keep <- intersect(
-    c("variable", "mean", "median", "sd",
-      "q5", "q95", "q2.5", "q97.5",
-      "rhat", "ess_bulk", "ess_tail"),
-    names(vars)
-  )
-
-  vars <- vars[, keep, drop = FALSE]
-  vars <- round_df(vars, digits = digits)
-
-  # classify parameters
-  is_hyper <- vars$variable %in% c("omega_theta", "omega_gamma")
-  is_item <- grepl("^(nu|a)\\[", vars$variable)
-  is_subject <- grepl("^(theta|gamma|tnd)\\[", vars$variable)
-
-  vars_hyper <- vars[is_hyper, , drop = FALSE]
-  vars_item <- vars[is_item, , drop = FALSE]
-  vars_subject <- vars[is_subject, , drop = FALSE]
-  vars_other <- vars[!(is_hyper | is_item | is_subject), , drop = FALSE]
-
-  head_n <- function(df, n) {
-    if (nrow(df) == 0) {
-      return(df)
-    }
-    if (is.null(n) || n >= nrow(df)) {
-      return(df)
-    }
-    df[seq_len(n), , drop = FALSE]
+  if (nDiv > 0) {
+    problems <-
+      c(problems, paste0(nDiv, " divergent transition(s)"))
   }
-
-  print_section <- function(title, df, n) {
-    if (nrow(df) == 0) {
-      return(invisible(NULL))
-    }
-
-    cat("\n", title, ":\n", sep = "")
-    print(head_n(df, n), row.names = FALSE)
-
-    if (!is.null(n) && nrow(df) > n) {
-      cat("... (", nrow(df) - n, " more)\n", sep = "")
-    }
-
-    invisible(NULL)
+  if (nrow(x$rhat) > 0) {
+    problems <-
+      c(problems, paste0(nrow(x$rhat), " parameter(s) with R-hat > 1.01"))
   }
-
-  cat("\nPosterior summaries:\n")
-
-  print_section("Hyperparameters", vars_hyper, n_hyper)
-  print_section("Item parameters", vars_item, n_item)
-  print_section("Subject parameters", vars_subject, n_subject)
-  print_section("Other parameters", vars_other, NULL)
-
+  if (nrow(x$ess) > 0) {
+    problems <-
+      c(problems, paste0(nrow(x$ess), " parameter(s) with low ESS"))
+  }
+  if (any(x$ebfmi$warning, na.rm = TRUE)) {
+    problems <-
+      c(problems, "low E-BFMI in at least one chain")
+  }
+  if (sum(x$treedepth$n_max_treedepth) > 0) {
+    problems <-
+      c(problems, "at least one transition hit max treedepth")
+  }
+  if (length(problems) > 0) {
+    warning(
+      "Some Stan diagnostics indicate potential sampling problems:\n- ",
+      paste(problems, collapse = "\n- "),
+      "\nUse checkDiagnostics() for details.",
+      call. = FALSE
+    )
+  }
   invisible(x)
 }
 
 
-round_df <- function(df, digits = 2) {
-  out <- df
-  is_num <- vapply(out, is.numeric, logical(1))
-  out[is_num] <- lapply(out[is_num], round, digits = digits)
-  out
-}
+

@@ -1,6 +1,6 @@
 # All files with the purpose to validate some stuff
 
-check_cmdstan <- function() {
+checkCmdstan <- function() {
 
   # Check cmdstanr package
   if (!requireNamespace("cmdstanr", quietly = TRUE)) {

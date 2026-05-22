@@ -19,7 +19,7 @@ BugReports: https://github.com/ManuelRausch/BayesDiffIRT/issues
 Depends:
     R (>= 4.5.0)
 Imports:
-    cmdstanr, Rdpack
+    cmdstanr, Rdpack, ggplot2, posterior
 RdMacros: Rdpack
 Suggests:
     tidyr, diffIRT 

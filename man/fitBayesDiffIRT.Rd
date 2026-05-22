@@ -12,12 +12,18 @@ fitBayesDiffIRT(
   item = "item",
   model = "d",
   priors = NULL,
-  seed = 42,
-  chains = 3,
-  parallel_chains = 1,
-  iter_warmup = 1000,
-  iter_sampling = 2000,
-  na.rm = TRUE
+  seed = NULL,
+  n.chains = 4,
+  n.cores = n.chains,
+  n.warmup = 1000,
+  n.samples = 1000,
+  adapt.delta = 0.95,
+  max.treedepth = 12,
+  init = NULL,
+  refresh = 200,
+  diagnostic.warnings = TRUE,
+  na.rm = TRUE,
+  ...
 )
 }
 \arguments{
@@ -42,13 +48,19 @@ The following models have been implemented:  'D', 'Q'}
 
 \item{seed}{A seed for the random number generators to be passed to Stan.}
 
-\item{chains}{\code{integer} the number of Markov chains to be run.}
+\item{n.chains}{Number of Markov chains.}
 
-\item{parallel_chains}{\code{integer} The maximum number of MCMC chains to run in parallel.}
+\item{n.cores}{Number of chains to run in parallel.}
 
-\item{iter_warmup}{\code{integer} number of warmup (aka burnin) iterations.}
+\item{n.warmup}{Number of warmup iterations per chain.}
 
-\item{iter_sampling}{`integer The number of post-warmup iterations to run per chain.}
+\item{n.samples}{Number of post-warmup sampling iterations per chain.}
+
+\item{...}{Additional arguments passed to \code{cmdstanr::CmdStanModel$sample()}.
+This is intended for advanced users. Common sampling controls such as
+\code{chains}, \code{parallel_chains}, \code{iter_warmup}, \code{iter_sampling},
+\code{adapt_delta}, \code{max_treedepth}, and \code{init} should be supplied via the
+corresponding arguments of \code{fitBayesDiffIRT()}.}
 
 \item{response}{\code{character} the name of the column in data that provides reaction times.}
 

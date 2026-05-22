@@ -3,6 +3,9 @@
 # Use roxygen to write the Rd-Files for documentation.
 devtools::document()
 
+# Load complete package
+devtools::load_all()
+
 # check how the created documentation looks like
 Rdpack::viewRd("man/fitBayesDiffIRT.Rd")
 

@@ -1,0 +1,17 @@
+.GlobalEnv
+package:bayesplot
+package:cmdstanr
+package:BayesDiffIRT
+package:patchwork
+package:ggpattern
+package:ggplot2
+package:RWiener
+tools:rstudio
+package:stats
+package:graphics
+package:grDevices
+package:utils
+package:datasets
+package:methods
+Autoloads
+package:base

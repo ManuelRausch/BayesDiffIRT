@@ -1,0 +1,512 @@
+data.frame(true = a, estimated = coef(fit_diffIRT)$item[,1]),
+aes(x= true, y=estimated)) +
+geom_smooth(method="lm", se=FALSE) +
+geom_point() +
+ggpmisc::stat_correlation(
+ggpmisc::use_label("R", "R.CI"),
+small.r=TRUE) +
+theme_classic() +
+ggplot(
+data.frame(true = nu, estimated = coef(fit_diffIRT)$item[,2]),
+aes(x= true, y=estimated)) +
+geom_smooth(method="lm", se=FALSE) +
+geom_point() +
+ggpmisc::stat_correlation(
+ggpmisc::use_label("R", "R.CI"),
+small.r=TRUE) +
+theme_classic()
+fit_diffIRT
+?diffIRT::diffIRT
+fit_diffIRT <-
+diffIRT::diffIRT(rt[,-1], x[,-1], model="D", se=T)
+x[,-1]
+x
+rt <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = rt,
+names_from = item)
+x <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = resp,
+names_from = item)
+fit_diffIRT <-
+diffIRT::diffIRT(rt[,-1], x[,-1], model="D", se=T)
+fit_diffIRT
+summary(
+fit_diffIRT )
+coef(fit_diffIRT)$item
+BayesDiffIRT:::validate_data(
+data = Extra,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+data <- BayesDiffIRT:::validate_data(
+data = Extra,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+head(data, n = 25)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(BayesDiffIRT:::prior(lognormal(0, 1), class = "tnd")),
+model= "d")
+priors
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0, chains = 3,
+parallel_chains = 3,
+iter_warmup =  10^3,
+iter_sampling = 10^3)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0, chains = 3,
+parallel_chains = 3,
+iter_warmup =  10^3,
+iter_sampling = 10^3)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 3,
+iter_warmup =  10^3,
+iter_sampling = 10^3)
+read_cmdstan_csv()
+cmdstanr::read_cmdstan_csv()
+SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(
+min_rt = min(rt),
+.groups = "drop"
+)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 3,
+iter_warmup =  10^3,
+iter_sampling = 10^3)
+data <- BayesDiffIRT:::validate_data(
+data = Extra,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(BayesDiffIRT:::prior(lognormal(0, 1), class = "tnd")),
+model= "d")
+stan_data <- BayesDiffIRT:::make_stan_data(
+data, "rt", "resp", "sbj","item",priors = priors)
+model
+model= "d"
+stanfile = switch(model,
+"q" = "qdiffusion.stan",
+"d" = "ddiffusion.stan",
+stop("Error. Unknown model.\nPlease select one out of the followng: c('d', 'q')"), .call=FALSE)
+stanfile
+fullNameStanFile <-
+system.file("stan", stanfile,
+package = "BayesDiffIRT")
+fullNameStanFile
+mod <- cmdstan_model(fullNameStanFile, compile = TRUE)
+library(cmdstanr)
+mod <- cmdstan_model(fullNameStanFile, compile = TRUE)
+seed
+seed=0
+n.chains
+n.chains=3
+n.cores=1
+iter_warmup=1000
+iter_sampling = 1000
+fit <- mod$sample(data = stan_data, seed = seed,
+chains = n.chains,
+parallel_chains = n.cores,
+iter_warmup = iter_warmup,
+iter_sampling = iter_sampling,
+init = 0,
+adapt_delta = .95, # NÃ¶tig!
+max_treedepth = 15)
+fit$output(1)
+priors
+stan_data
+fit$cmdstan_diagnose()
+fit$summary()
+View(fit$summary())
+fit$summary()$rhat
+summary(fit$summary()$rhat)
+library(bayesplot)
+library(bayesplot)
+draws <- fit$draws()
+mcmc_trace(draws, pars = c("omega_theta", "omega_gamma"))
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = n.chains,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = iter_sampling,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15) #
+?cmdstanr::cmdstan_model
+library(BayesDiffIRT)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 3,
+n_warmup =  10^3,
+n_sampling = 10^3)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 3,
+n.warmup =  10^3,
+n.samples = 10^3)
+summary(samples)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 42,
+n.chains = 3,  n.cores = 3,
+n.warmup =  10^3,
+n.samples = 10^3)
+summary(samples)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 1,
+n.warmup =  10^3,
+n.samples = 10^3)
+summary(samples)
+rm(list=ls())
+nSbj <- 200
+nItems <- 10
+ndt <- runif(nSbj, .1, .5) # non-decision time
+a <- runif(nItems, 0.5, 2)      # item time pressure
+theta <- rnorm(nSbj, 0, 2) # person drift variability
+gamma <- rlnorm(nSbj, 0, 0.5) # person drift variability
+nu <- rnorm(nItems, 0, 2) # item drifts
+quantile(rlnorm(nSbj, 0, 0.5) / runif(nItems, 0.5, 2) )
+quantile(rnorm(nSbj, 0, 2) - rnorm(nItems, 0, 2) )
+SimData <- expand.grid(item = 1:nItems, sbj = 1:nSbj,
+resp = NA, rt = NA)
+library(RWiener)
+for (i in 1:nrow(SimData)){
+print(paste0("alpha = ",
+round(gamma[SimData$sbj[i]] / a[SimData$item[i]],2),
+", ndt = ",
+round(ndt[SimData$sbj[i]],2),
+", delta = ",
+round(theta[SimData$sbj[i]]  - nu[SimData$item[i]],2)))
+try(sim <- rwiener(
+1,
+alpha = gamma[SimData$sbj[i]] / a[SimData$item[i]],
+tau = ndt[SimData$sbj[i]],
+beta = 0.5,
+delta = theta[SimData$sbj[i]]  - nu[SimData$item[i]]))
+SimData$resp[i] <- sim$resp
+SimData$rt[i] <- sim$q
+}
+SimData$resp <- as.numeric(SimData$resp) - 1
+rt <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = rt,
+names_from = item)
+x <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = resp,
+names_from = item)
+fit_diffIRT <-
+diffIRT::diffIRT(rt[,-1], x[,-1], model="D", se=T)
+summary(fit_diffIRT )
+rt <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = rt,
+names_from = item)
+x <- tidyr::pivot_wider(
+SimData, id_cols = sbj,
+values_from = resp,
+names_from = item)
+fit_diffIRT <-
+diffIRT::diffIRT(rt[,-1], x[,-1], model="D", se=F)
+summary(fit_diffIRT )
+library(ggplot2)
+library(patchwork)
+ggplot(
+data.frame(true = a, estimated = coef(fit_diffIRT)$item[,1]),
+aes(x = true, y = estimated)) +
+geom_smooth(method="lm", se=FALSE) +
+geom_point() +
+ggpmisc::stat_correlation(
+ggpmisc::use_label("R", "R.CI"),
+small.r=TRUE) +
+theme_classic() +
+ggplot(
+data.frame(true = nu, estimated = coef(fit_diffIRT)$item[,2]),
+aes(x = true, y = estimated)) +
+geom_smooth(method="lm", se=FALSE) +
+geom_point() +
+ggpmisc::stat_correlation(
+ggpmisc::use_label("R", "R.CI"),
+small.r=TRUE) +
+theme_classic()
+data <- BayesDiffIRT:::validate_data(
+data = Extra,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+data <- BayesDiffIRT:::validate_data(
+data = SimaData,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+data <- BayesDiffIRT:::validate_data(
+data = SimData,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+head(data, n = 25)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(BayesDiffIRT:::prior(lognormal(0, 1), class = "tnd")),
+model= "d")
+priors
+stan_data <- BayesDiffIRT:::make_stan_data(
+data, "rt", "resp", "sbj","item",
+priors = priors)
+stan_data
+SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(
+min_rt = min(rt),
+.groups = "drop"
+)
+stan_data
+SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(
+min_rt = min(rt),
+.groups = "drop"
+)
+min_rt <- SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(min_rt = min(rt),.groups = "drop")
+min_rt
+stan_data
+stan_data$tau_upper - min_rt$min_rt
+length(stan_data$tau_upper)
+summary(stan_data$tau_upper)
+data <- BayesDiffIRT:::validate_data(
+data = SimData,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+na.rm = TRUE)
+head(data, n = 25)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(BayesDiffIRT:::prior(lognormal(0, 1), class = "tnd")),
+model= "d")
+stan_data <- BayesDiffIRT:::make_stan_data(
+data, "rt", "resp", "sbj","item",
+priors = priors)
+min_rt <- SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(min_rt = min(rt),.groups = "drop")
+stan_data$tau_upper - min_rt$min_rt
+summary(stan_data$tau_upper)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = n.chains,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15)
+mod <- cmdstanr::cmdstan_model(
+system.file("stan", "ddiffusion.stan", package = "BayesDiffIRT"),
+compile = TRUE)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = n.chains,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = 3,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15)
+summary(fit)
+fit $summary()
+View(fit $summary())
+fit$summary()$Rhat
+summary(fit$summary()$Rhat)
+str(fit$summary())
+summary(fit$summary()$rhat)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(),
+model= "d")
+priors
+stan_data <- BayesDiffIRT:::make_stan_data(
+data, "rt", "resp", "sbj","item",
+priors = priors)
+min_rt <- SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(min_rt = min(rt),.groups = "drop")
+stan_data$tau_upper - min_rt$min_rt
+summary(stan_data$tau_upper)
+mod <- cmdstanr::cmdstan_model(
+system.file("stan", "ddiffusion.stan", package = "BayesDiffIRT"),
+compile = TRUE)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = 3,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15)
+priors <- BayesDiffIRT:::complete_priors(
+priors = list(BayesDiffIRT:::prior(lognormal(0, 1), class = "tnd")),
+model= "d")
+stan_data <- BayesDiffIRT:::make_stan_data(
+data, "rt", "resp", "sbj","item",
+priors = priors)
+min_rt <- SimData |>
+dplyr::group_by(sbj) |>
+dplyr::summarise(min_rt = min(rt),.groups = "drop")
+stan_data$tau_upper - min_rt$min_rt
+summary(stan_data$tau_upper)
+mod <- cmdstanr::cmdstan_model(
+system.file("stan", "ddiffusion.stan", package = "BayesDiffIRT"),
+compile = TRUE)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = 3,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .99, # NÃ¶tig!
+max_treedepth = 15)
+diag <- fit$sampler_diagnostics(format = "df")
+diag
+sum(diag$divergent__)
+fit <- mod$sample(data = stan_data, seed = 0,
+chains = 3,
+parallel_chains = 1,
+iter_warmup = 1000,
+iter_sampling = 1000,
+init = 0,
+adapt_delta = .9)
+summary(fit$summary()$rhat)
+diag <- fit$sampler_diagnostics(format = "df")
+diag
+sum(diag$divergent__)
+m <- 0.3
+s <- 0.1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+sdlog <- sqrt(log(1 + s^2/m^2))
+meanlog
+sdlog
+exp(0)
+meanlog = 0
+sdlog = 1
+exp(meanlog + sdlog^2/2)
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+m <- 1
+s <- 1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+meanlog = -0.3
+sdlog = 0.8
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+m <- 1
+s <- 0.1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+m <- 0.5
+s <- 0.1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+m <- 0.3
+s <- 0.1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+meanlog = 0
+sdlog = 0.8
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+meanlog = 0
+sdlog = 0.1
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+meanlog = 0
+sdlog = 0.5
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+meanlog = 0
+sdlog = 0.1
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+meanlog = 0
+sdlog = 1
+exp(meanlog + sdlog^2/2)
+sqrt((exp(sdlog^2)-1)*exp(2*meanlog+sdlog^2))
+m <- 1
+s <- 0.1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+m <- 1
+s <- 1
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+m <- 1
+s <- 0.25
+meanlog <- log(m)- 0.5* log(1 + s^2 / m^2)
+meanlog
+sdlog <- sqrt(log(1 + s^2/m^2))
+sdlog
+a <- rlnorm(1000, 0, 0.25)
+summary(a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+gamma <- rlnorm(1000, 0, 0.5)
+a <- rlnorm(1000, 0, 0.25)
+summary(gamma/a)
+library(BayesDiffIRT)
+samples <-
+fitBayesDiffIRT(SimData,
+rt = "rt", resp = "resp", sbj = "sbj",
+item = "item", model = "d",
+seed = 0,
+n.chains = 3,  n.cores = 1,
+n.warmup =  10^3,
+n.samples = 10^3)
+summary(samples)
