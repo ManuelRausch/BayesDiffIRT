@@ -1,6 +1,8 @@
 # 0) Simulate some data
 
 rm(list=ls())
+load("dev/Tests.RData")
+
 nSbj <- 200
 nItems <- 10
 
@@ -108,6 +110,17 @@ samples <-
                   n.samples = 10^3)
 summary(samples)
 checkDiagnostics(samples)
+plot(samples, parameter = "theta", type = "trace")
+plot(samples, parameter = "gamma", type = "trace")
+plot(samples, parameter = "nu", type = "trace")
+plot(samples, parameter = "a", type = "trace")
+plot(samples, parameter = "tnd", type = "trace")
+plot(samples, parameter = "omega_gamma",
+     type = "trace")
+plot(samples, parameter = "omega_theta",
+     type = "trace")
+
+
 plot(samples, parameter = "theta", type = "interval")
 plot(samples, parameter = "gamma", type = "interval")
 plot(samples, parameter = "nu", type = "interval")

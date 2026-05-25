@@ -99,5 +99,36 @@ plot.BayesDiffIRTfit <-
       return(invisible(p))
     }
 
+    if (type == "trace"){
+      drawsDf <- as.data.frame(drawsAll)
+      drawsLong <- data.frame(
+        drawsDf[rep(seq_len(nrow(drawsDf)),
+                    times = length(parameterCols)),  metadataCols, drop = FALSE],
+        parameter = rep(parameterCols, each = nrow(drawsDf)),
+        value = unlist(drawsDf[parameterCols], use.names = FALSE),
+        row.names = NULL#
+      )
+
+      # Convert to long format
+      p <- ggplot(drawsLong, aes(x=.iteration,
+                                 y=value,
+                                 color=factor(.chain))) +
+        geom_line()
+      if(length(unique(drawsLong$parameter))> 1){
+        p <- p + facet_wrap(~ parameter,
+                            nrow = ceiling(sqrt(length(unique(drawsLong$parameter)))),
+                            ncol = ceiling(sqrt(length(unique(drawsLong$parameter)))))
+      }
+      p <- p + ggplot2::labs(
+        x = "Iteration",
+        y = "Parameter value",
+        color = NULL) +
+        ggplot2::theme_classic()
+
+      base::print(p)
+      return(invisible(p))
+
+    }
+
     stop("Plot type not implemented yet.", call. = FALSE)
   }
