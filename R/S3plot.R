@@ -110,12 +110,12 @@ plot.BayesDiffIRTfit <-
       )
 
       # Convert to long format
-      p <- ggplot(drawsLong, aes(x=.iteration,
+      p <- ggplot2::ggplot(drawsLong, ggplot2::aes(x=.iteration,
                                  y=value,
                                  color=factor(.chain))) +
-        geom_line()
+        ggplot2::geom_line()
       if(length(unique(drawsLong$parameter))> 1){
-        p <- p + facet_wrap(~ parameter,
+        p <- p + ggplot2::facet_wrap(~ parameter,
                             nrow = ceiling(sqrt(length(unique(drawsLong$parameter)))),
                             ncol = ceiling(sqrt(length(unique(drawsLong$parameter)))))
       }

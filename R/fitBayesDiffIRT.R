@@ -30,7 +30,7 @@
 #'   corresponding arguments of `fitBayesDiffIRT()`.
 
 
-#' @return An object of class `BayesDiffIRTfit`. Available methods include `print`, `summary`, and `plot`.
+#' @return An object of class `BayesDiffIRTfit`. Available methods include `print`, `summary`, `plot` and `checkDiagnostics`.
 
 #' @author
 #' Manuel Rausch, \email{manuel.rausch@aau.at}

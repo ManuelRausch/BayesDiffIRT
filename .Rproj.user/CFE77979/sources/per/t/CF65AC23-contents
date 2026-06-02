@@ -1,0 +1,221 @@
+makeStanData <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
+
+  personLevels <- unique(data[[sbj]])
+  itemLevels   <- unique(data[[item]])
+
+  personId <- match(data[[sbj]], personLevels)
+  itemId   <- match(data[[item]], itemLevels)
+
+  tauUpper <-
+    vapply(seq_along(personLevels),
+           function(p) {
+             min(data[[rt]][personId == p]) - eps
+           }, numeric(1))
+
+  if (any(tauUpper <= 0)) {
+    stop("Some tauUpper values are non-positive.", call. = FALSE)
+  }
+
+  # Critical consistency check
+  if (!all(tauUpper[personId] < data[[rt]])) {
+    bad <- which(!(tauUpper[personId] < data[[rt]]))
+    stop(
+      "Subject indexing mismatch between 'person' and 'tauUpper'. ",
+      "First failing row: ", bad[1],
+      call. = FALSE
+    )
+  }
+
+  c(
+    list(
+      nObs = as.integer(nrow(data)),
+      nPerson = as.integer(length(personLevels)),
+      nItem = as.integer(length(itemLevels)),
+      person = as.integer(personId),
+      item = as.integer(itemId),
+      rt = as.numeric(data[[rt]]),
+      resp = as.integer(data[[resp]]),
+      tauUpper = as.numeric(tauUpper)
+    ),
+    priorsToStanData(priors)
+  )
+}
+
+
+priorsToStanData <- function(priors){
+  out <- list()
+
+  for (pr in priors) {
+
+    parsed <- parseDist(pr$dist)
+    cls <- pr$class
+    validatePriorFamily(cls, parsed$family)
+
+    out[[paste0(cls, "_prior_family")]] <-
+      priorFamilyCode(parsed$family, class = cls)
+    out[[paste0(cls, "_prior_par1")]] <- parsed$par1
+    out[[paste0(cls, "_prior_par2")]] <- parsed$par2
+  }
+  out
+}
+
+parseDist <- function(distDall) {
+  fam <- as.character(distDall[[1]])
+  args <- as.list(distDall[-1])
+  num <- function(x) {
+    if (is.numeric(x)) return(as.numeric(x))
+    eval(x, envir = baseenv())
+  }
+  if (fam == "normal") {
+    if (length(args) != 2) {
+      stop("normal() must have two arguments: mean and sd", call. = FALSE)
+    }
+    return(list(
+      family = "normal",
+      par1 = num(args[[1]]),
+      par2 = num(args[[2]])
+    ))
+  }
+  if (fam == "lognormal") {
+    if (length(args) != 2) {
+      stop("lognormal() must have two arguments: meanlog and sdlog", call. = FALSE)
+    }
+    return(list(
+      family = "lognormal",
+      par1 = num(args[[1]]),
+      par2 = num(args[[2]])
+    ))
+  }
+  # if (fam == "gamma") {
+  #   if (length(args) != 2) {
+  #     stop("gamma() must have two arguments: shape and rate", call. = FALSE)
+  #   }
+  #   return(list(
+  #     family = "gamma",
+  #     par1 = num(args[[1]]),
+  #     par2 = num(args[[2]])
+  #   )) }
+
+  if (fam == "uniform") {
+    if (length(args) != 2) {
+      stop("uniform() must have two arguments: min and max", call. = FALSE)
+    }
+    return(list(
+      family = "uniform",
+      par1 = num(args[[1]]),
+      par2 = num(args[[2]])
+    ))
+  }
+
+  stop("Unsupported prior family: ", fam, call. = FALSE)
+}
+
+priorFamilyCode <- function(family, class) {
+
+  if (class %in% c("omega_theta", "omega_gamma", "tnd", "a", "nu")) {
+    return(
+      switch(family,
+             lognormal = 1L,
+             normal    = 2L,
+             uniform   = 3L,
+             stop(paste0("Unsupported prior family: ",
+                         family, " for ", class), call. = FALSE)))
+  }
+
+  stop("Unsupported prior class: ", class, call. = FALSE)
+}
+
+allowedPriorFamilies <- function(class) {
+  switch(class,
+         omega_theta = c("lognormal", "normal", "uniform"),
+         omega_gamma = c("lognormal", "normal", "uniform"),
+         nu          = c("lognormal", "normal", "uniform"),
+         a           = c("lognormal", "normal", "uniform"),
+         tnd         = c("lognormal", "normal", "uniform"),
+         stop("Unknown prior class: ", class, call. = FALSE)
+  )
+}
+
+validatePriorFamily <- function(class, family) {
+  allowed <- allowedPriorFamilies(class)
+  if (!family %in% allowed) {
+    stop(
+      "Prior family '", family, "' is not supported for class '", class,
+      "'. Allowed families are: ",
+      paste(allowed, collapse = ", "),
+      call. = FALSE
+    )
+  }
+}
+
+validateData <- function(data, rt, resp, sbj, item, na.rm = TRUE){
+  # 1. Check if  columns exist
+  vars <- c(rt, resp, sbj, item)
+
+  missingVars <- vars[!vars %in% names(data)]
+  if (length(missingVars) > 0) {
+    stop(
+      "The following variables are missing in 'data': ",
+      paste(missingVars, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  # 2. Remove useless columns
+  df <- data[, vars, drop = FALSE]
+
+  # 3. Check for NA values
+  naRows <- !stats::complete.cases(df)
+
+  if (any(naRows)) {
+    if (na.rm) {
+      df <- df[!naRows, , drop = FALSE]
+    } else {
+      stop(
+        "Missing values detected in the data. ",
+        "Consider seting  na.rm = TRUE to remove incomplete cases.",
+        call. = FALSE
+      )
+    }
+  }
+
+  # 4. Check data Type types
+
+  # RT must be numeric and > 0
+  if (!is.numeric(df[[rt]])) {
+    stop("'", rt, "' must be numeric.", call. = FALSE)
+  }
+  if (any(df[[rt]] <= 1e-3)) {
+    stop("'", rt, "' must contain only positive values larger than 1e-3.", call. = FALSE)
+  }
+
+  if (any(df[[rt]] < 0.1)) {
+    warning(
+      "Some response times are below 0.1 seconds. ",
+      "This may cause instability for person-specific non-decision times.",
+      " Consider filtering fast response times. "
+    )
+  }
+
+  # Response must be 0/1 or logical
+  if (is.logical(df[[resp]])) {
+    df[[resp]] <- as.integer(df[[resp]])
+  }
+
+  if (!is.numeric(df[[resp]])) {
+    stop("'", resp, "' must be numeric (0/1) or logical.", call. = FALSE)
+  }
+
+  if (!all(df[[resp]] %in% c(0, 1))) {
+    stop("'", resp, "' must contain only 0 and 1.", call. = FALSE)
+  }
+
+  # sbj and item: allow anything coercible to factor
+  df[[sbj]]  <- as.factor(df[[sbj]])
+  df[[item]] <- as.factor(df[[item]])
+
+  # 5. Return cleaned data
+  return(df)
+}
+
+

@@ -9,8 +9,8 @@ makeStanData <- function(data, rt, resp, sbj, item, priors, eps = 1e-3) {
   tauUpper <-
     vapply(seq_along(personLevels),
            function(p) {
-    min(data[[rt]][personId == p]) - eps
-  }, numeric(1))
+             min(data[[rt]][personId == p]) - eps
+           }, numeric(1))
 
   if (any(tauUpper <= 0)) {
     stop("Some tauUpper values are non-positive.", call. = FALSE)
@@ -86,16 +86,16 @@ parseDist <- function(distDall) {
       par2 = num(args[[2]])
     ))
   }
-  if (fam == "gamma") {
-    if (length(args) != 2) {
-      stop("gamma() must have two arguments: shape and rate", call. = FALSE)
-    }
-    return(list(
-      family = "gamma",
-      par1 = num(args[[1]]),
-      par2 = num(args[[2]])
-    ))
-  }
+  # if (fam == "gamma") {
+  #   if (length(args) != 2) {
+  #     stop("gamma() must have two arguments: shape and rate", call. = FALSE)
+  #   }
+  #   return(list(
+  #     family = "gamma",
+  #     par1 = num(args[[1]]),
+  #     par2 = num(args[[2]])
+  #   )) }
+
   if (fam == "uniform") {
     if (length(args) != 2) {
       stop("uniform() must have two arguments: min and max", call. = FALSE)
@@ -112,23 +112,16 @@ parseDist <- function(distDall) {
 
 priorFamilyCode <- function(family, class) {
 
-  if (class %in% c("omega_theta", "omega_gamma", "tnd", "a")) {
+  if (class %in% c("omega_theta", "omega_gamma", "tnd", "a", "nu")) {
     return(
       switch(family,
              lognormal = 1L,
              normal    = 2L,
              uniform   = 3L,
              stop(paste0("Unsupported prior family: ",
-                  family, " for ", class), call. = FALSE)))
-  }
-  if (class %in% c("nu")) {
-    return(
-      switch(family,
-             normal  = 1L,
-             uniform = 2L,
-             stop(paste0("Unsupported prior family: ",
                          family, " for ", class), call. = FALSE)))
-    }
+  }
+
   stop("Unsupported prior class: ", class, call. = FALSE)
 }
 
@@ -136,7 +129,7 @@ allowedPriorFamilies <- function(class) {
   switch(class,
          omega_theta = c("lognormal", "normal", "uniform"),
          omega_gamma = c("lognormal", "normal", "uniform"),
-         nu          = c("normal", "uniform"),
+         nu          = c("lognormal", "normal", "uniform"),
          a           = c("lognormal", "normal", "uniform"),
          tnd         = c("lognormal", "normal", "uniform"),
          stop("Unknown prior class: ", class, call. = FALSE)

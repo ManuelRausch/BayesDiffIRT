@@ -70,11 +70,11 @@ defaultPriors <- function(model = "d") {
   if (model == "q"){
     # to do: Think hard about weakly informative values
     return(list(
-      prior(normal(0, 1), "omega_theta"),
-      prior(normal(0, 1), "omega_gamma"),
-      prior(normal(.01, 100), "nu"),
-      prior(uniform(0.1, 0.5), "a"),
-      prior(lognormal(0, 1), "tnd")))
+      prior(normal(0, 0.75), "omega_theta"),
+      prior(normal(0, 0.5), "omega_gamma"),
+      prior(lognormal(0, 0.75), "nu"),
+      prior(lognormal(0, .25), "a"),
+      prior(lognormal(-1.25, 0.3), "tnd")))
   }
   stop("Model not recognized", call. = FALSE)
 }

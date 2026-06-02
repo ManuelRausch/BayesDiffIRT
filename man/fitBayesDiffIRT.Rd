@@ -67,7 +67,7 @@ corresponding arguments of \code{fitBayesDiffIRT()}.}
 \item{id}{\code{character} the name of the column in data in which responses are found.}
 }
 \value{
-An object of class \code{BayesDiffIRTfit}. Available methods include \code{print}, \code{summary}, and \code{plot}.
+An object of class \code{BayesDiffIRTfit}. Available methods include \code{print}, \code{summary}, \code{plot} and \code{checkDiagnostics}.
 }
 \description{
 \code{fitBayesDiffIRT} samples item and subject parameters

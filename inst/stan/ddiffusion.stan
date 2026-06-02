@@ -24,7 +24,7 @@ data {
   real omega_gamma_prior_par1;
   real<lower=1e-6> omega_gamma_prior_par2;
 
-  int<lower=1, upper=2> nu_prior_family;
+  int<lower=1, upper=3> nu_prior_family;
   real nu_prior_par1;
   real<lower=1e-6> nu_prior_par2;
 
@@ -82,7 +82,7 @@ model {
   }else if (omega_gamma_prior_family == 3) {
     omega_gamma ~ uniform(omega_gamma_prior_par1, omega_gamma_prior_par2);
   }
-  z_gamma ~ normal(0, omega_gamma);  // Vielleicht doch lieber Gauss?
+  z_gamma ~ normal(0, 1);  // Vielleicht doch lieber Gauss?
 
   // Prior for nondecision time
    for (p in 1:nPerson) {
@@ -97,10 +97,13 @@ model {
 
   // Priors for item drift
   if (nu_prior_family == 1) {
-    nu ~ normal(nu_prior_par1, nu_prior_par2);
+    nu ~ lognormal(nu_prior_par1, nu_prior_par2);
   }else if (nu_prior_family == 2) {
+    nu ~ normal(nu_prior_par1, nu_prior_par2);
+  }else if (nu_prior_family == 3) {
     nu ~ uniform(nu_prior_par1, nu_prior_par2);
   }
+
 
   // Priors for item boundary aka item time pressure
   if (a_prior_family == 1) {
