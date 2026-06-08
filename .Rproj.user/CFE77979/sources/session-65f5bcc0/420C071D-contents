@@ -193,7 +193,8 @@ ggplot(
     ggpmisc::use_label("R", "R.CI"),
     small.r=TRUE) +
   theme_classic() +
-  labs(x = "true parameter", y = "posterior mean",
+  labs(x = "true parameter",
+       y = "posterior mean",
        title = "non-decision time")
 
 

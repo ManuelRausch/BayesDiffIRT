@@ -72,6 +72,8 @@
 #' parameters of responses and reaction times for
 #' diffusion item response theory models \insertCite{van_der_maas_cognitive_2011,molenaar_fitting_2015,tuerlinckx_two_2005}{BayesDiffIRT}.
 #' ## Description of models
+#' Diffusion item response theory combines item response theory with the drift diffusion
+#' model of decision making.
 #' According to the drift diffusion decision model, in each moment, the sensory
 #' system generates new evidence about which of the two possible choice options
 #' is the correct one. This momentary evidence is drawn from a Gaussian
@@ -80,23 +82,25 @@
 #' This accumulation process is bounded by an upper and lower threshold, where each threshold represents
 #' one of the two possible choice options.  When the accumulated evidence reaches
 #' one of the thresholds, a choice is made for the corresponding choice option.
-#' The quality of information favouring one response option over the other is reflected in the drift rate,
-#' which quantifies s how quickly, on average, accumulated evidence approaches
+#' The quality of information favouring one response option over the other is reflected
+#' in the drift rate  \eqn{delta}, which quantifies s how quickly the accumulated evidence approaches
 #' the threshold associated with the correct or preferred decision.
-#' The distance between the two thresholds determines the amount of evidence required
+#' The distance between the two thresholds \eqn{alpha} determines the amount of evidence required
 #' before a decision is made; a larger distance means that decisions tend to
 #' be made later because more evidence is required.
-#' The starting point of the accumulation process could be used to describe an a priori bias toward one of the response options.
-#' However, in the current set of implemented that the accumulation always starts midway betweeen the two response alternatives, i.e.,
+#' The starting point \eqn{beta} of the accumulation process could be used to describe an a priori bias toward one of the response options.
+#' However, in the current set of implemented that the accumulation always starts midway between the two response alternatives, i.e.,
 #' there is no a prior bias for any of the choice alternatives .
 #' In diffusion item response theory models, two of the traditional parameters
 #' from the drift diffusion decision model, boundary separation and drift rate,
-#'  are decomposed into person and item parameters. When person j makes a decision
-#'  about item i, the boundary separation is given by \eqn{gamma_j/a_i}, where \gamma_j represents
-#'  person-specific response caution and \eqn{a_i} item-specific time pressure. According
-#'  to the Q-Diffusion model, the drift is given by the person-specific ability parameter \theta_j divided by
-#'  the item-specific difficulty \nu_i.
-#' Acordding to
+#'  are decomposed into person and item parameters. When person p makes a decision
+#'  about item i, the boundary separation is given by \eqn{alpha_pi = gamma_p/a_i}, where
+#'  \eqn{gamma_p} represents the person-specific response caution and \eqn{a_i}
+#'  item-specific time pressure. The D-Diffusion and the Q-Diffusion model differ
+#'   in the way the drift decomposed. According to the D-Diffusion model, which is applicable for
+#'   survey item, the drift is given by \eqn{delta_ji = theta_j - nu_i}. According
+#'   to the Q-Diffusion model, the drift is given by \eqn{delta_ji = theta_j / nu_i}.
+#'
 
 #' @examples
 #' print("Coming!")

@@ -60,6 +60,11 @@ Other stuff that is IRT-realted?0
 The diffIRT package provides R functions to fit the Q-diffusion and the D-Diffusion
 model using maximim likelihood estimation [@molenaar_2015]. 
 
+# Statement of the field
+
+# Software design
+
+# Research impact statement
 
 ## Contact
 

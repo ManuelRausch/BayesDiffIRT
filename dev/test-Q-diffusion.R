@@ -12,6 +12,7 @@ rm(list=ls())
 
 nSbj <- 200
 nItems <- 10
+load("dev/Tests-Q-Diffusion.RData")
 
 ndt <- rlnorm(nSbj,-1.25, 0.3) # non-decision time
 a <- rlnorm(nItems, 0, 0.25)      # item time pressure
@@ -192,7 +193,8 @@ ggplot(
     ggpmisc::use_label("R", "R.CI"),
     small.r=TRUE) +
   theme_classic() +
-  labs(x = "true parameter", y = "posterior mean",
+  labs(x = "true parameter",
+       y = "posterior mean",
        title = "non-decision time")
 
 
