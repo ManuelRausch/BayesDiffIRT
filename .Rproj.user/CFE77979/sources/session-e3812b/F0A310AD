@@ -1,0 +1,27 @@
+{
+    "id": "F0A310AD",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/fitBayesDiffIRT.R",
+    "project_path": "R/fitBayesDiffIRT.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1780823762595.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "tempName": "Untitled2",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "102,5",
+        "scrollLine": "93"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1780908276,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1780923375123,
+    "read_only": false,
+    "read_only_alternatives": []
+}

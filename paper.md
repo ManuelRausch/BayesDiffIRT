@@ -30,15 +30,36 @@ affiliations:
 ---
   
 # Summmary
-  
-The `BayesDiffIRT` package provides R functions to sample posterior distributions 
-and posterior predictive distributions of item and subject parameters of diffusion item 
-response theory models for responses and reaction time []. `BayesDiffIRT` also provides functions to visualiize posterior distributions of Diffusion item response theory model parameters and construct HDIs. Under the hood, the package relies on NUTS sampling with STAN <!-- Citation missing -->. Up to know, the following diffusion item response theory models have been implemented: 
 
-* D-Diffusion model <!--citation missing --> 
-* Q-Diffusion model 
+The `BayesDiffIRT` package provides R functions to fits Bayesian drift diffusion
+item-response theory models by sampling from the posterior distributions of item
+and subject parameters using the No-U-Turn Sampler (NUTS) as implemented in Stan 
+via `cmdstanr`[@carpenter_stan_2017]. Diffusion item response theory combines 
+item response theory [@birnbaum_latent_1968, @rasch_probabilistic_1980] with the
+drift diffusion  model of decision.making [@link_sequential_1975, 
+@link_relative_1975, @Ratcliff2016, @alexandrowicz_diffusion_2020]. The drift 
+diffusion model assumes that observers continuously accumulate evidence differentiating between
+two binary decision options until the accumulated evidence hits one of the two decision 
+boundaries, after which the corresponding choice option is selected. Drift diffusion
+item-response theory models allow for the decomposition of two of the traditional parameters
+of the drift diffusion decision model, boundary separation and drift rate, into person and item parameters.
+The following diffusion item response theory models are currently implemented: 
+
+* D-Diffusion model [@tuerlinckx_two_2005]
+* Q-Diffusion model [@van_der_maas_cognitive_2011]. 
+
+The packages allows for sampling for the posterior distribution, provies fit diagnostics, 
+posterior predictive distributions, 
+
+plot methods enable researchers to plot Marcov Chains, posterior distributions of selected parameters, 
+as well as credible intervals. posterior predictive distributions. Diagnostic checks .
+Other stuff that is IRT-realted?0
 
 # Statement of need
+
+The diffIRT package provides R functions to fit the Q-diffusion and the D-Diffusion
+model using maximim likelihood estimation [@molenaar_2015]. 
+
 
 ## Contact
 

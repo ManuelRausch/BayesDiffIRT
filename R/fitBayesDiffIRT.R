@@ -1,52 +1,102 @@
 #' @title Fit Bayesian diffusion item-response theory models
 #'
-#' @description `fitBayesDiffIRT` samples item and subject parameters
-#' from the posterior distributions for diffusion item response theory
-#' models. For this purpose, NUTS sampling as implemented in STAN is used. See Details for the mathematical specification of the implemented models and
-#' their parameters.
+#' @description
+#' `fitBayesDiffIRT()` fits Bayesian diffusion item-response theory models by
+#' sampling from the posterior distributions of item and subject parameters using
+#' the No-U-Turn Sampler (NUTS) as implemented in Stan via `cmdstanr`.
 #'
-#' @param data  a `data.frame` with different row indicating responses to different items.
-#' It must include at least three columns:
-#'  * One column must provide response times. They should be numeric and measured in seconds.
-#'  * One column must provide integer responses.
-#'    - For ability tests, the value should be 0 for incorrect responses
-#'    or correct responses.
-#'    - For questionnaires, the value should be 0 for rejected items and 1 for accepted items.
-#' @param rt `character` the name of the column in data that provides reaction times.
-#' @param response `character` the name of the column in data that provides reaction times.
-#' @param id `character` the name of the column in data in which responses are found.
-#' @param model `character` the name of the model of which the parameters should be sampled. So far,
-#' The following models have been implemented:  'D', 'Q'
-#' @param priors BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects, created with prior().
-#' @param seed A seed for the random number generators to be passed to Stan.
-#' @param n.chains Number of Markov chains.
-#' @param n.cores Number of chains to run in parallel.
-#' @param n.warmup Number of warmup iterations per chain.
-#' @param n.samples Number of post-warmup sampling iterations per chain.
+#' @param data A `data.frame` with one row per response. The data must contain
+#' columns identifying the subject, item, response, and response time.
+#'  * Response times should be numeric and measured in seconds.
+#'  * For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses.
+#'  * For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items.
+#' @param rt Character string. Name of the column in `data` containing response
+#' times. Defaults to "rt".
+#' @param resp `character`. Name of the column in data containing
+#' the binary response. Defaults to `resp`.
+#' @param sbj `character` Name of the column in data identifying subjects.
+#' Defaults to "sbj".
+#' @param item `character`. Name of the column in data identifying items.
+#' Defaults to "item".
+#' @param model `character` . Name of the diffusion item-response theory model to fit.
+#' Currently implemented models are "d" for the D-diffusion model (for survey items) and
+#' "q" for the Q-diffusion model (for ability tests). Defaults to "d".
+#' @param priors Prior specification. Either NULL, a
+#' BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects created
+#' with [BayesDiffIRT::prior()]. ee [BayesDiffIRT::prior()] for details on specifying priors.
+#' If NULL, a set of default priors is used,
+#' @param seed Optional integer seed passed to Stan for reproducible sampling.
+#' @param n.chains Integer. Number of Markov chains. Defaults to 4.
+#' @param n.cores Integer. Number of chains to run in parallel. Defaults to
+#' n.chains.
+#' @param n.warmup Integer. Number of warmup iterations per chain. Defaults to
+#' 1000.
+#' @param n.samples Integer. Number of post-warmup sampling iterations per chain.
+#' Defaults to 1000.
+#' @param adapt.delta Numeric. Target average proposal acceptance probability
+#' passed to Stan. Higher values may reduce divergent transitions but can
+#' increase computation time. Defaults to 0.95.
+#' @param max.treedepth Integer. Maximum tree depth for the NUTS sampler.
+#' Increasing this value may help when transitions hit the maximum tree depth,
+#' but can increase computation time. Defaults to 12.
+#' @param init Initial values passed to Stan. See
+#' [cmdstanr::model-method-sample] for supported formats. Defaults to NULL.
+#' @param refresh Integer. Number of iterations between progress messages printed
+#' by Stan. Use 0 to suppress sampling progress output. Defaults to 200.
+#' @param diagnostic.warnings Logical. If TRUE, warnings are issued when common
+#' Stan diagnostics indicate potential sampling problems. Defaults to TRUE.
+#' @param na.rm Logical. If TRUE, rows with missing values in required columns
+#' are removed during data validation. If FALSE, missing values cause an
+#' error. Defaults to TRUE.
 #' @param ... Additional arguments passed to `cmdstanr::CmdStanModel$sample()`.
-#'   This is intended for advanced users. Common sampling controls such as
-#'   `chains`, `parallel_chains`, `iter_warmup`, `iter_sampling`,
-#'   `adapt_delta`, `max_treedepth`, and `init` should be supplied via the
-#'   corresponding arguments of `fitBayesDiffIRT()`.
 
-
-#' @return An object of class `BayesDiffIRTfit`. Available methods include `print`, `summary`, `plot` and `checkDiagnostics`.
-
+#' @return
+#' An object of class BayesDiffIRTfit, which is a list containing:
+#'
+#' \describe{
+#' \item{fit}{The fitted cmdstanr object.}
+#' \item{stanData}{The data list passed to Stan.}
+#' \item{model}{The fitted model name.}
+#' \item{call}{The matched function call.}
+#' \item{diag}{A list of Stan diagnostic summaries.}
+#' }
+#'
+#' Methods for BayesDiffIRTfit objects include print(), summary(),
+#' plot(), and checkDiagnostics().
+#'
 #' @author
-#' Manuel Rausch, \email{manuel.rausch@aau.at}
+#' Manuel Rausch, \email{manuel.rausch@@aau.at}
 #'
 #' @details
-#' `BayesDiffIRT` samples from the posterior distributions of item and subject parameters
-#' and from posterior predictive distributions of responses and reaction times for
-#' diffusion item response theory models
-#' \insertCite{van_der_maas_cognitive_2011,molenaar_fitting_2015,tuerlinckx_two_2005}{BayesDiffIRT}.
-#' ## Mathematical description of models
+#' `BayesDiffIRT` samples from the posterior distributions of item and subject
+#' parameters of responses and reaction times for
+#' diffusion item response theory models \insertCite{van_der_maas_cognitive_2011,molenaar_fitting_2015,tuerlinckx_two_2005}{BayesDiffIRT}.
+#' ## Description of models
 #' According to the drift diffusion decision model, in each moment, the sensory
-#' system generates new sensory evidence about which of the two possible choice options
-#' is the correct one. This momentary evidence is drawn from Gaussian
-#' distributions and accumulated over time, i.e. the newly
-#' acquired evidence is constantly added to the evidence collected up
-#'  to that moment. This accumulation process is bounded by an upper
+#' system generates new evidence about which of the two possible choice options
+#' is the correct one. This momentary evidence is drawn from a Gaussian
+#' distribution and accumulated over time, i.e. the newly
+#' acquired evidence is constantly added to the evidence collected up to that moment.
+#' This accumulation process is bounded by an upper and lower threshold, where each threshold represents
+#' one of the two possible choice options.  When the accumulated evidence reaches
+#' one of the thresholds, a choice is made for the corresponding choice option.
+#' The quality of information favouring one response option over the other is reflected in the drift rate,
+#' which quantifies s how quickly, on average, accumulated evidence approaches
+#' the threshold associated with the correct or preferred decision.
+#' The distance between the two thresholds determines the amount of evidence required
+#' before a decision is made; a larger distance means that decisions tend to
+#' be made later because more evidence is required.
+#' The starting point of the accumulation process could be used to describe an a priori bias toward one of the response options.
+#' However, in the current set of implemented that the accumulation always starts midway betweeen the two response alternatives, i.e.,
+#' there is no a prior bias for any of the choice alternatives .
+#' In diffusion item response theory models, two of the traditional parameters
+#' from the drift diffusion decision model, boundary separation and drift rate,
+#'  are decomposed into person and item parameters. When person j makes a decision
+#'  about item i, the boundary separation is given by \eqn{gamma_j/a_i}, where \gamma_j represents
+#'  person-specific response caution and \eqn{a_i} item-specific time pressure. According
+#'  to the Q-Diffusion model, the drift is given by the person-specific ability parameter \theta_j divided by
+#'  the item-specific difficulty \nu_i.
+#' Acordding to
 
 #' @examples
 #' print("Coming!")

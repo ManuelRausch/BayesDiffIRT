@@ -2,24 +2,106 @@
 % Please edit documentation in R/prior.R
 \name{prior}
 \alias{prior}
-\title{Prior Definitions for \strong{BayesDiffIRTfit} models}
+\title{Define priors for Bayesian diffusion item-response theory models}
 \usage{
 prior(dist, class, coef = NULL)
 }
 \arguments{
-\item{dist}{An expression defining a distribution in \strong{Stan} language (see examples)}
+\item{dist}{An expression specifying a prior distribution using Stan
+distribution syntax. For example, \code{normal(0, 1)},
+\code{normal(0, 2.5)}, or \code{lognormal(-1.25, 0.3)}.}
 
-\item{class}{\code{character} The parameter class. The following parameter classes are available:
-\itemize{
-\item \code{omega_theta} standard deviation of \theta, the latent trait.
-\item \code{omega_gamma} standard deviation of \gamma, the response caution parameter.
-\item \code{nu} item difficulty,
-\item \code{a} item time pressure,
-\item \code{tnd} person-specific non-decision time.
+\item{class}{Character string. Name of the parameter class for which the prior
+should be defined. Currently supported classes are:
+
+\describe{
+\item{\code{"omega_theta"}}{Standard deviation of \code{theta}, the latent trait.}
+\item{\code{"omega_gamma"}}{Standard deviation of \code{gamma}, the item response
+tendency parameter.}
+\item{\code{"nu"}}{Item difficulty parameter.}
+\item{\code{"a"}}{Item boundary separation parameter.}
+\item{\code{"tnd"}}{Person-specific non-decision time.}
 }}
 
-\item{description}{coef currently not implemented.}
+\item{coef}{Optional coefficient name or index. Currently not implemented.
+If \code{coef} is not \code{NULL}, an error is thrown. Individual priors for specific
+subjects or items are not yet supported.}
+}
+\value{
+An object of class \code{BayesDiffIRTPrior}, represented as a list with two
+elements:
+
+\describe{
+\item{\code{dist}}{The unevaluated prior distribution expression.}
+\item{\code{class}}{The parameter class to which the prior applies.}
+}
 }
 \description{
-Define priors for specific parameters or classes of parameters.
+\code{prior()} defines prior distributions for parameters or parameter classes in
+Bayesian diffusion item-response theory models fitted with
+\code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}.
+
+The function creates objects of class \code{BayesDiffIRTPrior}, which can be passed
+to the \code{priors} argument of \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}. Priors are specified using
+Stan distribution syntax, for example \code{normal(0, 1)} or
+\code{lognormal(0, 0.5)}.
+}
+\details{
+\code{prior()} stores the supplied distribution expression without evaluating it.
+The resulting object is later processed by \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}} and translated
+into the corresponding Stan model input.
+
+Priors can currently be set only for complete parameter classes, not for
+individual subjects or items. If no priors are supplied to
+\code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}, model-specific default priors are used. If priors are
+supplied for only some parameter classes, the remaining parameter classes are
+filled in with their model-specific defaults.
+
+For \code{model = "d"}, the current default priors are:
+
+\describe{
+\item{\code{omega_theta}}{\code{normal(0, 2.5)}}
+\item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
+\item{\code{nu}}{\code{normal(0, 2.5)}}
+\item{\code{a}}{\code{lognormal(0, 0.25)}}
+\item{\code{tnd}}{\code{lognormal(-1.25, 0.3)}}
+}
+
+For \code{model = "q"}, the current default priors are:
+
+\describe{
+\item{\code{omega_theta}}{\code{normal(0, 0.75)}}
+\item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
+\item{\code{nu}}{\code{lognormal(0, 0.75)}}
+\item{\code{a}}{\code{lognormal(0, 0.25)}}
+\item{\code{tnd}}{\code{lognormal(-1.25, 0.3)}}
+}
+
+The default priors are intended to be weakly informative. Users should assess critically
+whether these priors are appropriate for their specific application.
+}
+\examples{
+# Define a prior for the standard deviation of the latent trait
+prior(normal(0, 2.5), class = "omega_theta")
+
+# Define a prior for item difficulty
+prior(normal(0, 2.5), class = "nu")
+
+# Define a lognormal prior for non-decision time
+prior(lognormal(-1.25, 0.3), class = "tnd")
+
+\dontrun{
+fit <- fitBayesDiffIRT(
+  data = dat,
+  priors = list(
+    prior(normal(0, 2.5), class = "omega_theta"),
+    prior(normal(0, 0.5), class = "omega_gamma"),
+    prior(lognormal(-1.25, 0.3), class = "tnd")
+  )
+)
+}
+
+}
+\seealso{
+\code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}
 }

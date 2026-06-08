@@ -1,13 +1,101 @@
-#' @title Prior Definitions for **BayesDiffIRTfit** models
-#' @description Define priors for specific parameters or classes of parameters.
-#' @param dist  An expression defining a distribution in **Stan** language (see examples)
-#' @param class `character` The parameter class. The following parameter classes are available:
-#' * \code{omega_theta} standard deviation of \theta, the latent trait.
-#' * \code{omega_gamma} standard deviation of \gamma, the response caution parameter.
-#' * \code{nu} item difficulty,
-#' * \code{a} item time pressure,
-#' * \code{tnd} person-specific non-decision time.
-#' @param  description coef currently not implemented.
+#' @title
+#' Define priors for Bayesian diffusion item-response theory models
+
+#' @description
+#' `prior()` defines prior distributions for parameters or parameter classes in
+#' Bayesian diffusion item-response theory models fitted with
+#' [fitBayesDiffIRT()].
+#'
+#' The function creates objects of class `BayesDiffIRTPrior`, which can be passed
+#' to the `priors` argument of [fitBayesDiffIRT()]. Priors are specified using
+#' Stan distribution syntax, for example `normal(0, 1)` or
+#' `lognormal(0, 0.5)`.
+#'
+#' @param dist An expression specifying a prior distribution using Stan
+#'   distribution syntax. For example, `normal(0, 1)`,
+#'   `normal(0, 2.5)`, or `lognormal(-1.25, 0.3)`.
+#' @param class Character string. Name of the parameter class for which the prior
+#'   should be defined. Currently supported classes are:
+#'
+#'   \describe{
+#'     \item{`"omega_theta"`}{Standard deviation of `theta`, the latent trait.}
+#'     \item{`"omega_gamma"`}{Standard deviation of `gamma`, the item response
+#'       tendency parameter.}
+#'     \item{`"nu"`}{Item difficulty parameter.}
+#'     \item{`"a"`}{Item boundary separation parameter.}
+#'     \item{`"tnd"`}{Person-specific non-decision time.}
+#'   }
+#'
+#' @param coef Optional coefficient name or index. Currently not implemented.
+#'   If `coef` is not `NULL`, an error is thrown. Individual priors for specific
+#'   subjects or items are not yet supported.
+#'
+#' @details
+#' `prior()` stores the supplied distribution expression without evaluating it.
+#' The resulting object is later processed by [fitBayesDiffIRT()] and translated
+#' into the corresponding Stan model input.
+#'
+#' Priors can currently be set only for complete parameter classes, not for
+#' individual subjects or items. If no priors are supplied to
+#' [fitBayesDiffIRT()], model-specific default priors are used. If priors are
+#' supplied for only some parameter classes, the remaining parameter classes are
+#' filled in with their model-specific defaults.
+#'
+#' For `model = "d"`, the current default priors are:
+#'
+#' \describe{
+#'   \item{`omega_theta`}{`normal(0, 2.5)`}
+#'   \item{`omega_gamma`}{`normal(0, 0.5)`}
+#'   \item{`nu`}{`normal(0, 2.5)`}
+#'   \item{`a`}{`lognormal(0, 0.25)`}
+#'   \item{`tnd`}{`lognormal(-1.25, 0.3)`}
+#' }
+#'
+#' For `model = "q"`, the current default priors are:
+#'
+#' \describe{
+#'   \item{`omega_theta`}{`normal(0, 0.75)`}
+#'   \item{`omega_gamma`}{`normal(0, 0.5)`}
+#'   \item{`nu`}{`lognormal(0, 0.75)`}
+#'   \item{`a`}{`lognormal(0, 0.25)`}
+#'   \item{`tnd`}{`lognormal(-1.25, 0.3)`}
+#' }
+#'
+#' The default priors are intended to be weakly informative. Users should assess critically
+#' whether these priors are appropriate for their specific application.
+#'
+#' @return
+#' An object of class `BayesDiffIRTPrior`, represented as a list with two
+#' elements:
+#'
+#' \describe{
+#'   \item{`dist`}{The unevaluated prior distribution expression.}
+#'   \item{`class`}{The parameter class to which the prior applies.}
+#' }
+#'
+#' @examples
+#' # Define a prior for the standard deviation of the latent trait
+#' prior(normal(0, 2.5), class = "omega_theta")
+#'
+#' # Define a prior for item difficulty
+#' prior(normal(0, 2.5), class = "nu")
+#'
+#' # Define a lognormal prior for non-decision time
+#' prior(lognormal(-1.25, 0.3), class = "tnd")
+#'
+#' \dontrun{
+#' fit <- fitBayesDiffIRT(
+#'   data = dat,
+#'   priors = list(
+#'     prior(normal(0, 2.5), class = "omega_theta"),
+#'     prior(normal(0, 0.5), class = "omega_gamma"),
+#'     prior(lognormal(-1.25, 0.3), class = "tnd")
+#'   )
+#' )
+#' }
+#'
+#' @seealso
+#' [fitBayesDiffIRT()]
 
 
 #' @export
