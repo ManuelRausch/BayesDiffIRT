@@ -8,6 +8,8 @@ print.BayesDiffIRTfit <- function(x, ...) {
   cat("Model:", switch(x$model,
                        "d" = "D-Diffusion model",
                        "q" = "Q-diffusion model",
+                       "dRV" = "D-diffusion model with random variation",
+                       "qRV" = "Q-diffusion model with random variation",
                        x$model), "\n")
 
   # Data

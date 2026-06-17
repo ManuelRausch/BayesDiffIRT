@@ -24,6 +24,8 @@
 #'     \item{`"nu"`}{Item difficulty parameter.}
 #'     \item{`"a"`}{Item boundary separation parameter.}
 #'     \item{`"tnd"`}{Person-specific non-decision time.}
+#'     \item{ "s_delta"}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "qRV" and "qRV".}
+#'     \item{ "s_beta"}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "qRV" and "qRV".}
 #'   }
 #'
 #' @param coef Optional coefficient name or index. Currently not implemented.
@@ -39,10 +41,10 @@
 #' individual subjects or items. If no priors are supplied to
 #' [fitBayesDiffIRT()], model-specific default priors are used. If priors are
 #' supplied for only some parameter classes, the remaining parameter classes are
-#' filled in with their model-specific defaults.
-#'
+#' filled in with their model-specific defaults. Uniform prior distributions have
+#' been implemented to be consistent with previous research \insertCite{van_der_maas_cognitive_2011},
+#' but they will often lead to convergence issues.
 #' For `model = "d"`, the current default priors are:
-#'
 #' \describe{
 #'   \item{`omega_theta`}{`normal(0, 2.5)`}
 #'   \item{`omega_gamma`}{`normal(0, 0.5)`}
@@ -50,9 +52,13 @@
 #'   \item{`a`}{`lognormal(0, 0.25)`}
 #'   \item{`tnd`}{`lognormal(-1.25, 0.3)`}
 #' }
-#'
+#' For `model = "dRV"`, the default priors are the same as in `model = "d"`,
+#' except that there are two additional parameters:
+#' \describe{
+#'   \item{`s_delta`}{`lognormal(-0.5*log(2), sqrt(2))`}
+#'   \item{`s_beta`}{`beta(0.25, 0.01)`}
+#' }
 #' For `model = "q"`, the current default priors are:
-#'
 #' \describe{
 #'   \item{`omega_theta`}{`normal(0, 0.75)`}
 #'   \item{`omega_gamma`}{`normal(0, 0.5)`}
@@ -60,9 +66,14 @@
 #'   \item{`a`}{`lognormal(0, 0.25)`}
 #'   \item{`tnd`}{`lognormal(-1.25, 0.3)`}
 #' }
-#'
+#' For `model = "qRV"`, the default priors are the same as in `model = "q"`,
+#' except that there are again two additional parameters:
+#' \describe{
+#'   \item{`s_delta`}{`lognormal(-0.5*log(2), sqrt(2))`}
+#'   \item{`s_beta`}{`beta(0.25, 0.01)`}
+#' }
 #' The default priors are intended to be weakly informative. Users should assess critically
-#' whether these priors are appropriate for their specific application.
+#' whether these prior distributions are appropriate for their specific application.
 #'
 #' @return
 #' An object of class `BayesDiffIRTPrior`, represented as a list with two
@@ -97,14 +108,17 @@
 #' @seealso
 #' [fitBayesDiffIRT()]
 
+#' @references
+#' \insertAllCited{}
+
 
 #' @export
 prior <- function(dist, class, coef = NULL) {
   if (!class %in% c("omega_theta",
                     "omega_gamma",
-                    "nu", "a", "tnd")){
+                    "nu", "a", "tnd", "s_delta", "s_beta")){
     stop(paste0(class, " not recognized. class should be on of the following: omega_theta,
-                    omega_gamma, nu, a, tnd"))
+                    omega_gamma, nu, a, tnd", "s_delta", "s_beta"))
   }
   if (!is.null(coef)) stop("Setting individual priors for subjects and items is not yet supported")
   structure(
@@ -155,6 +169,17 @@ defaultPriors <- function(model = "d") {
       prior(lognormal(0, .25), "a"),
       prior(lognormal(-1.25, 0.3), "tnd")))
   }
+  if (model == "dRV"){
+    # to do: Think hard about weakly informative values
+    return(list(
+      prior(normal(0, 2.5), "omega_theta"),
+      prior(normal(0, 0.5), "omega_gamma"),
+      prior(normal(0, 2.5), "nu"),
+      prior(lognormal(0, .25), "a"),
+      prior(lognormal(-1.25, 0.3), "tnd"),
+      prior(lognormal(-0.5*log(2), sqrt(2)), "s_delta"),
+      prior(beta(0.25, 0.01), "s_beta")))
+  }
   if (model == "q"){
     # to do: Think hard about weakly informative values
     return(list(
@@ -164,6 +189,18 @@ defaultPriors <- function(model = "d") {
       prior(lognormal(0, .25), "a"),
       prior(lognormal(-1.25, 0.3), "tnd")))
   }
+  if (model == "qRV"){
+    # to do: Think hard about weakly informative values
+    return(list(
+      prior(normal(0, 0.75), "omega_theta"),
+      prior(normal(0, 0.5), "omega_gamma"),
+      prior(lognormal(0, 0.75), "nu"),
+      prior(lognormal(0, .25), "a"),
+      prior(lognormal(-1.25, 0.3), "tnd"),
+      prior(lognormal(-0.5*log(2), sqrt(2)), "s_delta"),
+      prior(beta(0.25, 0.01), "s_beta")))
+  }
+
   stop("Model not recognized", call. = FALSE)
 }
 

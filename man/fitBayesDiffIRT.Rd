@@ -39,7 +39,7 @@ columns identifying the subject, item, response, and response time.
 times. Defaults to "rt".}
 
 \item{resp}{\code{character}. Name of the column in data containing
-the binary response. Defaults to \code{resp}.}
+the binary response. Defaults to "resp".}
 
 \item{sbj}{\code{character} Name of the column in data identifying subjects.
 Defaults to "sbj".}
@@ -47,13 +47,18 @@ Defaults to "sbj".}
 \item{item}{\code{character}. Name of the column in data identifying items.
 Defaults to "item".}
 
-\item{model}{\code{character} . Name of the diffusion item-response theory model to fit.
-Currently implemented models are "d" for the D-diffusion model (for survey items) and
-"q" for the Q-diffusion model (for ability tests). Defaults to "d".}
+\item{model}{\code{character}. Name of the diffusion item-response theory model to fit.
+Currently implemented models:
+\itemize{
+\item "d" for the D-diffusion model (for survey items, default),
+\item "dRV" for the D-diffusion model with random variability (for survey items),
+\item "q" for the Q-diffusion model (for ability tests),
+\item "qRV" for the Q-diffusion model with random variability (for ability tests).
+}}
 
 \item{priors}{Prior specification. Either NULL, a
 BayesDiffIRTPrior object, or a list of BayesDiffIRTPrior objects created
-with \code{\link[=prior]{prior()}}. ee \code{\link[=prior]{prior()}} for details on specifying priors.
+with \code{\link[=prior]{prior()}}. See \code{\link[=prior]{prior()}} for details on specifying priors.
 If NULL, a set of default priors is used,}
 
 \item{seed}{Optional integer seed passed to Stan for reproducible sampling.}
@@ -103,8 +108,8 @@ An object of class BayesDiffIRTfit, which is a list containing:
 \item{diag}{A list of Stan diagnostic summaries.}
 }
 
-Methods for BayesDiffIRTfit objects include print(), summary(),
-plot(), and checkDiagnostics().
+Methods for BayesDiffIRTfit objects include print(), summary(), plot(), and
+checkDiagnostics().
 }
 \description{
 \code{fitBayesDiffIRT()} fits Bayesian diffusion item-response theory models by
@@ -112,40 +117,78 @@ sampling from the posterior distributions of item and subject parameters using
 the No-U-Turn Sampler (NUTS) as implemented in Stan via \code{cmdstanr}.
 }
 \details{
-\code{BayesDiffIRT} samples from the posterior distributions of item and subject
+\code{fitBayesDiffIRT} samples from the posterior distributions of item and subject
 parameters of responses and reaction times for
-diffusion item response theory models \insertCite{van_der_maas_cognitive_2011,molenaar_fitting_2015,tuerlinckx_two_2005}{BayesDiffIRT}.
+diffusion item response theory models
+\insertCite{van_der_maas_cognitive_2011,tuerlinckx_two_2005,kang_modeling_2022}{BayesDiffIRT}.
 \subsection{Description of models}{
 
-According to the drift diffusion decision model, in each moment, the sensory
-system generates new evidence about which of the two possible choice options
+Diffusion item response theory combines item response theory with the drift diffusion
+model of decision making. According to the drift diffusion decision model
+\insertCite{Ratcliff2016}{BayesDiffIRT}, in each moment, the sensory system generates new evidence about which of the two possible choice options
 is the correct one. This momentary evidence is drawn from a Gaussian
 distribution and accumulated over time, i.e. the newly
 acquired evidence is constantly added to the evidence collected up to that moment.
 This accumulation process is bounded by an upper and lower threshold, where each threshold represents
 one of the two possible choice options.  When the accumulated evidence reaches
 one of the thresholds, a choice is made for the corresponding choice option.
-The quality of information favouring one response option over the other is reflected in the drift rate,
-which quantifies s how quickly, on average, accumulated evidence approaches
+The quality of information favouring one response option over the other is reflected
+in the drift rate \eqn{\delta}, which quantifies s how quickly the accumulated evidence approaches
 the threshold associated with the correct or preferred decision.
-The distance between the two thresholds determines the amount of evidence required
-before a decision is made; a larger distance means that decisions tend to
+The distance between the two thresholds \eqn{\alpha} determines the amount of
+evidence required before a decision is made; a larger distance means that decisions tend to
 be made later because more evidence is required.
-The starting point of the accumulation process could be used to describe an a priori bias toward one of the response options.
-However, in the current set of implemented that the accumulation always starts midway betweeen the two response alternatives, i.e.,
-there is no a prior bias for any of the choice alternatives .
-In diffusion item response theory models, two of the traditional parameters
-from the drift diffusion decision model, boundary separation and drift rate,
-are decomposed into person and item parameters. When person j makes a decision
-about item i, the boundary separation is given by \eqn{gamma_j/a_i}, where \gamma_j represents
-person-specific response caution and \eqn{a_i} item-specific time pressure. According
-to the Q-Diffusion model, the drift is given by the person-specific ability parameter \theta_j divided by
-the item-specific difficulty \nu_i.
-Acordding to
+The starting point \eqn{\beta} of the accumulation process reflects a priori bias toward one of the response options.
+In diffusion item response theory models,
+two of the traditional parameters from the drift diffusion decision model,
+boundary separation and drift rate, are decomposed into person and item parameters.
+When person p makes a decision about item i, the boundary separation is given
+by \eqn{\alpha_{pi} = \gamma_p / a_i}, where \eqn{\gamma_p} represents the
+person-specific response caution and \eqn{a_i} item-specific time pressure.
+The D-diffusion and the Q-diffusion model are characterised by the way
+the drift rate is decomposed. According to the D-diffusion model
+\insertCite{tuerlinckx_two_2005}{BayesDiffIRT}, which is applicable for survey items,
+the drift rate is given by \eqn{\delta_{pi} = \theta_p - \nu_i}.
+According to the Q-diffusion model \insertCite{van_der_maas_cognitive_2011}{BayesDiffIRT},
+which is applicable for ability tests, the drift is given by
+\eqn{\delta_{pi} = \theta_p / \nu_i}. In both the D-diffusion and the Q-diffusion model,
+the accumulation always starts midway between the two response alternatives, i.e.,
+there is no a prior bias for any of the choice alternatives.
+\insertCite{kang_modeling_2022}{BayesDiffIRT} proposed to include random
+trial-to-trial variability in both starting value \eqn{\beta} and drift rate \eqn{\delta}.
+In the Q- and D-diffusion model with random variation, the starting point
+\eqn{\beta_{pij}} for trial j given item i and person p is sampled from a uniform
+distribution \eqn{\beta_{pij} \sim \mathcal{U}(0.5 - s_{\beta}/2, 0.5 + s_{\beta}/2)}.
+The drift rate \eqn{\delta_{pij}} in trial j given item i and person p is sampled
+from a Gaussian distribution \eqn{\delta_{pij} \sim \mathcal{N}(\delta_{ij}, s_{\delta}^2)}.
+Random variability in starting values and drift rates accounts for the conditional
+dependency of accuracy and reaction times \insertCite{kang_modeling_2022}{BayesDiffIRT},
+but note that sampling will be considerably slower.
 }
 }
 \examples{
-print("Coming!")
+data("bayesDiffIRTexample")
+\dontrun{
+fit <- fitBayesDiffIRT(
+  data = bayesDiffIRTexample,
+  rt = "rt",
+  response = "response",
+  person = "person",
+  item = "item",
+  model = "d",
+  chains = 4,
+  iter.warmup = 1000,
+  iter.sampling = 1000
+)
+
+summary(fit)
+plot(samples, parameter = "gamma", type = "interval",index=1:10)
+plot(samples, parameter = "a", type = "interval",index=1:10)
+
+diagnostics(fit)
+
+
+}
 }
 \references{
 \insertAllCited{}

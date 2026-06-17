@@ -36,22 +36,32 @@ data {
   real tnd_prior_par1;
   real<lower=1e-6> tnd_prior_par2;
 
+  int<lower=1, upper=3> s_delta_prior_family;
+  real s_delta_prior_par1;
+  real<lower=1e-6> s_delta_prior_par2;
+
+  int<lower=1, upper=2> s_beta_prior_family;
+  real s_beta_prior_par1;
+  real<lower=1e-6> s_beta_prior_par2;
+
 }
 
 parameters {
   // Drift parameterization
-  vector[nPerson] z_theta; // z-standardized
+  vector[nPerson] z_theta; // z-standardized person drift
   vector[nItem] nu;          // item drift effects
   real<lower=1e-6> omega_theta; // standard deviation of person drift effects (on the log scale)
+  real<lower=1e-6> s_delta; // standard deviation of the Gaussian drift rate variability, constant across subjects and items
 
   // Boundary separation parameterization on log scale
-  vector[nPerson] z_gamma; // sample
+  vector[nPerson] z_gamma; // z-standardized person response caution
   vector<lower=0.01>[nItem] a;     // item boundary effects
   real<lower=1e-6> omega_gamma; // standard deviation of person boundary effects (on the log scale)
+  real<lower = .01, upper = .99> s_beta; // range of the unifirm starting value variability
 
   // Nondecision time
- //  vector<lower=0>[nPerson] tau; // non-decision time is a person parameter
-  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;
+  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;// non-decision time is a person parameter
+
 }
 
 transformed parameters{
@@ -113,6 +123,23 @@ model {
   }else if (a_prior_family == 3) {
     a ~ uniform(a_prior_par1, a_prior_par2);
   }
+
+  // priors trial-to-trial drift rate variability
+  if (s_delta_prior_family == 1) {
+    s_delta ~ lognormal(s_delta_prior_par1, s_delta_prior_par2);
+  } else if (s_delta_prior_family == 2) {
+    s_delta ~ normal(s_delta_prior_par1, s_delta_prior_par2);
+  }else if (s_delta_prior_family == 3) {
+    s_delta ~ uniform(s_delta_prior_par1, s_delta_prior_par2);
+  }
+
+  // priors trial-to-trial stating value variability
+  if (s_beta_prior_family == 1) {
+    s_beta ~ beta(s_beta_prior_par1, s_beta_prior_par2);
+  }else if (s_beta_prior_family == 2) {
+    s_beta ~ uniform(s_beta_prior_par1, s_beta_prior_par2);
+  }
+
   // Likelihood
   for (n in 1:nObs) {
     int p = person[n];
@@ -122,20 +149,6 @@ model {
     real alpha = gamma[p] / a[i];
     real delta_eff = resp_sign(resp[n]) * delta;
 
-    rt[n] ~ wiener(alpha, tnd[p], 0.5, delta_eff);
+    rt[n] ~ wiener(alpha, tnd[p], 0.5, delta_eff, s_delta, s_beta, 0);
   }
 }
-
-// generated quantities {
-//   vector[nObs] log_lik;
-//
-//   for (n in 1:nObs) {
-//     int p = person[n];
-//     int i = item[n];
-//
-//     real delta = theta[p] - nu[i];
-//     real alpha = gamma[p] / a[i];
-//     real delta_eff = resp_sign(resp[n]) * delta;
-//     log_lik[n] = wiener_lpdf(rt[n] | alpha, tnd[p], .5, delta_eff);
-//   }}
-

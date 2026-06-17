@@ -21,6 +21,8 @@ tendency parameter.}
 \item{\code{"nu"}}{Item difficulty parameter.}
 \item{\code{"a"}}{Item boundary separation parameter.}
 \item{\code{"tnd"}}{Person-specific non-decision time.}
+\item{ "s_delta"}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "qRV" and "qRV".}
+\item{ "s_beta"}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "qRV" and "qRV".}
 }}
 
 \item{coef}{Optional coefficient name or index. Currently not implemented.
@@ -55,10 +57,10 @@ Priors can currently be set only for complete parameter classes, not for
 individual subjects or items. If no priors are supplied to
 \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}, model-specific default priors are used. If priors are
 supplied for only some parameter classes, the remaining parameter classes are
-filled in with their model-specific defaults.
-
+filled in with their model-specific defaults. Uniform prior distributions have
+been implemented to be consistent with previous research \insertCite{van_der_maas_cognitive_2011},
+but they will often lead to convergence issues.
 For \code{model = "d"}, the current default priors are:
-
 \describe{
 \item{\code{omega_theta}}{\code{normal(0, 2.5)}}
 \item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
@@ -66,9 +68,13 @@ For \code{model = "d"}, the current default priors are:
 \item{\code{a}}{\code{lognormal(0, 0.25)}}
 \item{\code{tnd}}{\code{lognormal(-1.25, 0.3)}}
 }
-
+For \code{model = "dRV"}, the default priors are the same as in \code{model = "d"},
+except that there are two additional parameters:
+\describe{
+\item{\code{s_delta}}{\code{lognormal(-0.5*log(2), sqrt(2))}}
+\item{\code{s_beta}}{\code{beta(0.25, 0.01)}}
+}
 For \code{model = "q"}, the current default priors are:
-
 \describe{
 \item{\code{omega_theta}}{\code{normal(0, 0.75)}}
 \item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
@@ -76,9 +82,14 @@ For \code{model = "q"}, the current default priors are:
 \item{\code{a}}{\code{lognormal(0, 0.25)}}
 \item{\code{tnd}}{\code{lognormal(-1.25, 0.3)}}
 }
-
+For \code{model = "qRV"}, the default priors are the same as in \code{model = "q"},
+except that there are again two additional parameters:
+\describe{
+\item{\code{s_delta}}{\code{lognormal(-0.5*log(2), sqrt(2))}}
+\item{\code{s_beta}}{\code{beta(0.25, 0.01)}}
+}
 The default priors are intended to be weakly informative. Users should assess critically
-whether these priors are appropriate for their specific application.
+whether these prior distributions are appropriate for their specific application.
 }
 \examples{
 # Define a prior for the standard deviation of the latent trait
@@ -101,6 +112,9 @@ fit <- fitBayesDiffIRT(
 )
 }
 
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}

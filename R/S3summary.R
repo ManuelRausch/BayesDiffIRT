@@ -31,8 +31,10 @@ print.summary.BayesDiffIRTfit <-
     cat("---------------------------------\n")
 
     cat("Model:", switch(x$model,
-                         "d" = "D-diffusion model",
+                         "d" = "D-Diffusion model",
                          "q" = "Q-diffusion model",
+                         "dRV" = "D-diffusion model with random variation",
+                         "qRV" = "Q-diffusion model with random variation",
                          x$model), "\n")
 
     cat("\nData:\n")
@@ -63,7 +65,7 @@ print.summary.BayesDiffIRTfit <-
     varsHyper <- vars[isHyper, , drop = FALSE]
     varsItem <- vars[isItem, , drop = FALSE]
     varsSubject <- vars[isSubject, , drop = FALSE]
-    #vars_other <- vars[!(is_hyper | is_item | is_subject),, drop = FALSE]
+    vars_other <- vars[!(isHyper | isItem | isSubject),, drop = FALSE]
 
     headN <- function(df, n) {
       if (nrow(df) == 0) {
@@ -96,6 +98,9 @@ print.summary.BayesDiffIRTfit <-
     printSection("Item parameters", varsItem, nItems)
     printSection("Subject parameters", varsSubject, nSubjects)
 
+    if(length(vars_other  > 0)){
+      printSection("Other parameters", vars_other, nSubjects)
+    }
     invisible(x)
   }
 

@@ -2,7 +2,7 @@
 plot.BayesDiffIRTfit <-
   function(x,
            parameter = c("theta", "gamma", "nu", "a", "tnd",
-                         "omega_theta", "omega_gamma"),
+                         "omega_theta", "omega_gamma", "s_delta", "s_beta"),
            type = c("interval", "density", "trace"),
            index = NULL,
            nmax = 15,
