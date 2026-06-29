@@ -1,6 +1,3 @@
-// Q-Diffusion model with random variation in starting point and drift
-// Kang et al. (2022) Psychometrica
-
 functions {
   real resp_sign(int r) {
     return (r == 1) ? 1.0 : -1.0;
@@ -27,7 +24,7 @@ data {
   real omega_gamma_prior_par1;
   real<lower=1e-6> omega_gamma_prior_par2;
 
-  int<lower=1, upper=2> nu_prior_family;
+  int<lower=1, upper=3> nu_prior_family;
   real nu_prior_par1;
   real<lower=1e-6> nu_prior_par2;
 
@@ -50,27 +47,26 @@ data {
 }
 
 parameters {
-  // Drift parameterization, also on the log scale
-  vector[nPerson] z_theta; // for sammpling
-  vector<lower=0.01>[nItem] nu;          // item drift effects
+  // Drift parameterization
+  vector[nPerson] z_theta; // z-standardized person drift
+  vector[nItem] nu;          // item drift effects
   real<lower=1e-6> omega_theta; // standard deviation of person drift effects (on the log scale)
   real<lower=1e-6> s_delta; // standard deviation of the Gaussian drift rate variability, constant across subjects and items
 
   // Boundary separation parameterization on log scale
-  vector[nPerson] z_gamma; // sample
+  vector[nPerson] z_gamma; // z-standardized person response caution
   vector<lower=0.01>[nItem] a;     // item boundary effects
   real<lower=1e-6> omega_gamma; // standard deviation of person boundary effects (on the log scale)
   real<lower = .01, upper = .99> s_beta; // range of the unifirm starting value variability
 
-  // Nondecision time person parameter
-  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;
+  // Nondecision time
+  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;// non-decision time is a person parameter
+
 }
 
 transformed parameters{
-  vector[nPerson] log_theta;
-  vector<lower=1e-6>[nPerson] theta;
-  log_theta = omega_theta * z_theta; //  person drift
-  theta = exp(log_theta);
+  vector[nPerson] theta;
+  theta = omega_theta * z_theta; //  person drift
   vector[nPerson] log_gamma;
   vector<lower=1e-6>[nPerson] gamma;
   log_gamma = omega_gamma * z_gamma;
@@ -118,6 +114,7 @@ model {
     nu ~ uniform(nu_prior_par1, nu_prior_par2);
   }
 
+
   // Priors for item boundary aka item time pressure
   if (a_prior_family == 1) {
     a ~ lognormal(a_prior_par1, a_prior_par2);
@@ -148,7 +145,7 @@ model {
     int p = person[n];
     int i = item[n];
 
-    real delta = theta[p] / nu[i];  // that's the specific thing of the q diffusion model!
+    real delta = theta[p] - nu[i];
     real alpha = gamma[p] / a[i];
     real delta_eff = resp_sign(resp[n]) * delta;
 

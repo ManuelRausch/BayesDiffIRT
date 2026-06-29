@@ -1,0 +1,27 @@
+{
+    "id": "058FFAC2",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/posteriorPredict.R",
+    "project_path": "R/posteriorPredict.R",
+    "type": "r_source",
+    "hash": "106471430",
+    "contents": "",
+    "dirty": false,
+    "created": 1782164717507.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "1,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1782165933,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1782165933369,
+    "read_only": false,
+    "read_only_alternatives": []
+}

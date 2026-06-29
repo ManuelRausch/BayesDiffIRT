@@ -29,17 +29,17 @@
 #' with [BayesDiffIRT::prior()]. See [BayesDiffIRT::prior()] for details on specifying priors.
 #' If NULL, a set of default priors is used,
 #' @param seed Optional integer seed passed to Stan for reproducible sampling.
-#' @param n.chains Integer. Number of Markov chains. Defaults to 4.
-#' @param n.cores Integer. Number of chains to run in parallel. Defaults to
-#' n.chains.
-#' @param n.warmup Integer. Number of warmup iterations per chain. Defaults to
+#' @param nChains Integer. Number of Markov chains. Defaults to 4.
+#' @param nCores Integer. Number of chains to run in parallel. Defaults to
+#' nChains.
+#' @param nWarmup Integer. Number of warmup iterations per chain. Defaults to
 #' 1000.
-#' @param n.samples Integer. Number of post-warmup sampling iterations per chain.
+#' @param nSamples Integer. Number of post-warmup sampling iterations per chain.
 #' Defaults to 1000.
-#' @param adapt.delta Numeric. Target average proposal acceptance probability
+#' @param adaptDelta Numeric. Target average proposal acceptance probability
 #' passed to Stan. Higher values may reduce divergent transitions but can
 #' increase computation time. Defaults to 0.95.
-#' @param max.treedepth Integer. Maximum tree depth for the NUTS sampler.
+#' @param maxTreeDepth Integer. Maximum tree depth for the NUTS sampler.
 #' Increasing this value may help when transitions hit the maximum tree depth,
 #' but can increase computation time. Defaults to 12.
 #' @param init Initial values passed to Stan. See
@@ -154,12 +154,12 @@ fitBayesDiffIRT <- function(
     model = "d",
     priors = NULL,
     seed = NULL,
-    n.chains = 4,
-    n.cores = n.chains,
-    n.warmup = 1000,
-    n.samples = 1000,
-    adapt.delta = 0.95,
-    max.treedepth = 12,
+    nChains = 4,
+    nCores = nChains,
+    nWarmup = 1000,
+    nSamples = 1000,
+    adaptDelta = 0.95,
+    maxTreeDepth = 12,
     init = NULL,
     refresh = 200,
     diagnostic.warnings = TRUE,
@@ -210,17 +210,17 @@ fitBayesDiffIRT <- function(
                        compile = TRUE, quiet = TRUE)
   fit <- mod$sample(data = stanData,
                     seed = seed,
-                    chains = n.chains,
-                    parallel_chains = n.cores,
-                    iter_warmup = n.warmup,
-                    iter_sampling = n.samples,
-                    adapt_delta = adapt.delta,
-                    max_treedepth = max.treedepth,
+                    chains = nChains,
+                    parallel_chains = nCores,
+                    iter_warmup = nWarmup,
+                    iter_sampling = nSamples,
+                    adapt_delta = adaptDelta,
+                    max_treedepth = maxTreeDepth,
                     init = init,
                     refresh = refresh, ...)
 
   # 5) Postprocess:
-  diag <- checkStanDiagnostics(fit, max.treedepth)
+  diag <- checkStanDiagnostics(fit, maxTreeDepth)
   if(diagnostic.warnings) warnStanDiagnostics(diag)
 
   # 6) Construct return object

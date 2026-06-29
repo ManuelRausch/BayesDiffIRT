@@ -1,5 +1,5 @@
-data(extraversion, package = "diffIRT")
-x <- extraversion[,1:10]; rt <- extraversion[,11:20]
+data(rotation, package = "diffIRT")
+x <- rotation[,1:10]; rt <- rotation[,11:20]
 x <- cbind(1:nrow(x), x)
 colnames(x) <- c("sbj", paste0("Item", 1:10))
 x <- tidyr::pivot_longer(as.data.frame(x), cols=Item1:Item10,
@@ -12,13 +12,14 @@ colnames(rt) <- c("sbj", paste0("Item", 1:10))
 rt <- tidyr::pivot_longer(as.data.frame(rt), cols=Item1:Item10,
                           names_to="item",
                           values_to = "rt")
-Extra <- merge(x, rt)
-Extra$item <- factor(Extra$item)
+Data <- merge(x, rt)
+Data$item <- factor(Data$item)
 
 samples <-
-  fitBayesDiffIRT(Extra,
+  fitBayesDiffIRT(Data,
                   rt = "rt", resp = "resp", sbj = "sbj",
-                  item = "item", model = "dRV",
+                  item = "item", model = "qRV",
+                  prior = prior(beta(1,1), class = "s_beta"),
                   n.chains = 3,  n.cores = 3,
                   n.warmup =  10^3,
                   n.samples = 10^3)
