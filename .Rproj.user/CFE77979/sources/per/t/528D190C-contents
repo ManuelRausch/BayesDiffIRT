@@ -84,6 +84,85 @@ is using the `devtools` package:
 devtools::install_github("ManuelRausch/BayesDiffIRT")
 ```
 
+# Usage 
+
+## Fitting drift diffusion item response theory models
+
+The function `fitBayesDiffIRT` fits Bayesian diffusion item-response theory models by
+sampling from the posterior distributions of item and subject parameters using
+the No-U-Turn Sampler (NUTS) as implemented in Stan [@carpenter_stan_2017].
+The data must contain columns identifying the subject, item, response, and response time. Response times should be numeric and measured in seconds. For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses.
+For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items.
+
+
+```{r}     
+# Example for data preparation 
+
+data(extraversion, package = "diffIRT")
+
+Extra <- data.frame(
+  sbj = seq_len(nrow(extraversion)),
+  setNames(extraversion[, 1:10],  paste0("Item", 1:10, "_resp")),
+  setNames(extraversion[, 11:20], paste0("Item", 1:10, "_rt"))
+)
+
+Extra <- tidyr::pivot_longer(
+  Extra,
+  cols = -sbj,
+  names_to = c("item", ".value"),
+  names_pattern = "(Item\\d+)_(resp|rt)"
+)
+
+Extra$item <- factor(Extra$item)
+```
+
+Priors distributions for parameter classes are specified using the function 
+`prior()`. The function creates objects of class `BayesDiffIRTPrior`, which can 
+be passed to the `priors` argument of `fitBayesDiffIRT`. Priors are specified using Stan distribution syntax, for example `normal(0, 1)` or `lognormal(0, 0.5)`.
+Priors on the following parameters can be specified: 
+
+| Parameter       | Description                                                                                                            |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `"omega_theta"` | Standard deviation of `theta`, the latent trait.                                                                       |
+| `"omega_gamma"` | Standard deviation of `gamma`, the item response tendency parameter.                                                   |
+| `"nu"`          | Item difficulty parameter.                                                                                             |
+| `"a"`           | Item boundary separation parameter.                                                                                    |
+| `"tnd"`         | Person-specific non-decision time.                                                                                     |
+| `"s_delta"`     | Standard deviation of Gaussian trial-to-trial variability in drift rate. Only relevant for models `"dRV"` and `"qRV"`. |
+| `"s_beta"`      | Range of uniform trial-to-trial variability in starting point. Only relevant for models `"dRV"` and `"qRV"`.           |
+
+If priors are supplied for only some parameter classes, the remaining parameter classes are filled in with their model-specific defaults.
+
+```{r}
+# Example for prior specification
+myPrior <-  list(prior(normal(0, 2.5), class = "omega_theta"),
+               prior(normal(0, 0.5), class = "omega_gamma"),
+               prior(lognormal(-1.25, 0.3), class = "tnd"))
+```
+
+Finally, a string identifying the chosen model, the prepared data and a list of priors should be passed to `fitBayesDiffIRT` to fit a Bayesian diffusion item-response theory model. The following model names are recognized: 
+
+* "d" for the D-diffusion model (for survey items, default),
+* "dRV" for the D-diffusion model with random variability (for survey items),
+* "q" for the Q-diffusion model (for ability tests),
+* "qRV" for the Q-diffusion model with random variability (for ability tests).
+
+```{r}
+samples <- 
+  fitBayesDiffIRT(Extra,
+                  rt = "rt", resp = "resp", sbj = "sbj",
+                  item = "item", model = "d",
+                  nChains = 4,  nCores = 3,
+                  nWarmup =  10^3,
+                  nSamples = 10^3)
+  
+```
+
+## Inspecting the results
+
+
+
+
 # Contributing to the package 
 The package is under active development. Please feel free to [contact us](mailto:manuel.rausch@aau.at) to suggest diffusion item response theory models that we might have not yet implemented, or to volunteer adding additional features. 
  

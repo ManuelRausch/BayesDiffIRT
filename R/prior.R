@@ -23,8 +23,8 @@
 #'     \item{`"nu"`}{Item difficulty parameter.}
 #'     \item{`"a"`}{Item boundary separation parameter.}
 #'     \item{`"tnd"`}{Person-specific non-decision time.}
-#'     \item{`"s_delta"`}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "qRV" and "qRV".}
-#'     \item{`"s_beta"`}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "qRV" and "qRV".}
+#'     \item{`"s_delta"`}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "dRV" and "qRV".}
+#'     \item{`"s_beta"`}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "dRV" and "qRV".}
 #'   }
 #' @param coef Optional coefficient name or index. Currently not implemented.
 #'   If `coef` is not `NULL`, an error is thrown. Individual priors for specific

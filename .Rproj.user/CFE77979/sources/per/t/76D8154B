@@ -3,7 +3,7 @@
     "path": "C:/Users/marausch/AAU/Projekte/statConfR/README.rmd",
     "project_path": null,
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "3714051057",
     "contents": "",
     "dirty": false,
     "created": 1782942627784.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "210,16",
-        "scrollLine": "199"
+        "cursorPosition": "241,62",
+        "scrollLine": "238"
     },
     "folds": "",
-    "lastKnownWriteTime": 1776342557,
+    "lastKnownWriteTime": 1782945217,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1776342557,
+    "last_content_update": 1782945217367,
     "read_only": false,
     "read_only_alternatives": []
 }

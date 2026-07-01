@@ -128,9 +128,9 @@
 #'   person = "person",
 #'   item = "item",
 #'   model = "d",
-#'   chains = 4,
-#'   iter.warmup = 1000,
-#'   iter.sampling = 1000
+#'   nChains = 4,
+#'   nWarmup = 1000,
+#'   nSampling = 1000
 #' )
 #'
 #' summary(fit)

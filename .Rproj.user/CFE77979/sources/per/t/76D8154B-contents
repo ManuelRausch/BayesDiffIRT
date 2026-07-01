@@ -230,35 +230,7 @@ head(MaskOri)
 
 ## Fitting models of confidence and decision making to individual subjects
 
-The function `fitConfModels` allows the user to fit several confidence
-models separately to the data of each participant using maximum likelihood estimation. 
-The data should be provided via the argument `.data` in the form of a data.frame object with the following variables in separate columns:
 
--   stimulus (factor with 2 levels): The property of the stimulus which
-    defines which response is correct
--   diffCond (factor): The experimental manipulation that is expected to
-    affect discrimination sensitivity
--   correct (0-1): Indicating whether the choice was correct (1) or
-    incorrect(0).
--   rating (factor): A discrete variable encoding the decision
-    confidence (high: very confident; low: less confident)
--   participant (integer): giving the subject ID.
-The argument `model` is used to specify which model should be fitted, with 'WEV', 'SDT', 'GN', 'PDA', 'IG', 'ITGc', 'ITGcm', 'logN', and 'logWEV' as available options. If model="all" (default), all implemented models will be fit, although this may take a while. 
-
-Setting the optional argument `.parallel=TRUE` parallizes model fitting over all but 1 available core. __Note that the fitting procedure takes may take a considerable amount of time__, especially when there are multiple models, several difficulty conditions, and/or multiple confidence categories.  For example, if there are five difficulty conditions and five confidence levels, fitting the WEV model to one single participant may take 20-30 minutes on a 2.8GHz CPU. We recommend parallelization to keep the required time tolerable. 
-
-The fitting routine first performs a coarse grid search to find promising starting values for the maximum likelihood optimization procedure. Then the best `nInits` parameter sets found by the grid search are used as the initial values for separate runs of the Nelder-Mead algorithm implemented in optim (default: 5). Each run is restarted `nRestart` times (default: 4). 
-
-```{r}     
-fitted_pars <- fitConfModels(MaskOri, models=c("ITGcm", "WEV"), .parallel = TRUE) 
-```
-
-The output is then a data frame with one row for each combination of 
-participant and model and separate columns for each estimated parameter (d_1, d_2, d_3, d_4, c, theta_minus.4 theta_minus.3, theta_minus.2, theta_minus.1, theta_plus.1, theta_plus.2, theta_plus.3, theta_plus.4 for both models, w and sigma for WEV, and m only for ITGcm) as well as for different measures for goodness-of-fit (negative log-likelihood, BIC, AIC and AICc).
-
-```{r}
-head(fitted_pars)
-```
 
 
 ## Visualization of model fits
