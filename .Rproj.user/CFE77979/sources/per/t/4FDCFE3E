@@ -1,27 +1,27 @@
 {
-    "id": "D2D699A8",
-    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/S3summary.R",
-    "project_path": "R/S3summary.R",
+    "id": "4FDCFE3E",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/dev/test-D-diffusion.R",
+    "project_path": "dev/test-D-diffusion.R",
     "type": "r_source",
-    "hash": "278614177",
+    "hash": "2221264114",
     "contents": "",
     "dirty": false,
-    "created": 1782380695992.0,
+    "created": 1782911662789.0,
     "source_on_save": false,
     "relative_order": 7,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "14,33",
-        "scrollLine": "6"
+        "cursorPosition": "265,59",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1781684351,
+    "lastKnownWriteTime": 1779826438,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1781684351,
+    "last_content_update": 1779826438,
     "read_only": false,
     "read_only_alternatives": []
 }

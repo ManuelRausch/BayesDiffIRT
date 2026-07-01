@@ -3,7 +3,7 @@
 #' @description
 #' `fitBayesDiffIRT()` fits Bayesian diffusion item-response theory models by
 #' sampling from the posterior distributions of item and subject parameters using
-#' the No-U-Turn Sampler (NUTS) as implemented in Stan via `cmdstanr`.
+#' the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT} via \pkg{cmdstanr}.
 #'
 #' @param data A `data.frame` with one row per response. The data must contain
 #' columns identifying the subject, item, response, and response time.
@@ -142,6 +142,13 @@
 #'
 #' }
 
+#' @seealso
+#' \code{\link{prior}},
+#' \code{\link{plot}},
+#' \code{\link{checkDiagnostics}},
+#' \code{\link[cmdstanr]{cmdstan_model}},
+#' \code{\link[cmdstanr]{CmdStanModel}}
+#'
 #' @import cmdstanr
 #' @importFrom Rdpack reprompt
 

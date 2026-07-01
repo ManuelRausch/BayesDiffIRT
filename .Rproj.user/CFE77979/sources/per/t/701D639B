@@ -1,27 +1,27 @@
 {
-    "id": "058FFAC2",
-    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/posteriorPredict.R",
-    "project_path": "R/posteriorPredict.R",
+    "id": "701D639B",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/S3plot.R",
+    "project_path": "R/S3plot.R",
     "type": "r_source",
-    "hash": "1420252411",
+    "hash": "348363322",
     "contents": "",
     "dirty": false,
-    "created": 1782164717507.0,
+    "created": 1782898717313.0,
     "source_on_save": false,
-    "relative_order": 8,
+    "relative_order": 7,
     "properties": {
-        "tempName": "Untitled1",
+        "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "48,24",
-        "scrollLine": "51"
+        "cursorPosition": "57,47",
+        "scrollLine": "54"
     },
     "folds": "",
     "lastKnownWriteTime": 1782939433,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1782939433701,
+    "last_content_update": 1782939433634,
     "read_only": false,
     "read_only_alternatives": []
 }
