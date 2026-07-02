@@ -186,7 +186,7 @@ plot(samples, parameter = "omega_theta",
      type = "density")
 ```
 
-<!-- Posterior predictive distibution hinzufügen!  -->
+<!-- Posterior predictive distibution hinzuf?gen!  -->
 
 # Contributing to the package 
 The package is under active development. Please feel free to [contact us](mailto:manuel.rausch@aau.at) to suggest diffusion item response theory models that we might have not yet implemented, or to volunteer adding additional features. 

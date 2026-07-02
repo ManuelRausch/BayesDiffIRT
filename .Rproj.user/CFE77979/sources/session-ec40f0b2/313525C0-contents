@@ -1,0 +1,25 @@
+#' Posterior predictive checks
+#'
+#' @param object A fitted model object or posterior predictive object.
+#' @param ... Additional arguments passed to methods.
+#'
+#' @export
+ppCheck <- function(object, ...) {
+  UseMethod("ppCheck")
+}
+
+#' @rdname ppCheck
+#' @method ppCheck BayesDiffIRTfit
+#' @export
+ppCheck.BayesDiffIRTfit <- function(object,
+                                    type = c( "response"),
+                                    ndraws = 10,
+                                    seed = NULL,
+                                    ...) {
+  type <- match.arg(type)
+  
+  yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
+  
+  ppCheck(yrep, type = type, ...)
+}
+

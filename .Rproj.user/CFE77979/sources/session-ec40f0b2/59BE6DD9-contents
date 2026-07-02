@@ -97,7 +97,7 @@ plot.BayesDiffIRTfit <-
       parameterCols <- head(parameterCols, nmax)
     }
 
-    draws <- drawsAll[, parameterCols, drop = FALSE]
+    draws <- as.data.frame(drawsAll[, parameterCols, drop = FALSE])
 
     # Convert to long format
     drawsLong <- stack(draws)
