@@ -237,631 +237,18 @@ samples <-
                   item = "item", model = "d")
 ```
 
-    ## Running MCMC with 4 parallel chains...
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 2 Rejecting initial value:
-
-    ## Chain 2   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 2   Stan can't start sampling from this initial value.
-
-    ## Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 2 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 2
-
-    ## Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 2 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 2
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Error evaluating the log probability at the initial value.
-
-    ## Chain 3 Exception: ddiffusion_model_namespace::log_prob: gamma[13] is 9.44796e-07, but must be greater than or equal to 0.000001 (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 61, column 2 to column 36)
-    ## Chain 3 Exception: ddiffusion_model_namespace::log_prob: gamma[13] is 9.44796e-07, but must be greater than or equal to 0.000001 (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 61, column 2 to column 36)
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Gradient evaluated at the initial value is not finite.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Rejecting initial value:
-
-    ## Chain 4   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 4   Stan can't start sampling from this initial value.
-
-    ## Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 4 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 4
-
-    ## Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 4 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 4
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 1 Rejecting initial value:
-
-    ## Chain 1   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 1   Stan can't start sampling from this initial value.
-
-    ## Chain 2 Iteration:    1 / 2000 [  0%]  (Warmup)
-
-    ## Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 2 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 2
-
-    ## Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 2 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 2
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Rejecting initial value:
-
-    ## Chain 3   Log probability evaluates to log(0), i.e. negative infinity.
-
-    ## Chain 3   Stan can't start sampling from this initial value.
-
-    ## Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 3 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 3 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 3
-
-    ## Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 3 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 3 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 3
-
-    ## Chain 4 Iteration:    1 / 2000 [  0%]  (Warmup)
-
-    ## Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 4 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 4
-
-    ## Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 4 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 4
-
-    ## Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 1 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 1
-
-    ## Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 1 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 1
-
-    ## Chain 1 Iteration:    1 / 2000 [  0%]  (Warmup)
-
-    ## Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 1 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 1
-
-    ## Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 1 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 1
-
-    ## Chain 3 Iteration:    1 / 2000 [  0%]  (Warmup)
-
-    ## Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 3 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 3 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 3
-
-    ## Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:
-
-    ## Chain 3 Exception: wiener_lpdf: Boundary separation is 0, but must be positive finite! (in 'C:/Users/marausch/AppData/Local/Temp/RtmpcZ5ALm/model-5d402cab15ac.stan', line 125, column 4 to column 50)
-
-    ## Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,
-
-    ## Chain 3 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.
-
-    ## Chain 3
-
-    ## Chain 2 Iteration:  200 / 2000 [ 10%]  (Warmup) 
-    ## Chain 4 Iteration:  200 / 2000 [ 10%]  (Warmup) 
-    ## Chain 3 Iteration:  200 / 2000 [ 10%]  (Warmup) 
-    ## Chain 1 Iteration:  200 / 2000 [ 10%]  (Warmup) 
-    ## Chain 2 Iteration:  400 / 2000 [ 20%]  (Warmup) 
-    ## Chain 4 Iteration:  400 / 2000 [ 20%]  (Warmup) 
-    ## Chain 3 Iteration:  400 / 2000 [ 20%]  (Warmup) 
-    ## Chain 1 Iteration:  400 / 2000 [ 20%]  (Warmup) 
-    ## Chain 2 Iteration:  600 / 2000 [ 30%]  (Warmup) 
-    ## Chain 4 Iteration:  600 / 2000 [ 30%]  (Warmup) 
-    ## Chain 3 Iteration:  600 / 2000 [ 30%]  (Warmup) 
-    ## Chain 1 Iteration:  600 / 2000 [ 30%]  (Warmup) 
-    ## Chain 2 Iteration:  800 / 2000 [ 40%]  (Warmup) 
-    ## Chain 4 Iteration:  800 / 2000 [ 40%]  (Warmup) 
-    ## Chain 3 Iteration:  800 / 2000 [ 40%]  (Warmup) 
-    ## Chain 1 Iteration:  800 / 2000 [ 40%]  (Warmup) 
-    ## Chain 2 Iteration: 1000 / 2000 [ 50%]  (Warmup) 
-    ## Chain 2 Iteration: 1001 / 2000 [ 50%]  (Sampling) 
-    ## Chain 4 Iteration: 1000 / 2000 [ 50%]  (Warmup) 
-    ## Chain 4 Iteration: 1001 / 2000 [ 50%]  (Sampling) 
-    ## Chain 3 Iteration: 1000 / 2000 [ 50%]  (Warmup) 
-    ## Chain 3 Iteration: 1001 / 2000 [ 50%]  (Sampling) 
-    ## Chain 1 Iteration: 1000 / 2000 [ 50%]  (Warmup) 
-    ## Chain 1 Iteration: 1001 / 2000 [ 50%]  (Sampling) 
-    ## Chain 2 Iteration: 1200 / 2000 [ 60%]  (Sampling) 
-    ## Chain 4 Iteration: 1200 / 2000 [ 60%]  (Sampling) 
-    ## Chain 3 Iteration: 1200 / 2000 [ 60%]  (Sampling) 
-    ## Chain 1 Iteration: 1200 / 2000 [ 60%]  (Sampling) 
-    ## Chain 2 Iteration: 1400 / 2000 [ 70%]  (Sampling) 
-    ## Chain 4 Iteration: 1400 / 2000 [ 70%]  (Sampling) 
-    ## Chain 3 Iteration: 1400 / 2000 [ 70%]  (Sampling) 
-    ## Chain 1 Iteration: 1400 / 2000 [ 70%]  (Sampling) 
-    ## Chain 2 Iteration: 1600 / 2000 [ 80%]  (Sampling) 
-    ## Chain 4 Iteration: 1600 / 2000 [ 80%]  (Sampling) 
-    ## Chain 3 Iteration: 1600 / 2000 [ 80%]  (Sampling) 
-    ## Chain 1 Iteration: 1600 / 2000 [ 80%]  (Sampling) 
-    ## Chain 2 Iteration: 1800 / 2000 [ 90%]  (Sampling) 
-    ## Chain 4 Iteration: 1800 / 2000 [ 90%]  (Sampling) 
-    ## Chain 3 Iteration: 1800 / 2000 [ 90%]  (Sampling) 
-    ## Chain 1 Iteration: 1800 / 2000 [ 90%]  (Sampling) 
-    ## Chain 2 Iteration: 2000 / 2000 [100%]  (Sampling) 
-    ## Chain 2 finished in 217.2 seconds.
-    ## Chain 4 Iteration: 2000 / 2000 [100%]  (Sampling) 
-    ## Chain 4 finished in 217.9 seconds.
-    ## Chain 3 Iteration: 2000 / 2000 [100%]  (Sampling) 
-    ## Chain 3 finished in 218.4 seconds.
-    ## Chain 1 Iteration: 2000 / 2000 [100%]  (Sampling) 
-    ## Chain 1 finished in 222.9 seconds.
-    ## 
-    ## All 4 chains finished successfully.
-    ## Mean chain execution time: 219.1 seconds.
-    ## Total execution time: 224.0 seconds.
+    ## In file included from stan/src/stan/model/model_header.hpp:5:
+    ## stan/src/stan/model/model_base_crtp.hpp:205:8: warning: 'void stan::model::model_base_crtp<M>::write_array(stan::rng_t&, std::vector<double>&, std::vector<int>&, std::vector<double>&, bool, bool, std::ostream*) const [with M = ddiffusion_model_namespace::ddiffusion_model; stan::rng_t = boost::random::mixmax_engine<17, 36, 0>; std::ostream = std::basic_ostream<char>]' was hidden [-Woverloaded-virtual=]
+    ##   205 |   void write_array(stan::rng_t& rng, std::vector<double>& theta,
+    ##       |        ^~~~~~~~~~~
+
+    ## C:/Users/marausch/AppData/Local/Temp/RtmpeINp8S/model-38e435d22dd2.hpp:1348: note:   by 'ddiffusion_model_namespace::ddiffusion_model::write_array'
+    ##  1348 |   write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
+    ## stan/src/stan/model/model_base_crtp.hpp:136:8: warning: 'void stan::model::model_base_crtp<M>::write_array(stan::rng_t&, Eigen::VectorXd&, Eigen::VectorXd&, bool, bool, std::ostream*) const [with M = ddiffusion_model_namespace::ddiffusion_model; stan::rng_t = boost::random::mixmax_engine<17, 36, 0>; Eigen::VectorXd = Eigen::Matrix<double, -1, 1>; std::ostream = std::basic_ostream<char>]' was hidden [-Woverloaded-virtual=]
+    ##   136 |   void write_array(stan::rng_t& rng, Eigen::VectorXd& theta,
+    ##       |        ^~~~~~~~~~~
+    ## C:/Users/marausch/AppData/Local/Temp/RtmpeINp8S/model-38e435d22dd2.hpp:1348: note:   by 'ddiffusion_model_namespace::ddiffusion_model::write_array'
+    ##  1348 |   write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
 
 ## 4.2 Inspecting the results
 
@@ -891,64 +278,64 @@ summary(samples)
     ## # A tibble: 2 Ã 9
     ##   variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##   <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1440.    2426.
-    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1     970.    2034.
+    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1263.    1781.
+    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1     821.    1309.
     ## 
     ## Item parameters:
     ## # A tibble: 20 Ã 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 nu[1]    -0.65  -0.65  0.11 -0.82 -0.48     1    2041.    2977.
-    ##  2 nu[2]    -0.14  -0.14  0.11 -0.32  0.03     1    1971.    2974.
-    ##  3 nu[3]    -1.24  -1.24  0.13 -1.45 -1.03     1    1939.    2528.
-    ##  4 nu[4]    -1.7   -1.7   0.15 -1.95 -1.45     1    2631.    3135.
-    ##  5 nu[5]    -0.21  -0.21  0.11 -0.39 -0.03     1    2225.    2795.
-    ##  6 nu[6]    -1.3   -1.3   0.12 -1.51 -1.11     1    2062.    2723.
-    ##  7 nu[7]    -1.69  -1.69  0.14 -1.92 -1.46     1    2313.    2624.
-    ##  8 nu[8]    -1.92  -1.91  0.15 -2.16 -1.68     1    2504.    3086.
-    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.65     1    1885.    2739.
-    ## 10 nu[10]   -1.42  -1.42  0.14 -1.64 -1.2      1    2504.    3135.
-    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2825.    2837.
-    ## 12 a[2]      0.5    0.5   0.02  0.46  0.53     1    2639.    2665.
-    ## 13 a[3]      0.5    0.5   0.02  0.46  0.54     1    2274.    2681 
-    ## 14 a[4]      0.51   0.51  0.03  0.47  0.56     1    2201.    2906.
-    ## 15 a[5]      0.51   0.51  0.02  0.48  0.55     1    2823.    3030.
-    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2774.    2927.
-    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2352.    3130.
-    ## 18 a[8]      0.42   0.42  0.02  0.39  0.46     1    2468.    2858.
-    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    3185.    2742.
-    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    2350.    2800.
+    ##  1 nu[1]    -0.65  -0.65  0.11 -0.82 -0.48     1    1749.    2414.
+    ##  2 nu[2]    -0.14  -0.15  0.1  -0.31  0.02     1    1891.    2659 
+    ##  3 nu[3]    -1.23  -1.24  0.13 -1.45 -1.02     1    2420.    2533.
+    ##  4 nu[4]    -1.7   -1.7   0.14 -1.93 -1.46     1    2200.    2799.
+    ##  5 nu[5]    -0.21  -0.21  0.11 -0.38 -0.03     1    1733.    2282.
+    ##  6 nu[6]    -1.3   -1.3   0.12 -1.5  -1.11     1    2153.    2742.
+    ##  7 nu[7]    -1.69  -1.69  0.14 -1.93 -1.46     1    2275.    2818.
+    ##  8 nu[8]    -1.91  -1.91  0.15 -2.16 -1.68     1    2046.    2822.
+    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.66     1    1680.    2061.
+    ## 10 nu[10]   -1.42  -1.42  0.14 -1.65 -1.19     1    2405.    2389.
+    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2807.    2682.
+    ## 12 a[2]      0.49   0.49  0.02  0.46  0.53     1    2140.    2529.
+    ## 13 a[3]      0.49   0.49  0.02  0.46  0.54     1    2125.    2662.
+    ## 14 a[4]      0.51   0.51  0.03  0.47  0.55     1    1999.    2552.
+    ## 15 a[5]      0.51   0.51  0.02  0.47  0.55     1    2240.    2542.
+    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2583.    2452.
+    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2482.    3111.
+    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    2318.    2892.
+    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2823.    2970.
+    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    2105.    2663.
     ## 
     ## Subject parameters:
     ## # A tibble: 429 Ã 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 tnd[1]    0.37   0.37  0.1   0.22  0.54     1    5948.    3371.
-    ##  2 tnd[2]    0.4    0.4   0.09  0.24  0.54     1    4020.    3130.
-    ##  3 tnd[3]    0.46   0.46  0.12  0.27  0.64     1    4513.    2824.
-    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.37     1    6140.    3215.
-    ##  5 tnd[5]    0.39   0.4   0.07  0.26  0.5      1    5107.    3194.
-    ##  6 tnd[6]    0.32   0.32  0.06  0.21  0.41     1    4800.    3253.
-    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4969.    3145.
-    ##  8 tnd[8]    0.52   0.52  0.16  0.27  0.77     1    4736.    3099.
-    ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.45     1    6732.    3239.
-    ## 10 tnd[10]   0.42   0.41  0.13  0.24  0.65     1    5891.    2739.
+    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.54     1    5755.    2877.
+    ##  2 tnd[2]    0.4    0.4   0.09  0.25  0.54     1    3737.    3196.
+    ##  3 tnd[3]    0.46   0.46  0.11  0.27  0.64     1    4551.    3564.
+    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.36     1    5968.    3130.
+    ##  5 tnd[5]    0.39   0.39  0.08  0.25  0.51     1    4388.    2859.
+    ##  6 tnd[6]    0.31   0.31  0.06  0.21  0.41     1    4349.    3332.
+    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.52     1    4538.    3098.
+    ##  8 tnd[8]    0.52   0.52  0.15  0.27  0.77     1    3990.    3510.
+    ##  9 tnd[9]    0.34   0.34  0.07  0.21  0.46     1    5708.    3130.
+    ## 10 tnd[10]   0.43   0.42  0.12  0.24  0.64     1    5313.    3135.
     ## # â¹ 419 more rows
     ## 
     ## Other parameters:
     ## # A tibble: 429 Ã 9
     ##    variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 z_theta[1]  -0.83  -0.82  0.37 -1.44 -0.22     1    5269.    2870.
-    ##  2 z_theta[2]  -0.31  -0.31  0.56 -1.19  0.61     1    6177.    2481.
-    ##  3 z_theta[3]   0.4    0.4   0.52 -0.45  1.25     1    6095.    3044.
-    ##  4 z_theta[4]   0.49   0.49  0.45 -0.22  1.23     1    4435.    3031.
-    ##  5 z_theta[5]   1.47   1.47  0.67  0.38  2.54     1    6303.    2977.
-    ##  6 z_theta[6]  -0.08  -0.09  0.52 -0.92  0.78     1    7059.    3304.
-    ##  7 z_theta[7]  -0.07  -0.07  0.5  -0.89  0.73     1    6374.    2831.
-    ##  8 z_theta[8]   0.33   0.32  0.54 -0.54  1.23     1    5497.    3055.
-    ##  9 z_theta[9]   0.26   0.25  0.48 -0.5   1.05     1    6098.    3049.
-    ## 10 z_theta[10]  0.39   0.39  0.44 -0.3   1.11     1    5764.    3192.
+    ##  1 z_theta[1]  -0.83  -0.82  0.36 -1.43 -0.25     1    4458.    2674.
+    ##  2 z_theta[2]  -0.31  -0.32  0.55 -1.19  0.62     1    5949.    2729.
+    ##  3 z_theta[3]   0.39   0.39  0.53 -0.49  1.26     1    5324.    3092.
+    ##  4 z_theta[4]   0.49   0.49  0.45 -0.25  1.24     1    5163.    3014.
+    ##  5 z_theta[5]   1.47   1.44  0.68  0.39  2.59     1    6189.    3271.
+    ##  6 z_theta[6]  -0.08  -0.08  0.54 -0.96  0.8      1    6965.    2771.
+    ##  7 z_theta[7]  -0.07  -0.08  0.52 -0.92  0.79     1    5604.    3013.
+    ##  8 z_theta[8]   0.33   0.31  0.55 -0.52  1.25     1    4551.    2334.
+    ##  9 z_theta[9]   0.26   0.26  0.46 -0.5   1.05     1    4771.    2923.
+    ## 10 z_theta[10]  0.37   0.35  0.43 -0.31  1.09     1    4937.    2702.
     ## # â¹ 419 more rows
 
 `checkDiagnostics` provides common Stan diagnostics such as number of
