@@ -191,8 +191,8 @@ plot(samples, parameter = "omega_theta",
 The posterior predictive distributions can be visualized using `ppCheck`. Set type = "response" to visualize the predicted probability of a correct response / item acceptance as a function of item or person. 
 
 ```{r}
-ppCheck(samples2, type = "response", group = "item")
-ppCheck(samples2, type = "response", group = "person")
+ppCheck(samples, type = "response", group = "item")
+ppCheck(samples, type = "response", group = "person")
 
 ```
 

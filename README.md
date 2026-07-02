@@ -142,16 +142,16 @@ library(tidyverse)
 
     ## Warning: Paket 'lubridate' wurde unter R Version 4.5.3 erstellt
 
-    ## ââ Attaching core tidyverse packages ââââââââââââââââââââââââ tidyverse 2.0.0 ââ
-    ## â dplyr     1.2.1     â readr     2.1.5
-    ## â forcats   1.0.1     â stringr   1.6.0
-    ## â ggplot2   4.0.3     â tibble    3.3.1
-    ## â lubridate 1.9.5     â tidyr     1.3.2
-    ## â purrr     1.2.0     
-    ## ââ Conflicts ââââââââââââââââââââââââââââââââââââââââââ tidyverse_conflicts() ââ
-    ## â dplyr::filter() masks stats::filter()
-    ## â dplyr::lag()    masks stats::lag()
-    ## â¹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.2.1     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+    ## ✔ purrr     1.2.0     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
 ``` r
 data(extraversion, package = "diffIRT")
@@ -172,7 +172,7 @@ Extra$item <- factor(Extra$item)
 head(Extra)
 ```
 
-    ## # A tibble: 6 Ã 4
+    ## # A tibble: 6 × 4
     ##     sbj item   resp    rt
     ##   <int> <fct> <dbl> <dbl>
     ## 1     1 Item1     0 2.73 
@@ -230,26 +230,6 @@ recognized:
 - “qRV” for the Q-diffusion model with random variability (for ability
   tests).
 
-``` r
-samples <- 
-  fitBayesDiffIRT(Extra,
-                  rt = "rt", resp = "resp", sbj = "sbj",
-                  item = "item", model = "d")
-```
-
-    ## In file included from stan/src/stan/model/model_header.hpp:5:
-    ## stan/src/stan/model/model_base_crtp.hpp:205:8: warning: 'void stan::model::model_base_crtp<M>::write_array(stan::rng_t&, std::vector<double>&, std::vector<int>&, std::vector<double>&, bool, bool, std::ostream*) const [with M = ddiffusion_model_namespace::ddiffusion_model; stan::rng_t = boost::random::mixmax_engine<17, 36, 0>; std::ostream = std::basic_ostream<char>]' was hidden [-Woverloaded-virtual=]
-    ##   205 |   void write_array(stan::rng_t& rng, std::vector<double>& theta,
-    ##       |        ^~~~~~~~~~~
-
-    ## C:/Users/marausch/AppData/Local/Temp/RtmpeINp8S/model-38e435d22dd2.hpp:1348: note:   by 'ddiffusion_model_namespace::ddiffusion_model::write_array'
-    ##  1348 |   write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
-    ## stan/src/stan/model/model_base_crtp.hpp:136:8: warning: 'void stan::model::model_base_crtp<M>::write_array(stan::rng_t&, Eigen::VectorXd&, Eigen::VectorXd&, bool, bool, std::ostream*) const [with M = ddiffusion_model_namespace::ddiffusion_model; stan::rng_t = boost::random::mixmax_engine<17, 36, 0>; Eigen::VectorXd = Eigen::Matrix<double, -1, 1>; std::ostream = std::basic_ostream<char>]' was hidden [-Woverloaded-virtual=]
-    ##   136 |   void write_array(stan::rng_t& rng, Eigen::VectorXd& theta,
-    ##       |        ^~~~~~~~~~~
-    ## C:/Users/marausch/AppData/Local/Temp/RtmpeINp8S/model-38e435d22dd2.hpp:1348: note:   by 'ddiffusion_model_namespace::ddiffusion_model::write_array'
-    ##  1348 |   write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
-
 ## 4.2 Inspecting the results
 
 The results of a fitted Bayesian diffusion item-response theory model
@@ -275,68 +255,68 @@ summary(samples)
     ## Posterior summaries:
     ## 
     ## Hyperparameters:
-    ## # A tibble: 2 Ã 9
+    ## # A tibble: 2 × 9
     ##   variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##   <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1263.    1781.
-    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1     821.    1309.
+    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1219.    2265.
+    ## 2 omega_gamma   0.2   0.2   0.03  0.15  0.25     1     891.    1592.
     ## 
     ## Item parameters:
-    ## # A tibble: 20 Ã 9
+    ## # A tibble: 20 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 nu[1]    -0.65  -0.65  0.11 -0.82 -0.48     1    1749.    2414.
-    ##  2 nu[2]    -0.14  -0.15  0.1  -0.31  0.02     1    1891.    2659 
-    ##  3 nu[3]    -1.23  -1.24  0.13 -1.45 -1.02     1    2420.    2533.
-    ##  4 nu[4]    -1.7   -1.7   0.14 -1.93 -1.46     1    2200.    2799.
-    ##  5 nu[5]    -0.21  -0.21  0.11 -0.38 -0.03     1    1733.    2282.
-    ##  6 nu[6]    -1.3   -1.3   0.12 -1.5  -1.11     1    2153.    2742.
-    ##  7 nu[7]    -1.69  -1.69  0.14 -1.93 -1.46     1    2275.    2818.
-    ##  8 nu[8]    -1.91  -1.91  0.15 -2.16 -1.68     1    2046.    2822.
-    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.66     1    1680.    2061.
-    ## 10 nu[10]   -1.42  -1.42  0.14 -1.65 -1.19     1    2405.    2389.
-    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2807.    2682.
-    ## 12 a[2]      0.49   0.49  0.02  0.46  0.53     1    2140.    2529.
-    ## 13 a[3]      0.49   0.49  0.02  0.46  0.54     1    2125.    2662.
-    ## 14 a[4]      0.51   0.51  0.03  0.47  0.55     1    1999.    2552.
-    ## 15 a[5]      0.51   0.51  0.02  0.47  0.55     1    2240.    2542.
-    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2583.    2452.
-    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2482.    3111.
-    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    2318.    2892.
-    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2823.    2970.
-    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    2105.    2663.
+    ##  1 nu[1]    -0.65  -0.64  0.1  -0.82 -0.48     1    1665.    2310.
+    ##  2 nu[2]    -0.15  -0.15  0.11 -0.32  0.03     1    1406.    2200.
+    ##  3 nu[3]    -1.24  -1.24  0.13 -1.45 -1.03     1    2011.    2722.
+    ##  4 nu[4]    -1.71  -1.7   0.15 -1.95 -1.47     1    1879.    2711.
+    ##  5 nu[5]    -0.21  -0.21  0.11 -0.38 -0.03     1    1637     2521.
+    ##  6 nu[6]    -1.31  -1.3   0.12 -1.51 -1.11     1    1720.    3034.
+    ##  7 nu[7]    -1.69  -1.69  0.14 -1.93 -1.46     1    1878.    2444.
+    ##  8 nu[8]    -1.92  -1.92  0.15 -2.16 -1.67     1    2226.    3167.
+    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.66     1    1539.    2154.
+    ## 10 nu[10]   -1.43  -1.43  0.13 -1.65 -1.21     1    2203.    2675.
+    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2511.    3050.
+    ## 12 a[2]      0.49   0.49  0.02  0.46  0.53     1    2117.    2638.
+    ## 13 a[3]      0.49   0.49  0.02  0.46  0.53     1    2071.    2952.
+    ## 14 a[4]      0.51   0.51  0.03  0.47  0.55     1    1853.    2734.
+    ## 15 a[5]      0.51   0.51  0.02  0.47  0.55     1    2302.    2736.
+    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2116.    2996.
+    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    1830.    2529.
+    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    2114.    2681.
+    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2978.    2983.
+    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    1871.    2803.
     ## 
     ## Subject parameters:
-    ## # A tibble: 429 Ã 9
+    ## # A tibble: 429 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.54     1    5755.    2877.
-    ##  2 tnd[2]    0.4    0.4   0.09  0.25  0.54     1    3737.    3196.
-    ##  3 tnd[3]    0.46   0.46  0.11  0.27  0.64     1    4551.    3564.
-    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.36     1    5968.    3130.
-    ##  5 tnd[5]    0.39   0.39  0.08  0.25  0.51     1    4388.    2859.
-    ##  6 tnd[6]    0.31   0.31  0.06  0.21  0.41     1    4349.    3332.
-    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.52     1    4538.    3098.
-    ##  8 tnd[8]    0.52   0.52  0.15  0.27  0.77     1    3990.    3510.
-    ##  9 tnd[9]    0.34   0.34  0.07  0.21  0.46     1    5708.    3130.
-    ## 10 tnd[10]   0.43   0.42  0.12  0.24  0.64     1    5313.    3135.
-    ## # â¹ 419 more rows
+    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.54     1    6252.    2921.
+    ##  2 tnd[2]    0.4    0.4   0.09  0.25  0.54     1    3845.    3489.
+    ##  3 tnd[3]    0.46   0.47  0.11  0.27  0.64     1    3408.    3372.
+    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.37     1    5628.    2902.
+    ##  5 tnd[5]    0.39   0.39  0.08  0.26  0.51     1    3853.    3182.
+    ##  6 tnd[6]    0.31   0.32  0.06  0.21  0.41     1    3973     2682.
+    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4495.    3159.
+    ##  8 tnd[8]    0.52   0.52  0.15  0.27  0.77     1    3409.    2936.
+    ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.45     1    4401.    2994.
+    ## 10 tnd[10]   0.42   0.41  0.12  0.24  0.65     1    4309.    3089.
+    ## # ℹ 419 more rows
     ## 
     ## Other parameters:
-    ## # A tibble: 429 Ã 9
+    ## # A tibble: 429 × 9
     ##    variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 z_theta[1]  -0.83  -0.82  0.36 -1.43 -0.25     1    4458.    2674.
-    ##  2 z_theta[2]  -0.31  -0.32  0.55 -1.19  0.62     1    5949.    2729.
-    ##  3 z_theta[3]   0.39   0.39  0.53 -0.49  1.26     1    5324.    3092.
-    ##  4 z_theta[4]   0.49   0.49  0.45 -0.25  1.24     1    5163.    3014.
-    ##  5 z_theta[5]   1.47   1.44  0.68  0.39  2.59     1    6189.    3271.
-    ##  6 z_theta[6]  -0.08  -0.08  0.54 -0.96  0.8      1    6965.    2771.
-    ##  7 z_theta[7]  -0.07  -0.08  0.52 -0.92  0.79     1    5604.    3013.
-    ##  8 z_theta[8]   0.33   0.31  0.55 -0.52  1.25     1    4551.    2334.
-    ##  9 z_theta[9]   0.26   0.26  0.46 -0.5   1.05     1    4771.    2923.
-    ## 10 z_theta[10]  0.37   0.35  0.43 -0.31  1.09     1    4937.    2702.
-    ## # â¹ 419 more rows
+    ##  1 z_theta[1]  -0.82  -0.82  0.35 -1.39 -0.25     1    4382.    2544.
+    ##  2 z_theta[2]  -0.31  -0.31  0.54 -1.19  0.58     1    4894.    2974.
+    ##  3 z_theta[3]   0.38   0.36  0.52 -0.47  1.26     1    5361.    3245.
+    ##  4 z_theta[4]   0.49   0.49  0.46 -0.26  1.24     1    4182.    2793.
+    ##  5 z_theta[5]   1.46   1.46  0.66  0.38  2.57     1    4730.    3173.
+    ##  6 z_theta[6]  -0.07  -0.08  0.52 -0.9   0.78     1    5437.    2986.
+    ##  7 z_theta[7]  -0.07  -0.08  0.52 -0.92  0.81     1    4334.    3113.
+    ##  8 z_theta[8]   0.33   0.3   0.55 -0.54  1.29     1    4268.    2891.
+    ##  9 z_theta[9]   0.25   0.24  0.48 -0.53  1.06     1    4369.    2699.
+    ## 10 z_theta[10]  0.36   0.36  0.45 -0.36  1.11     1    3506.    3086.
+    ## # ℹ 419 more rows
 
 `checkDiagnostics` provides common Stan diagnostics such as number of
 divergeant transitions, R hat, effective sample size, maximum treedepth
@@ -364,8 +344,6 @@ method:
 plot(samples, parameter = "omega_theta", type = "trace")
 ```
 
-    ## Warning: Dropping 'draws_df' class as required metadata was removed.
-
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 There is also the possibility to plot posterior means with 50% and 95%
@@ -375,8 +353,6 @@ credible intervals as well as marginal posterior densities.
 plot(samples, parameter = "theta", type = "interval")
 ```
 
-    ## Warning: Dropping 'draws_df' class as required metadata was removed.
-
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
@@ -384,11 +360,25 @@ plot(samples, parameter = "omega_theta",
      type = "density")
 ```
 
-    ## Warning: Dropping 'draws_df' class as required metadata was removed.
-
 ![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 <!-- Posterior predictive distibution hinzufügen!  -->
+
+The posterior predictive distributions can be visualized using
+`ppCheck`. Set type = “response” to visualize the predicted probability
+of a correct response / item acceptance as a function of item or person.
+
+``` r
+ppCheck(samples, type = "response", group = "item")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ppCheck(samples, type = "response", group = "person")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 # 5 Contributing to the package
 
