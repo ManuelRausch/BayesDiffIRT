@@ -1,8 +1,64 @@
-#' Run diagnostic checks for BayesDiffIRTfit objects.
+#' Check MCMC diagnostics
 #'
-#' @param object A fitted BayesDiffIRTfit object.
-#' @param ... Further arguments passed to methods.
+#' Check convergence and sampling diagnostics for fitted BayesDiffIRT models.
 #'
+#' `checkDiagnostics()` is an S3 generic for extracting and summarizing MCMC
+#' diagnostics from fitted model objects. The method for objects of class
+#' `BayesDiffIRTfit` checks common Stan diagnostics, including divergent
+#' transitions, high \eqn{\hat R}, low effective sample size, maximum treedepth
+#' hits, and low E-BFMI.
+#'
+#' @param object A fitted model object.
+#' @param ... Additional arguments passed to methods.
+#'
+#' @return For objects of class `BayesDiffIRTfit`, an object of class
+#'   `diagnostics.BayesDiffIRTfit`. The returned object is a list with elements:
+#'   \describe{
+#'     \item{\code{ok}}{Logical. \code{TRUE} if no potential diagnostic problems
+#'       were detected.}
+#'     \item{\code{nChains}}{Number of MCMC chains.}
+#'     \item{\code{thresholds}}{Diagnostic thresholds used for the checks.}
+#'     \item{\code{divergences}}{Divergent transitions by chain.}
+#'     \item{\code{rhat}}{Parameters with \eqn{\hat R} values above the
+#'       threshold.}
+#'     \item{\code{ess}}{Parameters with low bulk or tail effective sample size.}
+#'     \item{\code{treedepth}}{Maximum treedepth information by chain.}
+#'     \item{\code{ebfmi}}{E-BFMI values and warnings by chain.}
+#'   }
+#'
+#' @details
+#' For `BayesDiffIRTfit` objects, the method extracts sampler diagnostics and
+#' posterior summaries from the underlying Stan fit. The maximum treedepth is
+#' read from the Stan fit metadata when available. If it cannot be recovered, a
+#' default value of `15` is used.
+#'
+#' The default diagnostic thresholds are:
+#' \describe{
+#'   \item{\eqn{\hat R}}{Values larger than `1.01` are flagged.}
+#'   \item{Effective sample size}{Bulk or tail effective sample size smaller
+#'     than `100` per chain is flagged.}
+#'   \item{E-BFMI}{Values smaller than `0.3` are flagged.}
+#'   \item{Treedepth}{Transitions reaching the maximum treedepth are flagged.}
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' fit <- fitBayesDiffIRT(data)
+#'
+#' diagnostics <- checkDiagnostics(fit)
+#' diagnostics
+#'
+#' diagnostics$divergences
+#' diagnostics$rhat
+#' diagnostics$ess
+#' diagnostics$treedepth
+#' diagnostics$ebfmi
+#' }
+#'
+#' @seealso
+#' \code{\link{fitBayesDiffIRT}}
+#'
+
 #' @export
 checkDiagnostics <- function(object, ...) {
   UseMethod("checkDiagnostics")

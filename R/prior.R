@@ -40,9 +40,11 @@
 #' [fitBayesDiffIRT()], model-specific default priors are used. If priors are
 #' supplied for only some parameter classes, the remaining parameter classes are
 #' filled in with their model-specific defaults. Uniform prior distributions have
-#' been implemented to be consistent with previous research \insertCite{van_der_maas_cognitive_2011},
+#' been implemented to be consistent with previous research
+#' \insertCite{van_der_maas_cognitive_2011}{BayesDiffIRT},
 #' but they will often lead to convergence issues.
-#' For `model = "d"`, the current default priors are:
+#' For model = "d", the current default priors are:
+#'
 #' \describe{
 #'   \item{`omega_theta`}{`normal(0, 2.5)`}
 #'   \item{`omega_gamma`}{`normal(0, 0.5)`}
@@ -52,11 +54,13 @@
 #' }
 #' For `model = "dRV"`, the default priors are the same as in `model = "d"`,
 #' except that there are two additional parameters:
+#'
 #' \describe{
 #'   \item{`s_delta`}{`lognormal(-0.5*log(2), sqrt(2))`}
 #'   \item{`s_beta`}{`beta(0.25, 0.01)`}
 #' }
 #' For `model = "q"`, the current default priors are:
+#'
 #' \describe{
 #'   \item{`omega_theta`}{`normal(0, 0.75)`}
 #'   \item{`omega_gamma`}{`normal(0, 0.5)`}
@@ -111,6 +115,8 @@
 
 #' @author
 #' Manuel Rausch, \email{manuel.rausch@@aau.at}
+
+#' @importFrom Rdpack reprompt
 
 #' @export
 prior <- function(dist, class, coef = NULL) {

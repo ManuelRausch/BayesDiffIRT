@@ -13,7 +13,6 @@ distribution syntax. For example, \code{normal(0, 1)},
 
 \item{class}{Character string. Name of the parameter class for which the prior
 should be defined. Currently supported classes are:
-
 \describe{
 \item{\code{"omega_theta"}}{Standard deviation of \code{theta}, the latent trait.}
 \item{\code{"omega_gamma"}}{Standard deviation of \code{gamma}, the item response
@@ -21,8 +20,8 @@ tendency parameter.}
 \item{\code{"nu"}}{Item difficulty parameter.}
 \item{\code{"a"}}{Item boundary separation parameter.}
 \item{\code{"tnd"}}{Person-specific non-decision time.}
-\item{ "s_delta"}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "qRV" and "qRV".}
-\item{ "s_beta"}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "qRV" and "qRV".}
+\item{\code{"s_delta"}}{Standard deviation of Gaussian trial-to-trial variability of drift rate. Only relevant for models "dRV" and "qRV".}
+\item{\code{"s_beta"}}{Range of uniform trial-to-trial variability in starting point. Only relevant for models "dRV" and "qRV".}
 }}
 
 \item{coef}{Optional coefficient name or index. Currently not implemented.
@@ -58,9 +57,10 @@ individual subjects or items. If no priors are supplied to
 \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}, model-specific default priors are used. If priors are
 supplied for only some parameter classes, the remaining parameter classes are
 filled in with their model-specific defaults. Uniform prior distributions have
-been implemented to be consistent with previous research \insertCite{van_der_maas_cognitive_2011},
+been implemented to be consistent with previous research
+\insertCite{van_der_maas_cognitive_2011}{BayesDiffIRT},
 but they will often lead to convergence issues.
-For \code{model = "d"}, the current default priors are:
+For model = "d", the current default priors are:
 \describe{
 \item{\code{omega_theta}}{\code{normal(0, 2.5)}}
 \item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
@@ -100,10 +100,10 @@ prior(normal(0, 2.5), class = "nu")
 
 # Define a lognormal prior for non-decision time
 prior(lognormal(-1.25, 0.3), class = "tnd")
-
+data(bayesDiffIRTexample)
 \dontrun{
 fit <- fitBayesDiffIRT(
-  data = dat,
+  data = bayesDiffIRTexample,
   priors = list(
     prior(normal(0, 2.5), class = "omega_theta"),
     prior(normal(0, 0.5), class = "omega_gamma"),
@@ -111,11 +111,13 @@ fit <- fitBayesDiffIRT(
   )
 )
 }
-
 }
 \references{
 \insertAllCited{}
 }
 \seealso{
 \code{\link[=fitBayesDiffIRT]{fitBayesDiffIRT()}}
+}
+\author{
+Manuel Rausch, \email{manuel.rausch@aau.at}
 }

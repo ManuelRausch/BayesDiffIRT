@@ -91,29 +91,28 @@ devtools::install_github("ManuelRausch/BayesDiffIRT")
 The function `fitBayesDiffIRT` fits Bayesian diffusion item-response theory models by
 sampling from the posterior distributions of item and subject parameters using
 the No-U-Turn Sampler (NUTS) as implemented in Stan [@carpenter_stan_2017].
-The data must contain columns identifying the subject, item, response, and response time. Response times should be numeric and measured in seconds. For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses.
-For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items.
+The data must contain columns identifying the subject, item, response, and response time. Response times should be numeric and measured in seconds. For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses. For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items.
 
 
 ```{r}     
-# Example for data preparation 
-
+# Example for preparing the data set.
+library(tidyverse)
 data(extraversion, package = "diffIRT")
-
-Extra <- data.frame(
-  sbj = seq_len(nrow(extraversion)),
-  setNames(extraversion[, 1:10],  paste0("Item", 1:10, "_resp")),
-  setNames(extraversion[, 11:20], paste0("Item", 1:10, "_rt"))
-)
-
+Extra <- as.data.frame(extraversion)
+names(Extra)[1:10]  <- paste0("Item", 1:10, "_resp")
+names(Extra)[11:20] <- paste0("Item", 1:10, "_rt")
+Extra$sbj <- 1:nrow(Extra)
+  
 Extra <- tidyr::pivot_longer(
   Extra,
-  cols = -sbj,
+  cols = tidyselect::matches("^Item\\d+_(resp|rt)$"),
   names_to = c("item", ".value"),
-  names_pattern = "(Item\\d+)_(resp|rt)"
+  names_pattern = "^(Item\\d+)_(resp|rt)$"
 )
 
 Extra$item <- factor(Extra$item)
+Extra$item <- factor(Extra$item)
+head(Extra)
 ```
 
 Priors distributions for parameter classes are specified using the function 
@@ -135,8 +134,11 @@ If priors are supplied for only some parameter classes, the remaining parameter 
 
 ```{r}
 # Example for prior specification
+library(BayesDiffIRT)
 myPrior <-  list(prior(normal(0, 2.5), class = "omega_theta"),
                prior(normal(0, 0.5), class = "omega_gamma"),
+               prior(lognormal(0, 0.75), class = "nu"),
+               prior(lognormal(0, 0.5), class = "a"),
                prior(lognormal(-1.25, 0.3), class = "tnd"))
 ```
 
@@ -151,17 +153,40 @@ Finally, a string identifying the chosen model, the prepared data and a list of 
 samples <- 
   fitBayesDiffIRT(Extra,
                   rt = "rt", resp = "resp", sbj = "sbj",
-                  item = "item", model = "d",
-                  nChains = 4,  nCores = 3,
-                  nWarmup =  10^3,
-                  nSamples = 10^3)
+                  item = "item", model = "d")
   
 ```
 
 ## Inspecting the results
 
+The results of a fitted  Bayesian diffusion item-response theory model can be inspected using the function `summary`. 
 
+```{r}
+summary(samples)
+```
 
+`checkDiagnostics` provides common Stan diagnostics such as number of divergeant transitions, R hat, effective sample size, maximum treedepth hits, and E-BFMI. 
+
+```{r}
+checkDiagnostics(samples)
+```
+
+Marcov chains of selected parameters can be visualized using the `plot` method: 
+
+```{r}
+plot(samples, parameter = "omega_theta", type = "trace")
+```
+
+There is also the possibility to plot posterior means with 50% and 95% credible intervals as well as marginal posterior densities. 
+
+```{r}
+plot(samples, parameter = "theta", type = "interval")
+
+plot(samples, parameter = "omega_theta",
+     type = "density")
+```
+
+<!-- Posterior predictive distibution hinzufügen!  -->
 
 # Contributing to the package 
 The package is under active development. Please feel free to [contact us](mailto:manuel.rausch@aau.at) to suggest diffusion item response theory models that we might have not yet implemented, or to volunteer adding additional features. 

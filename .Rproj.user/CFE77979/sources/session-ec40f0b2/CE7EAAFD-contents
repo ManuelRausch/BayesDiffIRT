@@ -142,16 +142,16 @@ library(tidyverse)
 
     ## Warning: Paket 'lubridate' wurde unter R Version 4.5.3 erstellt
 
-    ## ââ Attaching core tidyverse packages ââââââââââââââââââââââââ tidyverse 2.0.0 ââ
-    ## â dplyr     1.2.1     â readr     2.1.5
-    ## â forcats   1.0.1     â stringr   1.6.0
-    ## â ggplot2   4.0.3     â tibble    3.3.1
-    ## â lubridate 1.9.5     â tidyr     1.3.2
-    ## â purrr     1.2.0     
-    ## ââ Conflicts ââââââââââââââââââââââââââââââââââââââââââ tidyverse_conflicts() ââ
-    ## â dplyr::filter() masks stats::filter()
-    ## â dplyr::lag()    masks stats::lag()
-    ## â¹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+    ## Ã¢ÂÂÃ¢ÂÂ Attaching core tidyverse packages Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ tidyverse 2.0.0 Ã¢ÂÂÃ¢ÂÂ
+    ## Ã¢ÂÂ dplyr     1.2.1     Ã¢ÂÂ readr     2.1.5
+    ## Ã¢ÂÂ forcats   1.0.1     Ã¢ÂÂ stringr   1.6.0
+    ## Ã¢ÂÂ ggplot2   4.0.3     Ã¢ÂÂ tibble    3.3.1
+    ## Ã¢ÂÂ lubridate 1.9.5     Ã¢ÂÂ tidyr     1.3.2
+    ## Ã¢ÂÂ purrr     1.2.0     
+    ## Ã¢ÂÂÃ¢ÂÂ Conflicts Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ tidyverse_conflicts() Ã¢ÂÂÃ¢ÂÂ
+    ## Ã¢ÂÂ dplyr::filter() masks stats::filter()
+    ## Ã¢ÂÂ dplyr::lag()    masks stats::lag()
+    ## Ã¢ÂÂ¹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
 ``` r
 data(extraversion, package = "diffIRT")
@@ -172,7 +172,7 @@ Extra$item <- factor(Extra$item)
 head(Extra)
 ```
 
-    ## # A tibble: 6 Ã 4
+    ## # A tibble: 6 ÃÂ 4
     ##     sbj item   resp    rt
     ##   <int> <fct> <dbl> <dbl>
     ## 1     1 Item1     0 2.73 
@@ -223,11 +223,11 @@ list of priors should be passed to `fitBayesDiffIRT` to fit a Bayesian
 diffusion item-response theory model. The following model names are
 recognized:
 
-- “d” for the D-diffusion model (for survey items, default),
-- “dRV” for the D-diffusion model with random variability (for survey
+- âdâ for the D-diffusion model (for survey items, default),
+- âdRVâ for the D-diffusion model with random variability (for survey
   items),
-- “q” for the Q-diffusion model (for ability tests),
-- “qRV” for the Q-diffusion model with random variability (for ability
+- âqâ for the Q-diffusion model (for ability tests),
+- âqRVâ for the Q-diffusion model with random variability (for ability
   tests).
 
 ``` r
@@ -888,14 +888,14 @@ summary(samples)
     ## Posterior summaries:
     ## 
     ## Hyperparameters:
-    ## # A tibble: 2 Ã 9
+    ## # A tibble: 2 ÃÂ 9
     ##   variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##   <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
     ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1440.    2426.
     ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1     970.    2034.
     ## 
     ## Item parameters:
-    ## # A tibble: 20 Ã 9
+    ## # A tibble: 20 ÃÂ 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
     ##  1 nu[1]    -0.65  -0.65  0.11 -0.82 -0.48     1    2041.    2977.
@@ -920,7 +920,7 @@ summary(samples)
     ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    2350.    2800.
     ## 
     ## Subject parameters:
-    ## # A tibble: 429 Ã 9
+    ## # A tibble: 429 ÃÂ 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
     ##  1 tnd[1]    0.37   0.37  0.1   0.22  0.54     1    5948.    3371.
@@ -933,10 +933,10 @@ summary(samples)
     ##  8 tnd[8]    0.52   0.52  0.16  0.27  0.77     1    4736.    3099.
     ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.45     1    6732.    3239.
     ## 10 tnd[10]   0.42   0.41  0.13  0.24  0.65     1    5891.    2739.
-    ## # â¹ 419 more rows
+    ## # Ã¢ÂÂ¹ 419 more rows
     ## 
     ## Other parameters:
-    ## # A tibble: 429 Ã 9
+    ## # A tibble: 429 ÃÂ 9
     ##    variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
     ##  1 z_theta[1]  -0.83  -0.82  0.37 -1.44 -0.22     1    5269.    2870.
@@ -949,7 +949,7 @@ summary(samples)
     ##  8 z_theta[8]   0.33   0.32  0.54 -0.54  1.23     1    5497.    3055.
     ##  9 z_theta[9]   0.26   0.25  0.48 -0.5   1.05     1    6098.    3049.
     ## 10 z_theta[10]  0.39   0.39  0.44 -0.3   1.11     1    5764.    3192.
-    ## # â¹ 419 more rows
+    ## # Ã¢ÂÂ¹ 419 more rows
 
 `checkDiagnostics` provides common Stan diagnostics such as number of
 divergeant transitions, R hat, effective sample size, maximum treedepth
@@ -1001,7 +1001,7 @@ plot(samples, parameter = "omega_theta",
 
 ![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
-<!-- Posterior predictive distibution hinzufügen!  -->
+<!-- Posterior predictive distibution hinzufÃ¼gen!  -->
 
 # 5 Contributing to the package
 
@@ -1023,9 +1023,9 @@ entry-spacing="0">
 
 <div id="ref-alexandrowicz_diffusion_2020" class="csl-entry">
 
-Alexandrowicz, Rainer W. 2020. “The Diffusion Model Visualizer: An
-Interactive Tool to Understand the Diffusion Model Parameters.”
-*Psychological Research* 84 (4): 1157–65.
+Alexandrowicz, Rainer W. 2020. âThe Diffusion Model Visualizer: An
+Interactive Tool to Understand the Diffusion Model Parameters.â
+*Psychological Research* 84 (4): 1157â65.
 <https://doi.org/10.1007/s00426-018-1112-6>.
 
 </div>
@@ -1034,25 +1034,25 @@ Interactive Tool to Understand the Diffusion Model Parameters.”
 
 Carpenter, Bob, Andrew Gelman, Matthew D. Hoffman, Daniel Lee, Ben
 Goodrich, Michael Betancourt, Marcus Brubaker, Jiqiang Guo, Peter Li,
-and Allen Riddell. 2017. “*Stan* : A Probabilistic Programming
-Language.” *Journal of Statistical Software* 76 (1).
+and Allen Riddell. 2017. â*Stan* : A Probabilistic Programming
+Language.â *Journal of Statistical Software* 76 (1).
 <https://doi.org/10.18637/jss.v076.i01>.
 
 </div>
 
 <div id="ref-kang_modeling_2022" class="csl-entry">
 
-Kang, Inhan, Paul De Boeck, and Roger Ratcliff. 2022. “Modeling
+Kang, Inhan, Paul De Boeck, and Roger Ratcliff. 2022. âModeling
 Conditional Dependence of Response Accuracy and Response Time with the
-Diffusion Item Response Theory Model.” *Psychometrika* 87 (2): 725–48.
+Diffusion Item Response Theory Model.â *Psychometrika* 87 (2): 725â48.
 <https://doi.org/10.1007/s11336-021-09819-5>.
 
 </div>
 
 <div id="ref-link_sequential_1975" class="csl-entry">
 
-Link, S. W., and R. A. Heath. 1975. “A Sequential Theory of
-Psychological Discrimination.” *Psychometrika* 40 (1): 77–105.
+Link, S. W., and R. A. Heath. 1975. âA Sequential Theory of
+Psychological Discrimination.â *Psychometrika* 40 (1): 77â105.
 <https://doi.org/10.1007/BF02291481>.
 
 </div>
@@ -1060,8 +1060,8 @@ Psychological Discrimination.” *Psychometrika* 40 (1): 77–105.
 <div id="ref-molenaar_fitting_2015" class="csl-entry">
 
 Molenaar, Dylan, Francis Tuerlinckx, and Han L. J. Van Der Maas. 2015.
-“Fitting Diffusion Item Response Theory Models for Responses and
-Response Times Using the *r* Package **diffIRT**.” *Journal of
+âFitting Diffusion Item Response Theory Models for Responses and
+Response Times Using the *r* Package **diffIRT**.â *Journal of
 Statistical Software* 66 (4). <https://doi.org/10.18637/jss.v066.i04>.
 
 </div>
@@ -1069,23 +1069,23 @@ Statistical Software* 66 (4). <https://doi.org/10.18637/jss.v066.i04>.
 <div id="ref-Ratcliff2016" class="csl-entry">
 
 Ratcliff, Roger, Philip L Smith, Scott D Brown, and Gail McKoon. 2016.
-“Diffusion Decision Model : Current Issues and History.” *Trends in
-Cognitive Sciences* 20 (4): 260–81.
+âDiffusion Decision Model : Current Issues and History.â *Trends in
+Cognitive Sciences* 20 (4): 260â81.
 <https://doi.org/10.1016/j.tics.2016.01.007>.
 
 </div>
 
 <div id="ref-stone_models_1960" class="csl-entry">
 
-Stone, Mervyn. 1960. “Models for Choice-Reaction Time.” *Psychometrika*
-25 (3): 251–60. <https://doi.org/10.1007/BF02289729>.
+Stone, Mervyn. 1960. âModels for Choice-Reaction Time.â *Psychometrika*
+25 (3): 251â60. <https://doi.org/10.1007/BF02289729>.
 
 </div>
 
 <div id="ref-tuerlinckx_two_2005" class="csl-entry">
 
-Tuerlinckx, Francis, and Paul De Boeck. 2005. “Two Interpretations of
-the Discrimination Parameter.” *Psychometrika* 70 (4): 629–50.
+Tuerlinckx, Francis, and Paul De Boeck. 2005. âTwo Interpretations of
+the Discrimination Parameter.â *Psychometrika* 70 (4): 629â50.
 <https://doi.org/10.1007/s11336-000-0810-3>.
 
 </div>
@@ -1093,10 +1093,10 @@ the Discrimination Parameter.” *Psychometrika* 70 (4): 629–50.
 <div id="ref-van_der_maas_cognitive_2011" class="csl-entry">
 
 Van Der Maas, Han L. J., Dylan Molenaar, Gunter Maris, Rogier A. Kievit,
-and Denny Borsboom. 2011. “Cognitive Psychology Meets Psychometric
+and Denny Borsboom. 2011. âCognitive Psychology Meets Psychometric
 Theory: On the Relation Between Process Models for Decision Making and
-Latent Variable Models for Individual Differences.” *Psychological
-Review* 118 (2): 339–56. <https://doi.org/10.1037/a0022749>.
+Latent Variable Models for Individual Differences.â *Psychological
+Review* 118 (2): 339â56. <https://doi.org/10.1037/a0022749>.
 
 </div>
 

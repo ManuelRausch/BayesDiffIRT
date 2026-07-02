@@ -1,27 +1,27 @@
 {
-    "id": "528D190C",
+    "id": "628D67DA",
     "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/README.Rmd",
     "project_path": "README.Rmd",
     "type": "r_markdown",
-    "hash": "3685833676",
+    "hash": "501916784",
     "contents": "",
     "dirty": false,
-    "created": 1782941050019.0,
+    "created": 1782982192612.0,
     "source_on_save": false,
-    "relative_order": 9,
+    "relative_order": 2,
     "properties": {
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "161,0",
-        "scrollLine": "151"
+        "cursorPosition": "176,12",
+        "scrollLine": "178"
     },
     "folds": "",
-    "lastKnownWriteTime": 1782945209,
+    "lastKnownWriteTime": 1782983613,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1782945209481,
+    "last_content_update": 1782983613055,
     "read_only": false,
     "read_only_alternatives": []
 }

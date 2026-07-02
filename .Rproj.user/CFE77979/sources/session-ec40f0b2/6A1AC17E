@@ -1,27 +1,27 @@
 {
-    "id": "1F655C34",
-    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/prior.R",
-    "project_path": "R/prior.R",
+    "id": "6A1AC17E",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/fitBayesDiffIRT.R",
+    "project_path": "R/fitBayesDiffIRT.R",
     "type": "r_source",
-    "hash": "1246788246",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1782943694889.0,
+    "created": 1782982454912.0,
     "source_on_save": false,
-    "relative_order": 7,
+    "relative_order": 5,
     "properties": {
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "41,48",
-        "scrollLine": "34"
+        "cursorPosition": "152,0",
+        "scrollLine": "146"
     },
     "folds": "",
     "lastKnownWriteTime": 1782945217,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1782945217565,
+    "last_content_update": 1782945217,
     "read_only": false,
     "read_only_alternatives": []
 }

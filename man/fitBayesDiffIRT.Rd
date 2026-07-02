@@ -13,12 +13,12 @@ fitBayesDiffIRT(
   model = "d",
   priors = NULL,
   seed = NULL,
-  n.chains = 4,
-  n.cores = n.chains,
-  n.warmup = 1000,
-  n.samples = 1000,
-  adapt.delta = 0.95,
-  max.treedepth = 12,
+  nChains = 4,
+  nCores = nChains,
+  nWarmup = 1000,
+  nSamples = 1000,
+  adaptDelta = 0.95,
+  maxTreeDepth = 12,
   init = NULL,
   refresh = 200,
   diagnostic.warnings = TRUE,
@@ -63,22 +63,22 @@ If NULL, a set of default priors is used,}
 
 \item{seed}{Optional integer seed passed to Stan for reproducible sampling.}
 
-\item{n.chains}{Integer. Number of Markov chains. Defaults to 4.}
+\item{nChains}{Integer. Number of Markov chains. Defaults to 4.}
 
-\item{n.cores}{Integer. Number of chains to run in parallel. Defaults to
-n.chains.}
+\item{nCores}{Integer. Number of chains to run in parallel. Defaults to
+nChains.}
 
-\item{n.warmup}{Integer. Number of warmup iterations per chain. Defaults to
+\item{nWarmup}{Integer. Number of warmup iterations per chain. Defaults to
 1000.}
 
-\item{n.samples}{Integer. Number of post-warmup sampling iterations per chain.
+\item{nSamples}{Integer. Number of post-warmup sampling iterations per chain.
 Defaults to 1000.}
 
-\item{adapt.delta}{Numeric. Target average proposal acceptance probability
+\item{adaptDelta}{Numeric. Target average proposal acceptance probability
 passed to Stan. Higher values may reduce divergent transitions but can
 increase computation time. Defaults to 0.95.}
 
-\item{max.treedepth}{Integer. Maximum tree depth for the NUTS sampler.
+\item{maxTreeDepth}{Integer. Maximum tree depth for the NUTS sampler.
 Increasing this value may help when transitions hit the maximum tree depth,
 but can increase computation time. Defaults to 12.}
 
@@ -114,7 +114,7 @@ checkDiagnostics().
 \description{
 \code{fitBayesDiffIRT()} fits Bayesian diffusion item-response theory models by
 sampling from the posterior distributions of item and subject parameters using
-the No-U-Turn Sampler (NUTS) as implemented in Stan via \code{cmdstanr}.
+the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT} via \pkg{cmdstanr}.
 }
 \details{
 \code{fitBayesDiffIRT} samples from the posterior distributions of item and subject
@@ -176,9 +176,9 @@ fit <- fitBayesDiffIRT(
   person = "person",
   item = "item",
   model = "d",
-  chains = 4,
-  iter.warmup = 1000,
-  iter.sampling = 1000
+  nChains = 4,
+  nWarmup = 1000,
+  nSampling = 1000
 )
 
 summary(fit)
@@ -192,6 +192,13 @@ diagnostics(fit)
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\code{\link{prior}},
+\code{\link{plot}},
+\code{\link{checkDiagnostics}},
+\code{\link[cmdstanr]{cmdstan_model}},
+\code{\link[cmdstanr]{CmdStanModel}}
 }
 \author{
 Manuel Rausch, \email{manuel.rausch@aau.at}
