@@ -149,7 +149,7 @@ Finally, a string identifying the chosen model, the prepared data and a list of 
 * "q" for the Q-diffusion model (for ability tests),
 * "qRV" for the Q-diffusion model with random variability (for ability tests).
 
-```{r}
+```{r, include=FALSE}
 samples <- 
   fitBayesDiffIRT(Extra,
                   rt = "rt", resp = "resp", sbj = "sbj",
@@ -186,7 +186,16 @@ plot(samples, parameter = "omega_theta",
      type = "density")
 ```
 
-<!-- Posterior predictive distibution hinzuf?gen!  -->
+<!-- Posterior predictive distibution hinzufügen!  -->
+
+The posterior predictive distributions can be visualized using `ppCheck`. Set type = "response" to 
+
+```{r}
+ppCheck(samples2, type = "response", group = "item")
+ppCheck(samples2, type = "response", group = "person")
+
+```
+
 
 # Contributing to the package 
 The package is under active development. Please feel free to [contact us](mailto:manuel.rausch@aau.at) to suggest diffusion item response theory models that we might have not yet implemented, or to volunteer adding additional features. 
