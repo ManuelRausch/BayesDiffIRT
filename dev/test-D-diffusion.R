@@ -263,4 +263,7 @@ plot(samples2, parameter = "tnd", type = "interval")
 plot(samples2, parameter = "omega_gamma", type = "density")
 plot(samples2, parameter = "omega_theta", type = "density")
 
+ppCheck(samples2, type = "response", group = "item")
+ppCheck(samples2, type = "response", group = "person")
+
 save(samples, samples2, file = "dev/Tests-D-Diffusion.RData")

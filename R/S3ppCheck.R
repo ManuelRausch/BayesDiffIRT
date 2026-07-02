@@ -18,7 +18,7 @@ ppCheck.BayesDiffIRTfit <-
            group = c("none", "item", "person"),
            seed = NULL,
            ...)
-    {
+  {
     type <- match.arg(type)
     group <- match.arg(group)
 
@@ -34,7 +34,7 @@ ppCheck.BayesDiffIRTfit <-
 
 ppCheckResponse <- function(object,
                             ndraws = 10,
-                            group = c("none", "item", "person"),
+                            group = c("item", "person"),
                             seed = NULL) {
 
   group <- match.arg(group)
@@ -52,80 +52,44 @@ ppCheckResponse <- function(object,
     resp = object$stanData$resp
   )
 
-  if (group == "none") {
+  if (group == "item") {
 
-    obsStat <- data.frame(
-      response = c(0L, 1L),
-      observed = c(mean(obs$resp == 0L), mean(obs$resp == 1L))
-    )
+    obsStat <- aggregate(resp ~ item, obs, mean)
+    names(obsStat)[2] <- "observed"
 
-    predStat <- aggregate(
-      resp ~ draw,
-      data = yrep,
-      FUN = function(x) mean(x == 1L)
-    )
+    predStat <- aggregate(resp ~ draw + item,
+                          data = yrep, mean)
 
-    predLong <- rbind(
-      data.frame(
-        response = 1L,
-        draw = predStat$draw,
-        value = predStat$resp
-      ),
-      data.frame(
-        response = 0L,
-        draw = predStat$draw,
-        value = 1 - predStat$resp
-      )
-    )
+    predSummary <- aggregate(resp ~ item, data = predStat,
+                             FUN = function(x) {
+                               c(mean = mean(x),
+                                 lo50 = stats::quantile(x, 0.25),
+                                 hi50 = stats::quantile(x, 0.75),
+                                 lo95 = stats::quantile(x, 0.025),
+                                 hi95 = stats::quantile(x, 0.975))
+                             })
 
-    predSummary <- aggregate(
-      value ~ response,
-      data = predLong,
-      FUN = function(x) {
-        c(
-          mean = mean(x),
-          lo50 = stats::quantile(x, 0.25),
-          hi50 = stats::quantile(x, 0.75),
-          lo95 = stats::quantile(x, 0.025),
-          hi95 = stats::quantile(x, 0.975)
-        )
-      }
-    )
+    predSummary <- data.frame(item = predSummary$item,
+                              predSummary$resp,row.names = NULL)
 
-    predSummary <- data.frame(
-      response = predSummary$response,
-      do.call(rbind, predSummary$value),
-      row.names = NULL
-    )
+    plotDf <- merge(obsStat, predSummary, by = "item")
 
-    plotDf <- merge(obsStat, predSummary, by = "response")
-    plotDf$response <- factor(plotDf$response, levels = c(0, 1))
-
-    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = response)) +
+    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = item)) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
-        linewidth = 0.5
-      ) +
+        ggplot2::aes(ymin = `lo95.2.5.`, ymax = `hi95.97.5.`),
+        linewidth = 0.4) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
-        linewidth = 1.4
-      ) +
+        ggplot2::aes(ymin = `lo50.25.`, ymax = `hi50.75.`),
+        linewidth = 1.1) +
+      ggplot2::geom_point(ggplot2::aes(y = mean),
+                          shape = 21,size = 2,fill = "white") +
       ggplot2::geom_point(
-        ggplot2::aes(y = mean),
-        shape = 21,
-        size = 2.5,
-        fill = "white"
-      ) +
-      ggplot2::geom_point(
-        ggplot2::aes(y = observed),
-        size = 2.8
-      ) +
+        ggplot2::aes(y = observed), color = "purple",
+        shape = 21,, size = 2.2) +
+      ggplot2::coord_flip() +
       ggplot2::labs(
-        x = "Response category",
-        y = "Response proportion",
-        subtitle =
-          "Observed proportions and posterior predictive intervals"
-      ) +
+        x = group,
+        y = "Pr(response = 1)") +
       ggplot2::ylim(0, 1) +
       ggplot2::theme_classic()
 
@@ -133,77 +97,46 @@ ppCheckResponse <- function(object,
     return(invisible(p))
   }
 
-  if (group %in% c("item", "person")) {
+  if (group == "person") {
 
-    groupVar <- if (group == "item") "item" else "sbj"
+    obsStat <- aggregate(resp ~ sbj, obs, mean)
+    names(obsStat)[2] <- "observed"
 
-    obsStat <- aggregate(
-      resp ~ .,
-      data = obs[, c(groupVar, "resp")],
-      FUN = function(x) mean(x == 1L)
-    )
+    predStat <- aggregate(resp ~ draw + sbj,
+                          data = yrep, mean)
 
-    names(obsStat) <- c("group", "observed")
-
-    predStat <- aggregate(
-      resp ~ draw + group,
-      data = transform(yrep, group = yrep[[groupVar]]),
-      FUN = function(x) mean(x == 1L)
-    )
-
-    names(predStat)[names(predStat) == "resp"] <- "value"
-
-    predSummary <- aggregate(
-      value ~ group,
-      data = predStat,
-      FUN = function(x) {
-        c(
-          mean = mean(x),
-          lo50 = stats::quantile(x, 0.25),
-          hi50 = stats::quantile(x, 0.75),
-          lo95 = stats::quantile(x, 0.025),
-          hi95 = stats::quantile(x, 0.975)
-        )
-      }
-    )
+    predSummary <-
+      aggregate(resp ~ sbj, data = predStat,
+                FUN = function(x) {
+                  c(mean = mean(x),
+                    lo50 = stats::quantile(x, 0.25),
+                    hi50 = stats::quantile(x, 0.75),
+                    lo95 = stats::quantile(x, 0.025),
+                    hi95 = stats::quantile(x, 0.975))
+                })
 
     predSummary <- data.frame(
-      group = predSummary$group,
-      do.call(rbind, predSummary$value),
-      row.names = NULL
-    )
+      sbj = predSummary$sbj,
+      predSummary$resp,row.names = NULL)
 
-    plotDf <- merge(obsStat, predSummary, by = "group")
-    plotDf$group <- factor(plotDf$group, levels = plotDf$group)
+    plotDf <- merge(obsStat, predSummary, by = "sbj")
 
-    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = group)) +
+    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = sbj)) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
-        linewidth = 0.4
-      ) +
+        ggplot2::aes(ymin = `lo95.2.5.`, ymax = `hi95.97.5.`),
+        linewidth = 0.4) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
-        linewidth = 1.1
-      ) +
+        ggplot2::aes(ymin = `lo50.25.`, ymax = `hi50.75.`),
+        linewidth = 1.1) +
+      ggplot2::geom_point(ggplot2::aes(y = mean),
+                          shape = 21,size = 1.2,fill = "white") +
       ggplot2::geom_point(
-        ggplot2::aes(y = mean),
-        shape = 21,
-        size = 2,
-        fill = "white"
-      ) +
-      ggplot2::geom_point(
-        ggplot2::aes(y = observed),
-        size = 2.2
-      ) +
-      ggplot2::coord_flip() +
+        ggplot2::aes(y = observed), color = "darkgreen",
+        shape = 21,, size = 1.2) +
+      #ggplot2::coord_flip() +
       ggplot2::labs(
         x = group,
-        y = "Pr(response = 1)",
-        subtitle = paste0(
-          "Observed response proportions and posterior predictive intervals by ",
-          group
-        )
-      ) +
+        y = "Pr(response = 1)") +
       ggplot2::ylim(0, 1) +
       ggplot2::theme_classic()
 
