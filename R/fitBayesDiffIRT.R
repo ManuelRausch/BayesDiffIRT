@@ -224,7 +224,10 @@ fitBayesDiffIRT <- function(
                     adapt_delta = adaptDelta,
                     max_treedepth = maxTreeDepth,
                     init = init,
-                    refresh = refresh, ...)
+                    refresh = refresh,
+                    show_messages = FALSE,
+                    show_exceptions = FALSE,
+                    ...)
 
   # 5) Postprocess:
   diag <- checkStanDiagnostics(fit, maxTreeDepth)

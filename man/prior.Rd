@@ -61,6 +61,7 @@ been implemented to be consistent with previous research
 \insertCite{van_der_maas_cognitive_2011}{BayesDiffIRT},
 but they will often lead to convergence issues.
 For model = "d", the current default priors are:
+
 \describe{
 \item{\code{omega_theta}}{\code{normal(0, 2.5)}}
 \item{\code{omega_gamma}}{\code{normal(0, 0.5)}}
@@ -70,11 +71,13 @@ For model = "d", the current default priors are:
 }
 For \code{model = "dRV"}, the default priors are the same as in \code{model = "d"},
 except that there are two additional parameters:
+
 \describe{
 \item{\code{s_delta}}{\code{lognormal(-0.5*log(2), sqrt(2))}}
 \item{\code{s_beta}}{\code{beta(0.25, 0.01)}}
 }
 For \code{model = "q"}, the current default priors are:
+
 \describe{
 \item{\code{omega_theta}}{\code{normal(0, 0.75)}}
 \item{\code{omega_gamma}}{\code{normal(0, 0.5)}}

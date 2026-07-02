@@ -224,9 +224,9 @@ fitBayesDiffIRT <- function(
                     adapt_delta = adaptDelta,
                     max_treedepth = maxTreeDepth,
                     init = init,
-                    refresh = refresh, 
-                    show.messages = FALSE, 
-                    Show_exceptions = FALSE,
+                    refresh = refresh,
+                    show_messages = FALSE,
+                    show_exceptions = FALSE,
                     ...)
 
   # 5) Postprocess:
