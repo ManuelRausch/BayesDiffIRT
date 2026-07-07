@@ -62,9 +62,10 @@
 #' @export
 plot.BayesDiffIRTfit <-
   function(x,
+           type = c("interval", "density", "trace"),
            parameter = c("theta", "gamma", "nu", "a", "tnd",
                          "omega_theta", "omega_gamma", "s_delta", "s_beta"),
-           type = c("interval", "density", "trace"),
+
            index = NULL,
            nmax = 15,
            ...) {
@@ -128,17 +129,14 @@ plot.BayesDiffIRTfit <-
         summaryDf, ggplot2::aes(x = ind, y = mean)) +
         ggplot2::geom_linerange(
           ggplot2::aes(ymin = lo95, ymax = hi95),
-          linewidth = 0.4
-        ) +
+          linewidth = 0.4) +
         ggplot2::geom_linerange(
           ggplot2::aes(ymin = lo50, ymax = hi50),
-          linewidth = 1.2
-        ) +
+          linewidth = 1.2) +
         ggplot2::geom_point(
           size = 2,
           shape = 21,
-          fill = grDevices::rgb(52, 108, 131, maxColorValue = 255)
-        ) +
+          fill = grDevices::rgb(52, 108, 131, maxColorValue = 255)) +
         ggplot2::coord_flip() +
         ggplot2::labs(
           x = NULL,

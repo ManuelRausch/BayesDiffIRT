@@ -90,7 +90,8 @@ ggplot(
 # 1) test thr data preprocessing functions
 
 data <- BayesDiffIRT:::validateData(
-  data = SimData,rt = "rt", resp = "resp", sbj = "sbj", item = "item",
+  data = SimData,rt = "rt", resp = "resp",
+  sbj = "sbj", item = "item",
   na.rm = TRUE)
 head(data, n = 25)
 
@@ -265,5 +266,20 @@ plot(samples2, parameter = "omega_theta", type = "density")
 
 ppCheck(samples2, type = "response", group = "item")
 ppCheck(samples2, type = "response", group = "person")
+ppCheck(samples2, type = "response", group = "none")
+
+ppCheck(samples2, type = "rtQuantile",
+        minN=10, ndraws=10)
+ppCheck(samples2, type = "rtQuantile", minN=10, ndraws=10,
+        group="item", index=1:5)
+
+gg <- plotResponseSurface(samples2, item = 1,
+                    theta.range = NULL,
+                    gamma.range = NULL,
+                    grid.size = 50,
+                    contours = c(.1, .3, .5, .7, .9),
+                    ndraws = 200)
+gg
 
 save(samples, samples2, file = "dev/Tests-D-Diffusion.RData")
+load("dev/Tests-D-Diffusion.RData")

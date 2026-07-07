@@ -1,0 +1,6 @@
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(
+    "BayesDiffIRT: Bayesian diffusion-IRT models with RTs.\n",
+    "Backend: cmdstanr."
+  )
+}

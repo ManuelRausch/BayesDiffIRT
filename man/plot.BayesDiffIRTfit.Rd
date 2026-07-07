@@ -6,9 +6,9 @@
 \usage{
 \method{plot}{BayesDiffIRTfit}(
   x,
+  type = c("interval", "density", "trace"),
   parameter = c("theta", "gamma", "nu", "a", "tnd", "omega_theta", "omega_gamma",
     "s_delta", "s_beta"),
-  type = c("interval", "density", "trace"),
   index = NULL,
   nmax = 15,
   ...
@@ -18,17 +18,17 @@
 \item{x}{A fitted model object of class \code{BayesDiffIRTfit}, typically
 returned by \code{\link{fitBayesDiffIRT}}.}
 
-\item{parameter}{Character string. Name of the parameter to plot. Must be one
-of \code{"theta"}, \code{"gamma"}, \code{"nu"}, \code{"a"},
-\code{"tnd"}, \code{"omega_theta"}, \code{"omega_gamma"},
-\code{"s_delta"}, or \code{"s_beta"}. Person-specific and item-specific
-parameters can be subset with \code{index}.}
-
 \item{type}{Character string. Type of plot to produce. Must be one of
 \code{"interval"}, \code{"density"}, or \code{"trace"}.
 \code{"interval"} displays posterior means with 50\\% and 95\\% credible
 intervals. \code{"density"} displays marginal posterior densities.
 \code{"trace"} displays MCMC trace plots by chain.}
+
+\item{parameter}{Character string. Name of the parameter to plot. Must be one
+of \code{"theta"}, \code{"gamma"}, \code{"nu"}, \code{"a"},
+\code{"tnd"}, \code{"omega_theta"}, \code{"omega_gamma"},
+\code{"s_delta"}, or \code{"s_beta"}. Person-specific and item-specific
+parameters can be subset with \code{index}.}
 
 \item{index}{Optional integer vector. Indices of person-specific or
 item-specific parameters to plot. For example, \code{index = 1:5} with

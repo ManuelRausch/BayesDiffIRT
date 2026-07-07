@@ -56,7 +56,7 @@ item indices stored in the \code{BayesDiffIRTfit} object.
 \examples{
 data(bayesDiffIRTexample)
 \dontrun{
-fit <- fitBayesDiffIRT(bayesDiffIRTexample)
+fit <- fitBayesDiffIRT(data=bayesDiffIRTexample, model = "d")
 
 # Simulate 100 posterior predictive data sets
 yrep <- posteriorPredict(fit, ndraws = 100, seed = 123)

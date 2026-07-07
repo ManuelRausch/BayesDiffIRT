@@ -92,6 +92,7 @@
 #' evidence required before a decision is made; a larger distance means that decisions tend to
 #' be made later because more evidence is required.
 #' The starting point \eqn{\beta} of the accumulation process reflects a priori bias toward one of the response options.
+#'
 #' In diffusion item response theory models,
 #' two of the traditional parameters from the drift diffusion decision model,
 #' boundary separation and drift rate, are decomposed into person and item parameters.
@@ -109,7 +110,7 @@
 #' there is no a prior bias for any of the choice alternatives.
 #' \insertCite{kang_modeling_2022}{BayesDiffIRT} proposed to include random
 #' trial-to-trial variability in both starting value \eqn{\beta} and drift rate \eqn{\delta}.
-#' In the Q- and D-diffusion model with random variation, the starting point
+#' In the Q- and D-diffusion model with random variation, the relative starting point
 #' \eqn{\beta_{pij}} for trial j given item i and person p is sampled from a uniform
 #' distribution \eqn{\beta_{pij} \sim \mathcal{U}(0.5 - s_{\beta}/2, 0.5 + s_{\beta}/2)}.
 #' The drift rate \eqn{\delta_{pij}} in trial j given item i and person p is sampled
@@ -117,7 +118,7 @@
 #' Random variability in starting values and drift rates accounts for the conditional
 #' dependency of accuracy and reaction times \insertCite{kang_modeling_2022}{BayesDiffIRT},
 #' but note that sampling will be considerably slower.
-
+#'
 #' @examples
 #' data("bayesDiffIRTexample")
 #' \dontrun{
@@ -141,7 +142,7 @@
 #'
 #'
 #' }
-
+#'
 #' @seealso
 #' \code{\link{prior}},
 #' \code{\link{plot}},

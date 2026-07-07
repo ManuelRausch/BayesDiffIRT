@@ -9,10 +9,13 @@ ppCheck(object, ...)
 
 \method{ppCheck}{BayesDiffIRTfit}(
   object,
-  type = c("response"),
-  ndraws = 10,
+  type = c("response", "rtQuantile"),
+  ndraws = 100,
   group = c("none", "item", "person"),
+  probs = c(0.1, 0.3, 0.5, 0.7, 0.9),
+  minN = 10,
   seed = NULL,
+  index = NULL,
   ...
 )
 }
@@ -20,7 +23,82 @@ ppCheck(object, ...)
 \item{object}{A fitted model object or posterior predictive object.}
 
 \item{...}{Additional arguments passed to methods.}
+
+\item{type}{Character string specifying the type of posterior predictive
+check. Currently supported options are \code{"response"} and
+\code{"rtQuantile"}. \code{"response"}  compares observed and
+posterior-predictive response proportions. \code{"rtQuantile"}
+compares observed and posterior-predictive reaction-time quantiles
+separately by response category.}
+
+\item{ndraws}{Integer. Number of posterior predictive draws to generate.}
+
+\item{group}{Character string specifying the grouping level.
+Options are \code{"none"}, \code{"item"}, and \code{"person"}. If
+\code{"none"}, the check is computed for the full data set. If
+\code{"item"}, summaries are computed separately by item. If
+\code{"person"}, summaries are computed separately by person.}
+
+\item{probs}{Numeric vector of probabilities used for reaction-time quantile
+checks. Values must lie between 0 and 1.}
+
+\item{minN}{Integer. Minimum number of observations required to compute an
+observed or posterior-predictive reaction-time quantile within a response
+category or group.}
+
+\item{seed}{Optional integer seed passed to \code{\link{posteriorPredict}}.}
+
+\item{index}{Optional integer vector selecting specific items or persons when
+\code{group = "item"} or \code{group = "person"}. Ignored when
+\code{group = "none"}.}
+}
+\value{
+A plot object.
+
+returns a \code{\link[ggplot2]{ggplot}} object.
 }
 \description{
-Posterior predictive checks
+Perform posterior predictive checks for fitted Bayesian diffusion item
+response models.
+}
+\details{
+Posterior predictive checks compare summaries of the observed data with the
+same summaries computed from data simulated from the posterior predictive
+distribution.
+
+For \code{type = "response"}, the function compares the observed proportion
+of \code{resp = 1} with the posterior predictive distribution of the same
+quantity. With \code{group = "none"}, the plot shows the posterior predictive
+distribution of the overall response proportion and marks the observed value.
+With \code{group = "item"} or \code{group = "person"}, the plot shows
+posterior predictive 50 percent and 95 percent intervals for each item or
+person together with the observed response proportion.
+
+For \code{type = "rtQuantile"}, the function compares observed
+reaction-time quantiles with posterior predictive intervals for the same
+quantiles. Quantiles are computed separately for \code{resp = 0} and
+\code{resp = 1}. With \code{group = "item"} or \code{group = "person"}, the checks are
+computed separately for each item or person.
+}
+\examples{
+\dontrun{
+# Overall response proportion check
+ppCheck(fit, type = "response")
+
+# Response proportion check by item
+ppCheck(fit, type = "response", group = "item")
+
+# Restrict item-level checks to selected items
+ppCheck(fit, type = "response", group = "item", index = 1:5)
+
+# Reaction-time quantile check by response category
+ppCheck(fit, type = "rtQuantile", probs = c(.1, .3, .5, .7, .9))
+
+# Reaction-time quantile check by item
+ppCheck(fit, type = "rtQuantile", group = "item", index = 1:4)
+}
+
+}
+\seealso{
+\code{\link{posteriorPredict}}, \code{\link[ggplot2]{ggplot}}
 }
