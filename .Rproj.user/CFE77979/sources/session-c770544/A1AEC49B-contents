@@ -21,7 +21,7 @@ gitbranch <- "main/"
 ```
 # The BayesDiffIRT for R
 
-The `BayesDiffIRT` provides functions to sample posterior distributions and posterior predictive distributions of item and subject parameters of diffusion item response theory models for responses and reaction times [@molenaar_fitting_2015, @van_der_maas_cognitive_2011, @tuerlinckx_two_2005, @kang_modeling_2022]  `BayesDiffIRT` also provides functions to visualize posterior distributions of Diffusion item response theory model parameters and construct credible intervals. Under the hood, the package relies on NUTS sampling with STAN [@carpenter_stan_2017]. Up to know, the following diffusion item response theory models have been implemented: 
+The `BayesDiffIRT` provides functions to sample posterior distributions and posterior predictive distributions of item and subject parameters of diffusion item response theory models for responses and reaction times [@molenaar_fitting_2015, @van_der_maas_cognitive_2011, @tuerlinckx_two_2005, @kang_modeling_2022].  `BayesDiffIRT` also provides functions to visualize posterior distributions of Diffusion item response theory model parameters and construct credible intervals. Under the hood, the package relies on NUTS sampling with STAN [@carpenter_stan_2017]. Up to know, the following diffusion item response theory models have been implemented: 
 
 * D-diffusion model [@tuerlinckx_two_2005],
 * Q-diffusion model [@van_der_maas_cognitive_2011],
@@ -90,7 +90,7 @@ devtools::install_github("ManuelRausch/BayesDiffIRT")
 The function `fitBayesDiffIRT` fits Bayesian diffusion item-response theory models by
 sampling from the posterior distributions of item and subject parameters using
 the No-U-Turn Sampler (NUTS) as implemented in Stan [@carpenter_stan_2017].
-The data must contain columns identifying the subject, item, response, and response time. Response times should be numeric and measured in seconds. For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses. For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items.
+The data should be a dataframe with columns identifying the subject, item, response, and response time. Response times should be numeric and measured in seconds. For ability tests, binary responses should be coded as 0 for incorrect responses and 1 for correct responses. For questionnaire items, binary responses should be coded as 0 for rejected items and 1 for accepted items. Here, we prepare a dataset contained in the diffIRT package as example. 
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -151,7 +151,7 @@ Finally, a string identifying the chosen model, the prepared data and a list of 
 * "q" for the Q-diffusion model (for ability tests),
 * "qRV" for the Q-diffusion model with random variability (for ability tests).
 
-```{r, include=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 samples <- 
   fitBayesDiffIRT(Extra,
                   rt = "rt", resp = "resp", sbj = "sbj",
@@ -162,13 +162,13 @@ samples <-
 
 ## Inspecting the results
 
-The results of a fitted  Bayesian diffusion item-response theory model can be inspected using the function `summary`. 
+The results of a fitted  Bayesian diffusion item-response theory model can be inspected using the `summary` method. 
 
 ```{r}
 summary(samples)
 ```
 
-`checkDiagnostics` provides common Stan diagnostics such as number of divergeant transitions, R hat, effective sample size, maximum treedepth hits, and E-BFMI. 
+The method `checkDiagnostics` provides common Stan diagnostics such as number of divergeant transitions, R hat, effective sample size, maximum treedepth hits, and E-BFMI. 
 
 ```{r}
 checkDiagnostics(samples)
@@ -200,7 +200,7 @@ head(samplesDf)
 
 The posterior predictive distributions can be visualized using `ppCheck`. Set type = "response" to visualize the predicted probability of a correct response / item acceptance as a function of item or person. 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ppCheck(samples, type = "response")
 ppCheck(samples, type = "response", group = "item")
 ppCheck(samples, type = "response", group = "person",
@@ -216,7 +216,7 @@ ppCheck(samples, type = "rtQuantile")
 
 ## Plot item characteristics
 
-According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theTA$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours.
+According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theta$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours.
 
 ```{r}
  plotResponseSurface(samples, item = 1)

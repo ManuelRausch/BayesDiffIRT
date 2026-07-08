@@ -5,7 +5,7 @@
 The `BayesDiffIRT` provides functions to sample posterior distributions
 and posterior predictive distributions of item and subject parameters of
 diffusion item response theory models for responses and reaction times
-Kang, De Boeck, and Ratcliff (2022) `BayesDiffIRT` also provides
+Kang, De Boeck, and Ratcliff (2022). `BayesDiffIRT` also provides
 functions to visualize posterior distributions of Diffusion item
 response theory model parameters and construct credible intervals. Under
 the hood, the package relies on NUTS sampling with STAN (Carpenter et
@@ -125,12 +125,13 @@ install is using the `devtools` package:
 The function `fitBayesDiffIRT` fits Bayesian diffusion item-response
 theory models by sampling from the posterior distributions of item and
 subject parameters using the No-U-Turn Sampler (NUTS) as implemented in
-Stan (Carpenter et al. 2017). The data must contain columns identifying
-the subject, item, response, and response time. Response times should be
-numeric and measured in seconds. For ability tests, binary responses
-should be coded as 0 for incorrect responses and 1 for correct
-responses. For questionnaire items, binary responses should be coded as
-0 for rejected items and 1 for accepted items.
+Stan (Carpenter et al. 2017). The data should be a dataframe with
+columns identifying the subject, item, response, and response time.
+Response times should be numeric and measured in seconds. For ability
+tests, binary responses should be coded as 0 for incorrect responses and
+1 for correct responses. For questionnaire items, binary responses
+should be coded as 0 for rejected items and 1 for accepted items. Here,
+we prepare a dataset contained in the diffIRT package as example.
 
 ``` r
 library(tidyverse)
@@ -215,10 +216,17 @@ recognized:
 - “qRV” for the Q-diffusion model with random variability (for ability
   tests).
 
+``` r
+samples <- 
+  fitBayesDiffIRT(Extra,
+                  rt = "rt", resp = "resp", sbj = "sbj",
+                  item = "item", model = "d")
+```
+
 ## 4.2 Inspecting the results
 
 The results of a fitted Bayesian diffusion item-response theory model
-can be inspected using the function `summary`.
+can be inspected using the `summary` method.
 
 ``` r
 summary(samples)
@@ -243,69 +251,69 @@ summary(samples)
     ## # A tibble: 2 × 9
     ##   variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##   <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1349.    2728.
-    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1    1020.    1996.
+    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8      1    1371.    2582.
+    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25     1    1032.    2115.
     ## 
     ## Item parameters:
     ## # A tibble: 20 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 nu[1]    -0.65  -0.66  0.1  -0.82 -0.48     1    1702.    2451.
-    ##  2 nu[2]    -0.15  -0.16  0.11 -0.33  0.02     1    1678.    2155.
-    ##  3 nu[3]    -1.24  -1.24  0.13 -1.46 -1.04     1    1934.    2778.
-    ##  4 nu[4]    -1.71  -1.71  0.15 -1.95 -1.47     1    2086.    3092.
-    ##  5 nu[5]    -0.21  -0.21  0.11 -0.39 -0.04     1    1750.    2567.
-    ##  6 nu[6]    -1.31  -1.31  0.12 -1.51 -1.11     1    1977.    2960.
-    ##  7 nu[7]    -1.7   -1.69  0.14 -1.93 -1.47     1    1954.    2675.
-    ##  8 nu[8]    -1.92  -1.92  0.15 -2.17 -1.69     1    2688.    2449.
-    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.66     1    1326.    2536.
-    ## 10 nu[10]   -1.43  -1.43  0.14 -1.66 -1.2      1    2074.    2933.
-    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2848.    2749.
-    ## 12 a[2]      0.5    0.5   0.02  0.46  0.53     1    2523.    2728.
-    ## 13 a[3]      0.49   0.49  0.03  0.46  0.54     1    2414.    2797.
-    ## 14 a[4]      0.51   0.51  0.03  0.47  0.56     1    2079.    3027.
-    ## 15 a[5]      0.51   0.51  0.02  0.48  0.55     1    2747.    2962.
-    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2255.    2889.
-    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2448.    3025.
-    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    2489.    2779.
-    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2949.    2702.
-    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    2137.    3086.
+    ##  1 nu[1]    -0.64  -0.64  0.1  -0.81 -0.47  1.01    1837.    2190.
+    ##  2 nu[2]    -0.14  -0.14  0.11 -0.32  0.04  1.01    2071.    2473.
+    ##  3 nu[3]    -1.23  -1.23  0.13 -1.43 -1.02  1       1911.    2570.
+    ##  4 nu[4]    -1.69  -1.69  0.14 -1.93 -1.46  1       2207.    2888.
+    ##  5 nu[5]    -0.2   -0.2   0.11 -0.37 -0.03  1       1792.    2391.
+    ##  6 nu[6]    -1.29  -1.29  0.12 -1.5  -1.09  1       2291.    3059.
+    ##  7 nu[7]    -1.69  -1.69  0.14 -1.93 -1.45  1       2232.    3059.
+    ##  8 nu[8]    -1.91  -1.91  0.15 -2.14 -1.67  1       2550.    2949.
+    ##  9 nu[9]    -0.82  -0.82  0.1  -0.99 -0.66  1.01    1316.    2603.
+    ## 10 nu[10]   -1.42  -1.42  0.14 -1.65 -1.19  1       2277.    2545.
+    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47  1       2491.    3099.
+    ## 12 a[2]      0.49   0.49  0.02  0.46  0.53  1       2921.    3032.
+    ## 13 a[3]      0.5    0.5   0.02  0.46  0.54  1       2131.    3090.
+    ## 14 a[4]      0.51   0.51  0.03  0.47  0.55  1       2174.    2861.
+    ## 15 a[5]      0.51   0.51  0.02  0.48  0.55  1       2510.    2962.
+    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47  1       2661.    3017.
+    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44  1       2994.    3353.
+    ## 18 a[8]      0.42   0.42  0.02  0.39  0.46  1       2467.    2639.
+    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38  1       2985.    3158.
+    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59  1       2242.    2867.
     ## 
     ## Subject parameters:
     ## # A tibble: 429 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.54     1    6241.    2773.
-    ##  2 tnd[2]    0.4    0.41  0.09  0.24  0.54     1    4125.    2905.
-    ##  3 tnd[3]    0.46   0.46  0.12  0.27  0.65     1    4294.    3004.
-    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.36     1    6149.    3275.
-    ##  5 tnd[5]    0.39   0.39  0.08  0.26  0.51     1    4358.    2965.
-    ##  6 tnd[6]    0.32   0.32  0.06  0.21  0.41     1    5036.    3412.
-    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4836.    3119.
-    ##  8 tnd[8]    0.53   0.52  0.15  0.27  0.78     1    4068.    2715.
-    ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.46     1    5570.    2923.
-    ## 10 tnd[10]   0.43   0.42  0.13  0.24  0.65     1    5302.    2743.
+    ##  1 tnd[1]    0.37   0.36  0.1   0.21  0.54     1    5954.    2946.
+    ##  2 tnd[2]    0.4    0.4   0.09  0.24  0.54     1    4628.    3355.
+    ##  3 tnd[3]    0.47   0.47  0.12  0.27  0.65     1    4733.    3274.
+    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.36     1    5422.    3092.
+    ##  5 tnd[5]    0.39   0.39  0.07  0.26  0.5      1    4463.    3161.
+    ##  6 tnd[6]    0.31   0.32  0.06  0.21  0.41     1    4817.    3374.
+    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4466.    3136.
+    ##  8 tnd[8]    0.52   0.52  0.16  0.27  0.77     1    4054.    3474.
+    ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.45     1    5850.    3179.
+    ## 10 tnd[10]   0.43   0.41  0.12  0.24  0.64     1    5253.    2528.
     ## # ℹ 419 more rows
     ## 
     ## Other parameters:
     ## # A tibble: 429 × 9
     ##    variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 z_theta[1]  -0.84  -0.84  0.37 -1.44 -0.22     1    4874.    2885.
-    ##  2 z_theta[2]  -0.3   -0.3   0.53 -1.17  0.55     1    6567.    3216.
-    ##  3 z_theta[3]   0.4    0.38  0.53 -0.47  1.29     1    5456.    3052.
-    ##  4 z_theta[4]   0.48   0.47  0.45 -0.25  1.24     1    4610.    3218 
-    ##  5 z_theta[5]   1.46   1.46  0.68  0.34  2.58     1    6435.    2886.
-    ##  6 z_theta[6]  -0.07  -0.07  0.52 -0.93  0.79     1    7157.    2981.
-    ##  7 z_theta[7]  -0.08  -0.09  0.51 -0.89  0.76     1    5227.    2950.
-    ##  8 z_theta[8]   0.32   0.31  0.55 -0.55  1.24     1    5215.    2339.
-    ##  9 z_theta[9]   0.26   0.26  0.46 -0.52  1.02     1    4851.    2781.
-    ## 10 z_theta[10]  0.37   0.36  0.44 -0.35  1.1      1    4967.    3011.
+    ##  1 z_theta[1]  -0.81  -0.81  0.36 -1.42 -0.21     1    3917.    2546.
+    ##  2 z_theta[2]  -0.3   -0.31  0.54 -1.18  0.6      1    6600.    2821.
+    ##  3 z_theta[3]   0.41   0.41  0.55 -0.48  1.34     1    6673.    3010.
+    ##  4 z_theta[4]   0.5    0.49  0.46 -0.26  1.25     1    4856.    3061.
+    ##  5 z_theta[5]   1.48   1.46  0.67  0.39  2.59     1    6333.    2769.
+    ##  6 z_theta[6]  -0.07  -0.06  0.54 -0.97  0.83     1    7368.    2536.
+    ##  7 z_theta[7]  -0.07  -0.08  0.49 -0.87  0.75     1    5375.    2706.
+    ##  8 z_theta[8]   0.32   0.31  0.53 -0.52  1.23     1    4988.    2970.
+    ##  9 z_theta[9]   0.27   0.27  0.46 -0.49  1.03     1    5707.    2965.
+    ## 10 z_theta[10]  0.38   0.37  0.44 -0.33  1.12     1    4723.    3066.
     ## # ℹ 419 more rows
 
-`checkDiagnostics` provides common Stan diagnostics such as number of
-divergeant transitions, R hat, effective sample size, maximum treedepth
-hits, and E-BFMI.
+The method `checkDiagnostics` provides common Stan diagnostics such as
+number of divergeant transitions, R hat, effective sample size, maximum
+treedepth hits, and E-BFMI.
 
 ``` r
 checkDiagnostics(samples)
@@ -347,6 +355,33 @@ plot(samples, parameter = "omega_theta",
 
 ![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
+The function `fitBayesDiffIRT` returns a `BayesDiffIRTfit`-object. The
+samples from a `BayesDiffIRTfit` can be extracted using the
+extractSamples method.
+
+``` r
+samplesDf <- extractSamples(samples)
+head(samplesDf)
+```
+
+    ## # A draws_df: 6 iterations, 1 chains, and 881 variables
+    ##    lp__ z_theta[1] z_theta[2] z_theta[3] z_theta[4] z_theta[5] z_theta[6]
+    ## 1 -1711      -0.69     -0.561      0.098      1.267       1.83     -0.014
+    ## 2 -1736      -0.65     -0.979      0.591      0.451       1.65      0.098
+    ## 3 -1753      -0.57     -0.028     -0.281      0.914       0.19     -0.065
+    ## 4 -1753      -1.47      0.819      0.635      1.034       0.19      0.659
+    ## 5 -1747      -0.26     -1.645     -0.288     -0.123       2.53      0.111
+    ## 6 -1744      -1.07      0.301      0.772     -0.039       1.38     -0.469
+    ##   z_theta[7]
+    ## 1     -0.606
+    ## 2      0.263
+    ## 3     -0.039
+    ## 4     -0.180
+    ## 5     -0.134
+    ## 6     -0.370
+    ## # ... with 873 more variables
+    ## # ... hidden reserved variables {'.chain', '.iteration', '.draw'}
+
 ## 4.3 Posterior predcitive checks
 
 The posterior predictive distributions can be visualized using
@@ -357,29 +392,20 @@ of a correct response / item acceptance as a function of item or person.
 ppCheck(samples, type = "response")
 ```
 
-    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ## ℹ Please use `linewidth` instead.
-    ## ℹ The deprecated feature was likely used in the BayesDiffIRT package.
-    ##   Please report the issue at
-    ##   <https://github.com/ManuelRausch/BayesDiffIRT/issues>.
-    ## This warning is displayed once per session.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
-
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 ppCheck(samples, type = "response", group = "item")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 ``` r
 ppCheck(samples, type = "response", group = "person",
         index=1:10)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
 
 Set type = “rtQuantile” to compares observed and posterior-predictive
 reaction-time quantiles:
@@ -388,7 +414,7 @@ reaction-time quantiles:
 ppCheck(samples, type = "rtQuantile")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ## 4.4 Plot item characteristics
 
@@ -403,19 +429,19 @@ respectively, and the probability of solving / accepting as colours.
  plotResponseSurface(samples, item = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
  plotResponseSurface(samples, item = 2)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
  plotResponseSurface(samples, item = 3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 
 # 5 Contributing to the package
 
