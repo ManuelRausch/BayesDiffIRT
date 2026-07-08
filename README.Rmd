@@ -216,7 +216,7 @@ ppCheck(samples, type = "rtQuantile")
 
 ## Plot item characteristics
 
-According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theTA$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours.
+According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theta$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours.
 
 ```{r}
  plotResponseSurface(samples, item = 1)
