@@ -1,0 +1,3 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","gitrep <- ""https://github.com/ManuelRausch/BayesDiffIRT/tree"""
+"0","gitbranch <- ""main/"""

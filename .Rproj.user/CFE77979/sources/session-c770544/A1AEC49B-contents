@@ -159,6 +159,7 @@ samples <-
   
 ```
 
+
 ## Inspecting the results
 
 The results of a fitted  Bayesian diffusion item-response theory model can be inspected using the function `summary`. 
@@ -186,6 +187,13 @@ plot(samples, parameter = "theta", type = "interval")
 
 plot(samples, parameter = "omega_theta",
      type = "density")
+```
+
+The function `fitBayesDiffIRT` returns a  `BayesDiffIRTfit`-object. The samples from a `BayesDiffIRTfit` can be extracted using the extractSamples method. 
+
+```{r}
+samplesDf <- extractSamples(samples)
+head(samplesDf)
 ```
 
 ## Posterior predcitive checks

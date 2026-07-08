@@ -10,3 +10,6 @@ paper.bib
 paper.md
 ^\data-raw$
 CONTRIBUTING.md
+test_files
+README_files
+data-raw

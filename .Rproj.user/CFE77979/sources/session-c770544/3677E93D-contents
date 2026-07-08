@@ -133,14 +133,15 @@ ppCheckResponse <- function(object,
 
   if (group == "none"){
     obsStat <- mean(object$stanData$resp)
-    predStat <- aggregate(resp ~ draw , data = yrep, mean)
+    predStat <- stats::aggregate(stats::as.formula("resp ~ draw"),
+                                 data = yrep, mean)
 
-    p <- ggplot2::ggplot(predStat, aes(x=resp)) +
+    p <- ggplot2::ggplot(predStat, ggplot2::aes(x=resp)) +
       ggplot2::geom_histogram(binwidth=.01,
                               colour="black",
                               fill="seagreen") +
       ggplot2::labs(x = "Pr(response = 1)",y = "Number of samples") +
-      ggplot2::geom_vline(aes(xintercept=obsStat), size=2) +
+      ggplot2::geom_vline(ggplot2::aes(xintercept=obsStat), size=2) +
       ggplot2::theme_classic()
 
     base::print(p)
@@ -154,53 +155,51 @@ ppCheckResponse <- function(object,
       yrep <- yrep[yrep$item %in% index, , drop = FALSE]
     }
 
-    obsStat <- aggregate(resp ~ item, obs, mean)
+    obsStat <- stats::aggregate(
+      obs["resp"],by = list(item = obs$item),FUN = mean)
     names(obsStat)[2] <- "observed"
 
-    predStat <- aggregate(resp ~ draw + item, data = yrep, mean)
+    predStat <- stats::aggregate(
+      yrep["resp"],by = list(draw = yrep$draw, item = yrep$item), FUN = mean)
 
-    predSummary <- aggregate(
-      resp ~ item,
+    predSummary <- stats::aggregate(
+      stats::as.formula("resp ~ item"),
       data = predStat,
       FUN = function(x) {
-        c(
-          mean = mean(x),
+        c(mean = mean(x),
           lo50 = unname(stats::quantile(x, 0.25)),
           hi50 = unname(stats::quantile(x, 0.75)),
           lo95 = unname(stats::quantile(x, 0.025)),
           hi95 = unname(stats::quantile(x, 0.975))
-        )
-      }
-    )
+        )})
 
     predSummary <- data.frame(
       item = predSummary$item,
       predSummary$resp,
-      row.names = NULL
-    )
+      row.names = NULL)
 
     plotDf <- merge(obsStat, predSummary, by = "item")
 
     plotDf$item <- factor(plotDf$item,
                           levels = sort(unique(plotDf$item)))
 
-    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = item)) +
+    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = .data[["item"]])) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
+        ggplot2::aes(ymin = .data[["lo95"]], ymax = .data[["hi95"]]),
         linewidth = 0.4
       ) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
+        ggplot2::aes(ymin = .data[["lo50"]], ymax = .data[["hi50"]]),
         linewidth = 1.1
       ) +
       ggplot2::geom_point(
-        ggplot2::aes(y = mean),
+        ggplot2::aes(y = .data[["mean"]]),
         shape = 21,
         size = 2,
         fill = "green4"
       ) +
       ggplot2::geom_point(
-        ggplot2::aes(y = observed),
+        ggplot2::aes(y = .data[["observed"]]),
         size = 2.8
       ) +
       ggplot2::coord_flip(ylim = c(0, 1)) +
@@ -221,12 +220,14 @@ ppCheckResponse <- function(object,
       yrep <- yrep[yrep$sbj %in% index, , drop = FALSE]
     }
 
-    obsStat <- aggregate(resp ~ sbj, obs, mean)
+    obsStat <- stats::aggregate(obs["resp"],
+      by = list(sbj = obs$sbj),FUN = mean)
     names(obsStat)[2] <- "observed"
 
-    predStat <- aggregate(resp ~ draw + sbj, data = yrep, mean)
+    predStat <- stats::aggregate(
+      yrep["resp"],by = list(draw = yrep$draw, sbj = yrep$sbj),FUN = mean)
 
-    predSummary <- aggregate(
+    predSummary <- stats::aggregate(
       resp ~ sbj,
       data = predStat,
       FUN = function(x) {
@@ -250,23 +251,23 @@ ppCheckResponse <- function(object,
 
     plotDf$sbj <- factor(plotDf$sbj, levels = sort(unique(plotDf$sbj)))
 
-    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = sbj)) +
+    p <- ggplot2::ggplot(plotDf, ggplot2::aes(x = .data[["sbj"]])) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
+        ggplot2::aes(ymin = .data[["lo95"]], ymax = .data[["hi95"]]),
         linewidth = 0.4
       ) +
       ggplot2::geom_linerange(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
+        ggplot2::aes(ymin = .data[["lo50"]], ymax = .data[["hi50"]]),
         linewidth = 1.1
       ) +
       ggplot2::geom_point(
-        ggplot2::aes(y = mean),
+        ggplot2::aes(y = .data[["mean"]]),
         shape = 21,
         size = 1.2,
         fill = "white"
       ) +
       ggplot2::geom_point(
-        ggplot2::aes(y = observed),
+        ggplot2::aes(y = .data[["observed"]]),
         fill = "lightgoldenrod",
         shape = 21,
         size = 1.2
@@ -343,20 +344,20 @@ ppCheckRtQuantile <- function(object,
     plotDf$resp <- factor(plotDf$resp)
 
     p <- ggplot2::ggplot(
-      plotDf, ggplot2::aes(x = prob)) +
+      plotDf, ggplot2::aes(x = .data[["prob"]])) +
       ggplot2::geom_ribbon(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
+        ggplot2::aes(ymin = .data[["lo95"]], ymax = .data[["hi95"]]),
         alpha = 0.20, fill= "green4") +
       ggplot2::geom_ribbon(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
+        ggplot2::aes(ymin = .data[["lo50"]], ymax = .data[["hi50"]]),
         alpha = 0.35, fill="green4") +
       ggplot2::geom_line(
-        ggplot2::aes(y = mean)) +
+        ggplot2::aes(y = .data[["mean"]])) +
       ggplot2::geom_point(
-        ggplot2::aes(y = observed),
+        ggplot2::aes(y = .data[["observed"]]),
         size = 2) +
       ggplot2::facet_wrap(
-        ~ resp,
+        stats::as.formula("resp"),
         labeller = ggplot2::labeller(
           resp = c(`0` = "resp = 0", `1` = "resp = 1"))) +
       ggplot2::scale_x_continuous(breaks = probs, limits = c(0,1)) +
@@ -397,22 +398,22 @@ ppCheckRtQuantile <- function(object,
     plotDf$group <- factor(plotDf$group)
 
     p <- ggplot2::ggplot(
-      plotDf, ggplot2::aes(x = prob)) +
+      plotDf, ggplot2::aes(x = .data[["prob"]])) +
       ggplot2::facet_grid(
-        resp ~ group,
+        stats::as.formula("resp ~ group"),
         labeller = ggplot2::labeller(
           resp = c(`0` = "resp = 0", `1` = "resp = 1"),
           group = function(x) paste0(groupVar, " ", x))) +
       ggplot2::geom_ribbon(
-        ggplot2::aes(ymin = lo95, ymax = hi95),
+        ggplot2::aes(ymin = .data[["lo95"]], ymax = .data[["hi95"]]),
         alpha = 0.20, fill= "green4") +
       ggplot2::geom_ribbon(
-        ggplot2::aes(ymin = lo50, ymax = hi50),
+        ggplot2::aes(ymin = .data[["lo50"]], ymax = .data[["hi50"]]),
         alpha = 0.35, fill="green4") +
       ggplot2::geom_line(
-        ggplot2::aes(y = mean)) +
+        ggplot2::aes(y = .data[["mean"]])) +
       ggplot2::geom_point(
-        ggplot2::aes(y = observed),
+        ggplot2::aes(y = .data[["observed"]]),
         size = 2) +
       ggplot2::scale_x_continuous(breaks = probs, limits = c(0,1)) +
       ggplot2::labs(
