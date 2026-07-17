@@ -31,7 +31,7 @@ print.BayesDiffIRTfit <- function(x, ...) {
   cat("\nCall:\n")
   print(x$call)
 
-  cat("\nUse summary() for posterior summaries and diagnostics() for detailed diagnostics.\n")
+  cat("\nUse summary() for posterior summaries and checkDiagnostics() for detailed diagnostics.\n")
 
   invisible(x)
 }

@@ -227,7 +227,7 @@ fitBayesDiffIRT <- function(
                     max_treedepth = maxTreeDepth,
                     init = init,
                     refresh = refresh,
-                    show_messages = FALSE,
+                    show_messages = TRUE,
                     show_exceptions = FALSE,
                     ...)
 

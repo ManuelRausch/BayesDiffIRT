@@ -7,8 +7,8 @@ Authors@R: c(
       "Manuel", "Rausch",
       email = "manuel.rausch@aau.at",
       role = c("aut", "cre"), 
-      comment = c(ORCID = "0000-0002-5805-5544")
-    )
+      comment = c(ORCID = "0000-0002-5805-5544")), 
+	person("Rainer", "Alexandrowicz", role = "ctb")
   )
 Maintainer: Manuel Rausch <manuel.rausch@aau.at>
 Description: Samples from the posterior of the D-Diffusion item response theory model and the Q-diffusion item response theory model for responses and response times.

@@ -114,7 +114,8 @@ checkDiagnostics().
 \description{
 \code{fitBayesDiffIRT()} fits Bayesian diffusion item-response theory models by
 sampling from the posterior distributions of item and subject parameters using
-the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT} via \pkg{cmdstanr}.
+the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT}
+via \pkg{cmdstanr}.
 }
 \details{
 \code{fitBayesDiffIRT} samples from the posterior distributions of item and subject

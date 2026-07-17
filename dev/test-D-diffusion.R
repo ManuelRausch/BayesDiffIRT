@@ -116,9 +116,9 @@ samples <-
   fitBayesDiffIRT(SimData,
                   rt = "rt", resp = "resp", sbj = "sbj",
                   item = "item", model = "d",
-                  n.chains = 3,  n.cores = 3,
-                  n.warmup =  10^3,
-                  n.samples = 10^3)
+                  nChains = 3,  nCores = 3,
+                  nWarmup =  10^3)
+
 summary(samples)
 
 # 3) Check diagnostics
@@ -283,3 +283,63 @@ gg
 
 save(samples, samples2, file = "dev/Tests-D-Diffusion.RData")
 load("dev/Tests-D-Diffusion.RData")
+
+
+# Rainers function #
+
+coef <-
+  function(obj) {
+    stopifnot(inherits(obj,"summary.BayesDiffIRTfit"))
+    n = obj$dataInfo$nPerson
+    k = obj$dataInfo$nItem
+    splits =   cumsum(c(n,k,1,n,k,1,n,n,n,n))
+    result = list()
+    result$z_theta      = data.frame(obj$variables[           1 :splits[ 1],])
+    result$nu           = data.frame(obj$variables[(splits[1]+1):splits[ 2],])
+    result$omega_theta  = data.frame(obj$variables[(splits[2]+1):splits[ 3],])
+    result$z_gamma      = data.frame(obj$variables[(splits[3]+1):splits[ 4],])
+    result$a            = data.frame(obj$variables[(splits[4]+1):splits[ 5],])
+    result$omega_gamma  = data.frame(obj$variables[(splits[5]+1):splits[ 6],])
+    result$tnd          = data.frame(obj$variables[(splits[6]+1):splits[ 7],])
+    result$theta        = data.frame(obj$variables[(splits[7]+1):splits[ 8],])
+    result$log_gamma    = data.frame(obj$variables[(splits[8]+1):splits[ 9],])
+    result$gamma        = data.frame(obj$variables[(splits[9]+1):splits[10],])
+
+    return(result)
+  } # end fun coef
+
+coef(summary(samples))
+
+coef.BayesDiffIRTfit <- function(
+    object,
+    estimate = "mean",
+    parameters = NULL,
+    ...) {
+
+  if (!inherits(object, "BayesDiffIRTfit")) {
+    stop("`object` must inherit from class \"BayesDiffIRTfit\".",
+         call. = FALSE)
+  }
+
+  modelSummary <- summary(object, ...)
+  variables <- modelSummary$variables
+
+  requiredColumns <- c("variable", estimate)
+
+  # Remove the index from names such as theta[1].
+  baseName <- sub("\\[.*$", "", variables$variable)
+
+  if (is.null(parameters)) {
+    parameters <-
+      c("theta","gamma","nu","a","tnd","omega_theta","omega_gamma")
+  }
+
+  keep <- baseName %in% parameters
+
+  result <- variables[[estimate]][keep]
+  names(result) <- variables$variable[keep]
+
+  result
+}
+
+x<- coef.BayesDiffIRTfit(samples, estimate="median")

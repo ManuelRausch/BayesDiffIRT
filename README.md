@@ -2,14 +2,14 @@
 
 # 1 The BayesDiffIRT for R
 
-The `BayesDiffIRT` provides functions to sample posterior distributions
-and posterior predictive distributions of item and subject parameters of
-diffusion item response theory models for responses and reaction times
-Kang, De Boeck, and Ratcliff (2022). `BayesDiffIRT` also provides
-functions to visualize posterior distributions of Diffusion item
-response theory model parameters and construct credible intervals. Under
-the hood, the package relies on NUTS sampling with STAN (Carpenter et
-al. 2017). Up to know, the following diffusion item response theory
+The `BayesDiffIRT` package provides functions to sample posterior
+distributions and posterior predictive distributions of item and subject
+parameters of diffusion item response theory models for responses and
+reaction times Kang, De Boeck, and Ratcliff (2022). `BayesDiffIRT` also
+provides functions to visualize posterior distributions of Diffusion
+item response theory model parameters and construct credible intervals.
+Under the hood, the package relies on NUTS sampling with STAN (Carpenter
+et al. 2017). Up to know, the following diffusion item response theory
 models have been implemented:
 
 - D-diffusion model (Tuerlinckx and Boeck 2005),
@@ -22,6 +22,11 @@ models have been implemented:
 The two versions of the D-diffusion model are appropriate for survey
 items where persons decide whether to accept or reject an item. The two
 flavours of the Q-diffusion model were designed to model ability tests.
+
+*Important*: BayesDiffIRT uses Stan through the cmdstanr interface.
+Fitting models therefore requires a C++ toolchain and a separate
+installation of CmdStan. Installing the BayesDiffIRT R package alone is
+not sufficient.
 
 # 2 Mathematical description of diffusion item response theory models
 
@@ -111,8 +116,70 @@ for these models.
 
 # 3 Installation
 
-The the development version is available on GitHub. The easiest way to
-install is using the `devtools` package:
+## 3.1 System requirements
+
+The `BayesDiffIRT` package relies on STAN via cmdstanr. Stan models are
+translated into C++ and compiled before they are run. Consequently, a
+working C++ compiler and GNU Make are required. Please install the
+appropriate toolchain for your operating system before installing
+CmdStan:
+
+- Windows: Install the version of
+  [Rtools](https://cran.r-project.org/bin/windows/Rtools/) appropriate
+  for your version of R.
+- macOS: Install the Xcode Command Line Tools by entering the following
+  command in the Terminal:
+
+``` bash
+xcode-select --install
+```
+
+- Debian/Ubuntu Linux: Install g++ and make:
+
+``` bash
+sudo apt update
+sudo apt install g++ make
+```
+
+Further operating-system-specific information is available in the
+[CmdStan installation
+guide](https://mc-stan.org/docs/cmdstan-guide/installation.html).
+
+## 3.2 Installing CmdStan
+
+If `cmdstanr` is not yet installed on oyur system, install it from the
+Stan R-universe repository:
+
+``` r
+install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+
+First check whether the C++ toolchain is correctly configured:
+
+``` r
+cmdstanr::check_cmdstan_toolchain()
+```
+
+Once the toolchain check succeeds, install CmdStan:
+
+``` r
+cmdstanr::install_cmdstan()
+```
+
+Verify the installation with:
+
+``` r
+cmdstanr::cmdstan_version()
+```
+
+CmdStan is installed separately from the R package, normally in the
+.cmdstan directory in the user’s home directory. The initial compilation
+of CmdStan may take several minutes and require substantial memory.
+
+## 3.3 Installing BayesDiffIRT
+
+The development version of `BayesDiffIRT` is available from GitHub. The
+easiest way to install it is using the `devtools` package:
 
 <!-- without any dots, the code chunk will be shown, but not executed -->
 
@@ -251,64 +318,64 @@ summary(samples)
     ## # A tibble: 2 × 9
     ##   variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##   <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ## 1 omega_theta   0.7   0.69  0.06  0.6   0.8   1       1004.    1936.
-    ## 2 omega_gamma   0.2   0.2   0.03  0.16  0.25  1.01     740.    1688.
+    ## 1 omega_theta  0.69   0.69  0.06  0.6   0.8      1    1382.    2784.
+    ## 2 omega_gamma  0.2    0.2   0.03  0.16  0.25     1     860.    1508.
     ## 
     ## Item parameters:
     ## # A tibble: 20 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 nu[1]    -0.64  -0.64  0.1  -0.81 -0.47     1    1669.    2504.
-    ##  2 nu[2]    -0.15  -0.15  0.1  -0.31  0.03     1    1920.    2604.
-    ##  3 nu[3]    -1.24  -1.24  0.12 -1.44 -1.03     1    1846.    2702.
-    ##  4 nu[4]    -1.7   -1.71  0.15 -1.94 -1.46     1    2156.    3047.
-    ##  5 nu[5]    -0.21  -0.21  0.1  -0.38 -0.03     1    1828.    2588.
-    ##  6 nu[6]    -1.3   -1.3   0.12 -1.5  -1.1      1    2012.    2423.
-    ##  7 nu[7]    -1.69  -1.69  0.14 -1.93 -1.46     1    2223.    3132.
-    ##  8 nu[8]    -1.91  -1.91  0.15 -2.16 -1.66     1    2064.    2489.
-    ##  9 nu[9]    -0.83  -0.83  0.1  -0.99 -0.66     1    1765.    2538.
-    ## 10 nu[10]   -1.42  -1.42  0.14 -1.65 -1.2      1    2348.    3006.
-    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2257.    2617.
-    ## 12 a[2]      0.49   0.49  0.02  0.46  0.53     1    2174.    2946.
-    ## 13 a[3]      0.5    0.49  0.02  0.46  0.54     1    2013.    2787.
-    ## 14 a[4]      0.51   0.51  0.03  0.47  0.55     1    1731.    2419.
-    ## 15 a[5]      0.51   0.51  0.02  0.48  0.55     1    2030.    2624.
-    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2548.    3031.
-    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2246.    2920.
-    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    1879.    2704.
-    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2607.    2730.
-    ## 20 a[10]     0.55   0.55  0.03  0.51  0.59     1    1937.    2751.
+    ##  1 nu[1]    -0.65  -0.64  0.1  -0.82 -0.48     1    1531.    2138.
+    ##  2 nu[2]    -0.15  -0.14  0.11 -0.32  0.03     1    1632.    2309.
+    ##  3 nu[3]    -1.24  -1.23  0.13 -1.45 -1.03     1    1914.    2462.
+    ##  4 nu[4]    -1.7   -1.7   0.14 -1.94 -1.46     1    2063.    2485.
+    ##  5 nu[5]    -0.21  -0.21  0.11 -0.39 -0.03     1    1643.    2458.
+    ##  6 nu[6]    -1.3   -1.3   0.12 -1.5  -1.11     1    1909.    2562.
+    ##  7 nu[7]    -1.69  -1.69  0.14 -1.92 -1.46     1    2075.    2597.
+    ##  8 nu[8]    -1.91  -1.92  0.14 -2.15 -1.68     1    2339.    2710.
+    ##  9 nu[9]    -0.83  -0.83  0.1  -1    -0.66     1    1622.    1889.
+    ## 10 nu[10]   -1.42  -1.42  0.14 -1.65 -1.2      1    2340.    2667.
+    ## 11 a[1]      0.44   0.44  0.02  0.41  0.47     1    2583.    2448.
+    ## 12 a[2]      0.5    0.5   0.02  0.46  0.53     1    2204.    2528.
+    ## 13 a[3]      0.5    0.5   0.02  0.46  0.54     1    2063.    2975.
+    ## 14 a[4]      0.51   0.51  0.03  0.47  0.56     1    1927.    2528.
+    ## 15 a[5]      0.51   0.51  0.02  0.48  0.55     1    2127.    2075.
+    ## 16 a[6]      0.43   0.43  0.02  0.4   0.47     1    2261.    2255.
+    ## 17 a[7]      0.4    0.4   0.02  0.37  0.44     1    2490.    3025.
+    ## 18 a[8]      0.42   0.42  0.02  0.38  0.46     1    2275.    3036.
+    ## 19 a[9]      0.35   0.35  0.02  0.32  0.38     1    2835.    2670.
+    ## 20 a[10]     0.55   0.55  0.03  0.5   0.6      1    1960.    3107.
     ## 
     ## Subject parameters:
     ## # A tibble: 429 × 9
     ##    variable  mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.55     1    5354.    2892.
-    ##  2 tnd[2]    0.4    0.4   0.09  0.25  0.54     1    3469.    3277.
-    ##  3 tnd[3]    0.46   0.47  0.12  0.27  0.65     1    4139.    3110.
-    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.37     1    5090.    3057.
-    ##  5 tnd[5]    0.39   0.39  0.08  0.26  0.51     1    4194.    2649.
-    ##  6 tnd[6]    0.32   0.32  0.06  0.21  0.41     1    3955.    3517.
-    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4374.    2876.
-    ##  8 tnd[8]    0.52   0.52  0.16  0.27  0.78     1    3617.    3038.
-    ##  9 tnd[9]    0.34   0.34  0.07  0.21  0.45     1    5115.    3247.
-    ## 10 tnd[10]   0.42   0.42  0.12  0.24  0.64     1    5147.    3013.
+    ##  1 tnd[1]    0.37   0.36  0.1   0.22  0.54     1    5419.    3416.
+    ##  2 tnd[2]    0.4    0.4   0.09  0.25  0.54     1    3918.    3306.
+    ##  3 tnd[3]    0.46   0.46  0.12  0.27  0.65     1    4303.    3422.
+    ##  4 tnd[4]    0.27   0.27  0.06  0.18  0.36     1    5046.    2665.
+    ##  5 tnd[5]    0.39   0.39  0.08  0.26  0.51     1    4206.    3282.
+    ##  6 tnd[6]    0.32   0.32  0.06  0.21  0.41     1    4078.    2588.
+    ##  7 tnd[7]    0.39   0.39  0.09  0.24  0.53     1    4374.    2987.
+    ##  8 tnd[8]    0.51   0.51  0.15  0.27  0.77     1    3666.    3438.
+    ##  9 tnd[9]    0.34   0.34  0.07  0.22  0.45     1    5381.    3265.
+    ## 10 tnd[10]   0.42   0.41  0.13  0.24  0.64     1    4201.    2723.
     ## # ℹ 419 more rows
     ## 
     ## Other parameters:
     ## # A tibble: 429 × 9
     ##    variable     mean median    sd    q5   q95  rhat ess_bulk ess_tail
     ##    <chr>       <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>    <dbl>
-    ##  1 z_theta[1]  -0.82  -0.82  0.35 -1.41 -0.24     1    4117.    3078.
-    ##  2 z_theta[2]  -0.3   -0.3   0.56 -1.19  0.61     1    5387.    2782.
-    ##  3 z_theta[3]   0.4    0.39  0.53 -0.48  1.29     1    5148.    2950.
-    ##  4 z_theta[4]   0.49   0.48  0.46 -0.25  1.26     1    4222.    3109.
-    ##  5 z_theta[5]   1.48   1.49  0.66  0.41  2.54     1    5204.    3117.
-    ##  6 z_theta[6]  -0.06  -0.07  0.52 -0.93  0.81     1    5274.    2715.
-    ##  7 z_theta[7]  -0.07  -0.07  0.52 -0.9   0.79     1    6232.    2784.
-    ##  8 z_theta[8]   0.32   0.3   0.56 -0.6   1.27     1    4901.    3137.
-    ##  9 z_theta[9]   0.27   0.26  0.47 -0.5   1.05     1    5329.    2771.
-    ## 10 z_theta[10]  0.37   0.35  0.44 -0.32  1.11     1    4818.    3278.
+    ##  1 z_theta[1]  -0.82  -0.82  0.36 -1.41 -0.23     1    3798.    2797.
+    ##  2 z_theta[2]  -0.3   -0.31  0.53 -1.17  0.57     1    5354.    2841.
+    ##  3 z_theta[3]   0.39   0.39  0.53 -0.47  1.27     1    5618.    2559.
+    ##  4 z_theta[4]   0.49   0.48  0.46 -0.22  1.27     1    4994.    3233.
+    ##  5 z_theta[5]   1.47   1.47  0.69  0.34  2.61     1    6581.    3105.
+    ##  6 z_theta[6]  -0.07  -0.07  0.54 -0.97  0.81     1    6293.    3274.
+    ##  7 z_theta[7]  -0.08  -0.07  0.51 -0.93  0.78     1    5113.    2857.
+    ##  8 z_theta[8]   0.32   0.3   0.56 -0.57  1.27     1    5028.    3248.
+    ##  9 z_theta[9]   0.25   0.27  0.47 -0.51  1.03     1    5371.    3100.
+    ## 10 z_theta[10]  0.38   0.37  0.44 -0.33  1.11     1    4178.    2971.
     ## # ℹ 419 more rows
 
 The method `checkDiagnostics` provides common Stan diagnostics such as
@@ -366,21 +433,31 @@ head(samplesDf)
 
     ## # A draws_df: 6 iterations, 1 chains, and 881 variables
     ##    lp__ z_theta[1] z_theta[2] z_theta[3] z_theta[4] z_theta[5] z_theta[6]
-    ## 1 -1771     -0.047      -0.32      0.826       0.11        2.4      0.029
-    ## 2 -1758     -0.938      -0.28     -0.033       1.28        1.3      0.445
-    ## 3 -1746     -1.369      -0.22      1.161      -0.46        3.1      0.138
-    ## 4 -1771     -0.856      -0.89      0.483       1.13        1.6     -0.463
-    ## 5 -1759     -0.782       0.21     -0.148      -0.32        1.3     -0.090
-    ## 6 -1740     -0.457       0.59     -0.147      -0.19        1.6     -0.151
+    ## 1 -1744      -0.84      -1.50      -0.66       0.43       2.33       0.14
+    ## 2 -1705      -1.46      -0.19       1.38       0.56       0.22      -0.50
+    ## 3 -1707      -0.87      -1.41       1.07      -0.14       1.68       0.82
+    ## 4 -1724      -0.71       0.90      -0.17       0.65       2.07      -1.21
+    ## 5 -1759      -0.50      -1.34       0.80       0.33       0.49      -0.24
+    ## 6 -1719      -0.49      -1.01       1.01       0.27       0.88      -0.50
     ##   z_theta[7]
-    ## 1      1.183
-    ## 2     -0.939
-    ## 3      0.585
-    ## 4      0.391
-    ## 5     -0.243
-    ## 6      0.028
+    ## 1       0.87
+    ## 2      -0.15
+    ## 3       0.21
+    ## 4       0.14
+    ## 5       0.62
+    ## 6      -0.55
     ## # ... with 873 more variables
     ## # ... hidden reserved variables {'.chain', '.iteration', '.draw'}
+
+Should you really prefer working with point estimates, you can extract
+them conveniently with the coef method:
+
+``` r
+pointEstim <- coef(samples)
+pointEstim 
+```
+
+    ## NULL
 
 ## 4.3 Posterior predcitive checks
 
@@ -392,20 +469,20 @@ of a correct response / item acceptance as a function of item or person.
 ppCheck(samples, type = "response")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 ppCheck(samples, type = "response", group = "item")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 ``` r
 ppCheck(samples, type = "response", group = "person",
         index=1:10)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-3.png)<!-- -->
 
 Set type = “rtQuantile” to compares observed and posterior-predictive
 reaction-time quantiles:
@@ -414,7 +491,7 @@ reaction-time quantiles:
 ppCheck(samples, type = "rtQuantile")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ## 4.4 Plot item characteristics
 
@@ -429,19 +506,19 @@ respectively, and the probability of solving / accepting as colours.
  plotResponseSurface(samples, item = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
  plotResponseSurface(samples, item = 2)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 ``` r
  plotResponseSurface(samples, item = 3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-3.png)<!-- -->
 
 # 5 Contributing to the package
 

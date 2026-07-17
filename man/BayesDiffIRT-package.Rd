@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Manuel Rausch \email{manuel.rausch@aau.at} (\href{https://orcid.org/0000-0002-5805-5544}{ORCID})
 
+Other contributors:
+\itemize{
+  \item Rainer Alexandrowicz [contributor]
+}
+
 }
 \keyword{internal}

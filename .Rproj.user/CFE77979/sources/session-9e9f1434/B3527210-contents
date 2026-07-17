@@ -21,16 +21,16 @@ gitbranch <- "main/"
 ```
 # The BayesDiffIRT for R
 
-The `BayesDiffIRT` provides functions to sample posterior distributions and posterior predictive distributions of item and subject parameters of diffusion item response theory models for responses and reaction times [@molenaar_fitting_2015, @van_der_maas_cognitive_2011, @tuerlinckx_two_2005, @kang_modeling_2022].  `BayesDiffIRT` also provides functions to visualize posterior distributions of Diffusion item response theory model parameters and construct credible intervals. Under the hood, the package relies on NUTS sampling with STAN [@carpenter_stan_2017]. Up to know, the following diffusion item response theory models have been implemented: 
+The `BayesDiffIRT` package provides functions to sample posterior distributions and posterior predictive distributions of item and subject parameters of diffusion item response theory models for responses and reaction times [@molenaar_fitting_2015, @van_der_maas_cognitive_2011, @tuerlinckx_two_2005, @kang_modeling_2022].  `BayesDiffIRT` also provides functions to visualize posterior distributions of Diffusion item response theory model parameters and construct credible intervals. Under the hood, the package relies on NUTS sampling with STAN [@carpenter_stan_2017]. Up to know, the following diffusion item response theory models have been implemented: 
 
 * D-diffusion model [@tuerlinckx_two_2005],
 * Q-diffusion model [@van_der_maas_cognitive_2011],
 * D-diffusion model with random variability [@kang_modeling_2022],
 * Q-diffusion model with random variability [@kang_modeling_2022].
 
-The two versions of the D-diffusion model are appropriate for survey items where
-persons decide whether to accept or reject an item. The two flavours of the Q-diffusion model were designed to model ability tests.
+The two versions of the D-diffusion model are appropriate for survey items where persons decide whether to accept or reject an item. The two flavours of the Q-diffusion model were designed to model ability tests.
 
+*Important*: BayesDiffIRT uses Stan through the cmdstanr interface. Fitting models therefore requires a C++ toolchain and a separate installation of CmdStan. Installing the BayesDiffIRT R package alone is not sufficient.
 
 # Mathematical description of diffusion item response theory models
 
@@ -74,8 +74,49 @@ Random variability in starting points and drift rates accounts for the condition
 
 # Installation
 
-The the development version is available on GitHub. The easiest way to install 
-is using the `devtools` package: 
+## System requirements
+The `BayesDiffIRT` package  relies on STAN via cmdstanr. Stan models are translated into C++ and compiled before they are run. Consequently, a working C++ compiler and GNU Make are required. Please install the appropriate toolchain for your operating system before installing CmdStan:
+
+* Windows: Install the version of [Rtools](https://cran.r-project.org/bin/windows/Rtools/) appropriate for your version of R. 
+* macOS: Install the Xcode Command Line Tools by entering the following command in the Terminal:
+```bash
+xcode-select --install
+```
+* Debian/Ubuntu Linux: Install g++ and make:
+```bash
+sudo apt update
+sudo apt install g++ make
+```
+Further operating-system-specific information is available in the  [CmdStan installation guide](https://mc-stan.org/docs/cmdstan-guide/installation.html).
+
+## Installing CmdStan
+
+If `cmdstanr` is not yet installed on oyur system, install it from the Stan R-universe repository:
+
+```R         
+install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+First check whether the C++ toolchain is correctly configured:
+
+```R         
+cmdstanr::check_cmdstan_toolchain()
+```
+
+Once the toolchain check succeeds, install CmdStan:
+```R   
+cmdstanr::install_cmdstan()
+```
+
+Verify the installation with:
+```R 
+cmdstanr::cmdstan_version()
+```
+
+CmdStan is installed separately from the R package, normally in the .cmdstan directory in the user's home directory. The initial compilation of CmdStan may take several minutes and require substantial memory.
+
+## Installing BayesDiffIRT
+
+The development version of `BayesDiffIRT` is available from GitHub. The easiest way to install it is using the `devtools` package: 
 
 <!-- without any dots, the code chunk will be shown, but not executed -->
 
@@ -195,6 +236,14 @@ The function `fitBayesDiffIRT` returns a  `BayesDiffIRTfit`-object. The samples 
 samplesDf <- extractSamples(samples)
 head(samplesDf)
 ```
+
+Should you really prefer working with point estimates, you can extract them conveniently with the coef method: 
+
+```{r}
+pointEstim <- coef(samples)
+pointEstim 
+```
+
 
 ## Posterior predcitive checks
 

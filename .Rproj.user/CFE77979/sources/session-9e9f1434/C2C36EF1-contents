@@ -3,7 +3,8 @@
 #' @description
 #' `fitBayesDiffIRT()` fits Bayesian diffusion item-response theory models by
 #' sampling from the posterior distributions of item and subject parameters using
-#' the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT} via \pkg{cmdstanr}.
+#' the No-U-Turn Sampler (NUTS) as implemented in Stan \insertCite{carpenter_stan_2017}{BayesDiffIRT}
+#' via \pkg{cmdstanr}.
 #'
 #' @param data A `data.frame` with one row per response. The data must contain
 #' columns identifying the subject, item, response, and response time.
@@ -226,7 +227,7 @@ fitBayesDiffIRT <- function(
                     max_treedepth = maxTreeDepth,
                     init = init,
                     refresh = refresh,
-                    show_messages = FALSE,
+                    show_messages = TRUE,
                     show_exceptions = FALSE,
                     ...)
 
@@ -241,7 +242,7 @@ fitBayesDiffIRT <- function(
     model = model,
     call = call,
     diag = diag # divergences, rhats, etc.
-  )
+    )
 }
 
 newBayesDiffIRTfit <- function(
