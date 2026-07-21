@@ -1,27 +1,26 @@
 {
-    "id": "87C292F2",
-    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/R/prior.R",
-    "project_path": "R/prior.R",
+    "id": "59D8D262",
+    "path": "C:/Users/marausch/AppData/Local/Temp/3a331fe9-5aee-4667-9bcc-f36244d5add7_Kung&Ratcliff-DIRT-RV.zip.dd7/main.R",
+    "project_path": null,
     "type": "r_source",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1784584703360.0,
+    "created": 1784634599520.0,
     "source_on_save": false,
     "relative_order": 5,
     "properties": {
-        "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "153,0",
-        "scrollLine": "0"
+        "cursorPosition": "84,54",
+        "scrollLine": "72"
     },
     "folds": "",
-    "lastKnownWriteTime": 1783510534,
+    "lastKnownWriteTime": 1784634599,
     "encoding": "ISO8859-1",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1783510534,
+    "last_content_update": 1784634599,
     "read_only": false,
     "read_only_alternatives": []
 }

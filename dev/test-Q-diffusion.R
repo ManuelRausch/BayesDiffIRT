@@ -217,7 +217,7 @@ ppCheck(samples, type = "rtQuantile",
 ppCheck(samples, type = "rtQuantile", minN=10, yrep=yrep,
         group="item", index=1:5)
 
-plotResponseSurface(samples, items = c(1:10), nrow=2)
+plotResponseSurface(samples, items = c(1:10), facet.ncol=2)
 
 
 save(samples, SimData, file = "dev/Tests-Q-Diffusion.RData")

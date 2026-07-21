@@ -9,10 +9,10 @@
 rm(list = ls())
 setwd("-----path-of-the-files-----")
 
-save.name <- '-----name-of-the-result-file-----'
+save.name <- '-----name-of-the-result-file-----'   
   # result file name '*.rdata': see line 74
 
-load('-----load *.rdata -----')
+load('-----load *.rdata -----')   
 # the dataset should include a list variable 'dat' which includes
 # 1) R (dat$R): a P by I matrix of responses (P: number of persons, I: number of items)
 # 2) T (dat$T): a P by I matrix of response times (P: number of persons, I: number of items)
@@ -35,7 +35,7 @@ n.sampling <- 8000;
 # the number of total iterations
 n.iter <- n.burnin + n.sampling;
 # the number of chains for DEMC
-n.chains <- 5;
+n.chains <- 5; 
 # an index vector for the iterations after burn-in
 take.idx <- (n.burnin + 1):n.iter;
 
@@ -65,7 +65,7 @@ cpu.end.time <- proc.time()[3];
 end.time <- Sys.time();
 cpu.elapsed <- cpu.end.time - cpu.start.time;
 elapsed <- end.time - start.time;
-#----- end
+#----- end 
 #----- stop multicore processing
 sfStop()
 
@@ -79,7 +79,7 @@ save.image(save.name)
 # n.iter: the number of iterations, npars: the number of parameters, n.chains: the number of Bayesian chains
 
 # 2) idx.list: a list of some useful indices (indicating where each parameter is in 'sample.array')
-# e.g.,
+# e.g., 
 # to get theta (person-wise drift rates) samples: sample.array[, theta.idx, ]
 # to get theta after burn-in, use 'take.idx' (see line 40): sample.array[take.idx, theta.idx, ]
 # to get theta for person 1, after burn-in: sample.array[take.idx, theta.idx[1], ]
