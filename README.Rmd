@@ -240,7 +240,7 @@ head(samplesDf)
 Should you really prefer working with point estimates, you can extract them conveniently with the coef method: 
 
 ```{r}
-pointEstim <- coef(samples)
+pointEstim <- coef(samples, parameter = "theta")
 pointEstim 
 ```
 
@@ -250,10 +250,12 @@ pointEstim
 The posterior predictive distributions can be visualized using `ppCheck`. Set type = "response" to visualize the predicted probability of a correct response / item acceptance as a function of item or person. 
 
 ```{r, message=FALSE, warning=FALSE}
-ppCheck(samples, type = "response")
-ppCheck(samples, type = "response", group = "item")
+
+yrep <- posteriorPredict(samples, ndraws=20)
+ppCheck(samples, type = "response", yrep=yrep)
+ppCheck(samples, type = "response", group = "item", yrep=yrep )
 ppCheck(samples, type = "response", group = "person",
-        index=1:10)
+        index=1:10, yrep=yrep)
 
 ```
 
@@ -265,13 +267,11 @@ ppCheck(samples, type = "rtQuantile")
 
 ## Plot item characteristics
 
-According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theta$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours.
+According to drift diffusion item response theory, whether a person solves a test item or accepts a survey item depends on two latent variables, person ability $\theta$ and person response caution $\gamma$. Thus, we can characterise the response to an item by surface plot with the two latent variables on the x-axis and y-axis, respectively, and the probability of solving / accepting as colours. Warning: Creating response surfaces consumes some time, so please be patient. 
 
 ```{r}
- plotResponseSurface(samples, item = 1)
- plotResponseSurface(samples, item = 2)
- plotResponseSurface(samples, item = 3)
- 
+plotResponseSurface(samples, items = 1:10, facet.ncol = 5)
+
 ```
 
 # Contributing to the package 

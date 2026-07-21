@@ -23,7 +23,7 @@
 #' @param seed Optional integer. Random seed used before drawing posterior
 #'   samples and simulating replicated data. Defaults to \code{NULL}.
 
-#' @return A \code{data.frame} with \code{ndraws * object$stanData$nObs} rows.
+#' @return A \code{BayesDiffIRTpp} object, which is a  \code{data.frame} with \code{ndraws * object$stanData$nObs} rows.
 #'   Each row corresponds to one replicated observation from one posterior draw.
 #'   The returned data frame contains the following columns:
 #'   \describe{
@@ -152,7 +152,8 @@ posteriorPredict <- function(object, ndraws = 10, seed = NULL) {
   Out$rt   <- as.numeric(Sim[1, ])
   Out$resp <- as.integer(Sim[2, ])
   Out
-
+  class(Out) <- c(class(Out), "BayesDiffIRTpp")
+  Out
 }
 
 

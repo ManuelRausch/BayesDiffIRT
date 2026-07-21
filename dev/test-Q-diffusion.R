@@ -6,7 +6,7 @@
 # 4) Plot traces
 # 5 Plot posteriors
 # 6) Plot parameter recovery
-
+# 7) Plot posterior predictive checks
 
 rm(list=ls())
 
@@ -16,15 +16,21 @@ load("dev/Tests-Q-Diffusion.RData")
 
 ndt <- rlnorm(nSbj,-1.25, 0.3) # non-decision time
 a <- rlnorm(nItems, 0, 0.25)      # item time pressure
-theta <- rlnorm(nSbj, 0, 0.75) # person drift variability
+theta <- rlnorm(nSbj, 0, 0.5) # person drift variability
 gamma <- rlnorm(nSbj, 0, 0.5) # person drift variability
-nu <- rlnorm(nItems, 0, 0.75) # item drifts
+nu <- rlnorm(nItems, 0, 0.25) # item drifts
+
+quantile(gamma/a)
+quantile(theta / nu)
+
 
 SimData <- expand.grid(item = 1:nItems, sbj = 1:nSbj,
                        resp = NA, rt = NA)
 
 library(RWiener)
+pb <- txtProgressBar(min = 0, max = nrow(SimData), style = 3)
 for (i in 1:nrow(SimData)){
+  setTxtProgressBar(pb, i)
   print(paste0("alpha = ",
                round(gamma[SimData$sbj[i]] / a[SimData$item[i]],2),
                ", ndt = ",
@@ -89,9 +95,9 @@ samples <-
   fitBayesDiffIRT(SimData,
                   rt = "rt", resp = "resp", sbj = "sbj",
                   item = "item", model = "q",
-                  n.chains = 3,  n.cores = 3,
-                  n.warmup =  10^3,
-                  n.samples = 10^3)
+                  nChains = 3,  nCores = 3,
+                  nWarmup =  10^3)
+
 summary(samples)
 
 # 3) Check diagnostics
@@ -198,4 +204,20 @@ ggplot(
        title = "non-decision time")
 
 
-save(samples, file = "dev/Tests-Q-Diffusion.RData")
+# 7) Plot posterior predictive checks
+
+yrep <- posteriorPredict(samples, ndraws=20)
+
+ppCheck(samples, type = "response", group = "item", yrep=yrep)
+ppCheck(samples, type = "response", group = "person", yrep=yrep)
+ppCheck(samples, type = "response", group = "none", yrep=yrep)
+
+ppCheck(samples, type = "rtQuantile",
+        minN=10, yrep=yrep)
+ppCheck(samples, type = "rtQuantile", minN=10, yrep=yrep,
+        group="item", index=1:5)
+
+plotResponseSurface(samples, items = c(1:10), nrow=2)
+
+
+save(samples, SimData, file = "dev/Tests-Q-Diffusion.RData")

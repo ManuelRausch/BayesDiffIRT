@@ -1,0 +1,29 @@
+Package: BayesDiffIRT
+Type: Package
+Title: Bayesian Fitting of Diffusion Item-Response Theory Models
+Version: 0.0.1
+Authors@R: c(
+    person(
+      "Manuel", "Rausch",
+      email = "manuel.rausch@aau.at",
+      role = c("aut", "cre"), 
+      comment = c(ORCID = "0000-0002-5805-5544")), 
+	person("Rainer", "Alexandrowicz", role = "ctb")
+  )
+Maintainer: Manuel Rausch <manuel.rausch@aau.at>
+Description: Samples from the posterior of the D-Diffusion item response theory model and the Q-diffusion item response theory model for responses and response times.
+  Provides also functions to plot posterior distributions of item and subject parameters and construct HDI intervals. Relies on Stan.  
+License: GPL(>=3)
+URL: https://github.com/ManuelRausch/BayesDiffIRT
+BugReports: https://github.com/ManuelRausch/BayesDiffIRT/issues
+Depends:
+    R (>= 4.5.0)
+Imports:
+    cmdstanr(>= 0.8.0), Rdpack, ggplot2 (>= 3.0.0), posterior, rtdists, stats, utils
+RdMacros: Rdpack
+Suggests:
+    tidyr, diffIRT 
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

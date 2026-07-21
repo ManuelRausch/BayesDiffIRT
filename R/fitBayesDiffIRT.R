@@ -227,8 +227,6 @@ fitBayesDiffIRT <- function(
                     max_treedepth = maxTreeDepth,
                     init = init,
                     refresh = refresh,
-                    show_messages = TRUE,
-                    show_exceptions = FALSE,
                     ...)
 
   # 5) Postprocess:
@@ -242,7 +240,7 @@ fitBayesDiffIRT <- function(
     model = model,
     call = call,
     diag = diag # divergences, rhats, etc.
-  )
+    )
 }
 
 newBayesDiffIRTfit <- function(

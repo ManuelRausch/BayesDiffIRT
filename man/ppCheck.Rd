@@ -10,17 +10,18 @@ ppCheck(object, ...)
 \method{ppCheck}{BayesDiffIRTfit}(
   object,
   type = c("response", "rtQuantile"),
-  ndraws = 100,
   group = c("none", "item", "person"),
   probs = c(0.1, 0.3, 0.5, 0.7, 0.9),
   minN = 10,
+  yrep = NULL,
+  ndraws = 10,
   seed = NULL,
   index = NULL,
   ...
 )
 }
 \arguments{
-\item{object}{A fitted model object or posterior predictive object.}
+\item{object}{A fitted  \code{BayesDiffIRTfit} object}
 
 \item{...}{Additional arguments passed to methods.}
 
@@ -31,8 +32,6 @@ posterior-predictive response proportions. \code{"rtQuantile"}
 compares observed and posterior-predictive reaction-time quantiles
 separately by response category.}
 
-\item{ndraws}{Integer. Number of posterior predictive draws to generate.}
-
 \item{group}{Character string specifying the grouping level.
 Options are \code{"none"}, \code{"item"}, and \code{"person"}. If
 \code{"none"}, the check is computed for the full data set. If
@@ -40,11 +39,16 @@ Options are \code{"none"}, \code{"item"}, and \code{"person"}. If
 \code{"person"}, summaries are computed separately by person.}
 
 \item{probs}{Numeric vector of probabilities used for reaction-time quantile
-checks. Values must lie between 0 and 1.}
+checks. Values must lie between 0 and 1. Only used if type is \code{"rtQuantile"}.}
 
 \item{minN}{Integer. Minimum number of observations required to compute an
 observed or posterior-predictive reaction-time quantile within a response
-category or group.}
+category or group. Only used if type is \code{"rtQuantile"}.}
+
+\item{yrep}{Optional BayesDiffIRTpp object created with  \code{\link{posteriorPredict}},}
+
+\item{ndraws}{Optional Integer. Number of posterior predictive draws to generate. Only used
+if yrep is NULL.}
 
 \item{seed}{Optional integer seed passed to \code{\link{posteriorPredict}}.}
 

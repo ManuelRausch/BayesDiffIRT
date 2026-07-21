@@ -9,12 +9,13 @@ plotResponseSurface(object, ...)
 
 \method{plotResponseSurface}{BayesDiffIRTfit}(
   object,
-  item,
+  items,
   theta.range = NULL,
   gamma.range = NULL,
   grid.size = 60,
   contours = c(0.1, 0.3, 0.5, 0.7, 0.9),
-  ndraws = 200
+  ndraws = 200,
+  facet.ncol = NULL
 )
 }
 \arguments{
@@ -22,7 +23,7 @@ plotResponseSurface(object, ...)
 
 \item{...}{Additional arguments passed to methods.}
 
-\item{item}{Integer. Indexes the item for which the response-probability
+\item{items}{Integer or integer vector. Indexes the items for which the response-probability
 surface should be plotted.}
 
 \item{grid.size}{Integer. Number of grid points used for each axis. The total

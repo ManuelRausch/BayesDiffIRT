@@ -12,16 +12,30 @@ checkCmdstan <- function() {
   }
 
   # Check CmdStan installation
-  cs <- try(cmdstanr::cmdstan_version(), silent = TRUE)
+  cmdstanVersion <- tryCatch(
+    cmdstanr::cmdstan_version(error_on_NA = FALSE),
+    error = function(e) NULL
+  )
 
-  if (inherits(cs, "try-error") || is.null(cs)) {
+  if (is.null(cmdstanVersion)) {
     stop(
-      "CmdStan is not installed or not configured.\n",
-      "Run cmdstanr::install_cmdstan() to install it.\n",
-      "See https://mc-stan.org/cmdstanr/ for details.",
+      "CmdStan could not be found. Install it using ",
+      "cmdstanr::install_cmdstan().",
       call. = FALSE
     )
   }
+
+  tryCatch(
+    cmdstanr::check_cmdstan_toolchain(quiet = TRUE),
+    error = function(e) {
+      stop(
+        "A working C++ toolchain is required to compile the Stan models.\n",
+        conditionMessage(e),
+        "\nSee https://mc-stan.org/docs/cmdstan-guide/installation.html#cpp-toolchain.",
+        call. = FALSE
+      )
+    }
+  )
 
   invisible(TRUE)
 

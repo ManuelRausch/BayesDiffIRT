@@ -13,8 +13,6 @@
 #'
 #' @method coef BayesDiffIRTfit
 #' @export
-#'
-#' export
 
 coef.BayesDiffIRTfit <- function(
     object,

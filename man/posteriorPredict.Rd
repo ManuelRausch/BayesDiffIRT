@@ -18,7 +18,7 @@ number of available posterior draws in \code{object}.}
 samples and simulating replicated data. Defaults to \code{NULL}.}
 }
 \value{
-A \code{data.frame} with \code{ndraws * object$stanData$nObs} rows.
+A \code{BayesDiffIRTpp} object, which is a  \code{data.frame} with \code{ndraws * object$stanData$nObs} rows.
 Each row corresponds to one replicated observation from one posterior draw.
 The returned data frame contains the following columns:
 \describe{

@@ -7,7 +7,7 @@
 #' same summaries computed from data simulated from the posterior predictive
 #' distribution.
 #'
-#' @param object A fitted model object or posterior predictive object.
+#' @param object A fitted  `BayesDiffIRTfit` object
 #' @param ... Additional arguments passed to methods.
 #'
 #' @return A plot object.
@@ -26,17 +26,19 @@ ppCheck <- function(object, ...) {
 #'   posterior-predictive response proportions. \code{"rtQuantile"}
 #'   compares observed and posterior-predictive reaction-time quantiles
 #'   separately by response category.
-#' @param ndraws Integer. Number of posterior predictive draws to generate.
 #' @param group Character string specifying the grouping level.
 #'   Options are \code{"none"}, \code{"item"}, and \code{"person"}. If
 #'   \code{"none"}, the check is computed for the full data set. If
 #'   \code{"item"}, summaries are computed separately by item. If
 #'   \code{"person"}, summaries are computed separately by person.
 #' @param probs Numeric vector of probabilities used for reaction-time quantile
-#'   checks. Values must lie between 0 and 1.
+#'   checks. Values must lie between 0 and 1. Only used if type is \code{"rtQuantile"}.
 #' @param minN Integer. Minimum number of observations required to compute an
 #'   observed or posterior-predictive reaction-time quantile within a response
-#'   category or group.
+#'   category or group. Only used if type is \code{"rtQuantile"}.
+#' @param yrep Optional BayesDiffIRTpp object created with  \code{\link{posteriorPredict}},
+#' @param ndraws Optional Integer. Number of posterior predictive draws to generate. Only used
+#'   if yrep is NULL.
 #' @param seed Optional integer seed passed to \code{\link{posteriorPredict}}.
 #' @param index Optional integer vector selecting specific items or persons when
 #'   \code{group = "item"} or \code{group = "person"}. Ignored when
@@ -87,23 +89,37 @@ ppCheck <- function(object, ...) {
 ppCheck.BayesDiffIRTfit <-
   function(object,
            type = c( "response", "rtQuantile"),
-           ndraws = 100,
            group = c("none", "item", "person"),
            probs = c(.1, .3, .5, .7, .9),
            minN = 10,
+           yrep = NULL,
+           ndraws = 10,
            seed = NULL,
            index = NULL,
-           ...)
-  {
+           ...) {
     type <- match.arg(type)
     group <- match.arg(group)
 
+    if (!inherits(object, "BayesDiffIRTfit")) {
+      stop("`object` must inherit from class \"BayesDiffIRTfit\".",
+           call. = FALSE)
+    }
+
+    if (is.null(yrep)){
+      yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
+    }
+
+    if (!inherits(yrep, "BayesDiffIRTpp")) {
+      stop("yrep must be a BayesDiffIRTpp object, created with posteriorPredict",
+           call. = FALSE)
+    }
+
     if (type == "response") {
-      return(ppCheckResponse(object, ndraws = ndraws,group = group, seed = seed, index=index))
+      return(ppCheckResponse(object, yrep = yrep,group = group, seed = seed, index=index))
     }
     if (type ==  "rtQuantile"){
       return(ppCheckRtQuantile(
-        object = object,ndraws = ndraws,group = group,
+        object = object, yrep = yrep,group = group,
         probs = probs,minN = minN,seed = seed, index=index))
     }
     stop("PPC type not implemented.", call. = FALSE)
@@ -111,14 +127,14 @@ ppCheck.BayesDiffIRTfit <-
 
 
 ppCheckResponse <- function(object,
-                            ndraws = 10,
+                            yrep = yrep,
                             group = c("none", "item", "person"),
                             index = NULL,
                             seed = NULL) {
 
   group <- match.arg(group)
 
-  yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
+  #yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
 
   if (is.null(object$stanData$resp)) {
     stop("object$stanData$resp is required for response PPCs.", call. = FALSE)
@@ -221,7 +237,7 @@ ppCheckResponse <- function(object,
     }
 
     obsStat <- stats::aggregate(obs["resp"],
-      by = list(sbj = obs$sbj),FUN = mean)
+                                by = list(sbj = obs$sbj),FUN = mean)
     names(obsStat)[2] <- "observed"
 
     predStat <- stats::aggregate(
@@ -289,7 +305,7 @@ ppCheckResponse <- function(object,
 }
 
 ppCheckRtQuantile <- function(object,
-                              ndraws = 10,
+                              yrep = yrep,
                               group = "none",
                               probs = c(.1, .3, .5, .7, .9),
                               minN = 5,
@@ -317,7 +333,7 @@ ppCheckRtQuantile <- function(object,
     stop("probs must contain values between 0 and 1.", call. = FALSE)
   }
 
-  yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
+  #yrep <- posteriorPredict(object, ndraws = ndraws, seed = seed)
 
   obs <- data.frame(
     obs  = seq_len(object$stanData$nObs),
