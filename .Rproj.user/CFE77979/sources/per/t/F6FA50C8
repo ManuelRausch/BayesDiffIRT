@@ -1,0 +1,26 @@
+{
+    "id": "F6FA50C8",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/inst/stan/qdiffusion.stan",
+    "project_path": "inst/stan/qdiffusion.stan",
+    "type": "stan",
+    "hash": "2198539614",
+    "contents": "",
+    "dirty": false,
+    "created": 1784731353970.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "124,47",
+        "scrollLine": "118"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1784731518,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1784731518777,
+    "read_only": false,
+    "read_only_alternatives": []
+}

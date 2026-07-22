@@ -1,0 +1,4 @@
+
+a <- 1
+b <- 5
+quantile(rbeta(10000, a, b),  probs = c(0.01, .99))

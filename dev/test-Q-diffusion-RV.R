@@ -1,3 +1,4 @@
+rm(list=ls())
 data(rotation, package = "diffIRT")
 x <- rotation[,1:10]; rt <- rotation[,11:20]
 x <- cbind(1:nrow(x), x)
@@ -15,27 +16,37 @@ rt <- tidyr::pivot_longer(as.data.frame(rt), cols=Item1:Item10,
 Data <- merge(x, rt)
 Data$item <- factor(Data$item)
 
-samples <-
+
+priors <- list(prior(beta(1, 1), class = "s_beta"))
+
+start.time <- Sys.time()
+fitQRV <-
   fitBayesDiffIRT(Data,
                   rt = "rt", resp = "resp", sbj = "sbj",
                   item = "item", model = "qRV",
-                  prior = prior(beta(1,1), class = "s_beta"),
-                  n.chains = 3,  n.cores = 3,
-                  n.warmup =  10^3,
-                  n.samples = 10^3)
-summary(samples)
-checkDiagnostics(samples)
+                  nChains = 10,  nCores = 10,
+                  nWarmup =  1000, nSamples = 1000,
+                  refresh = 100)
 
-class(samples)
-plot(samples, parameter = "gamma", type = "interval",
-     index=1:10)
-plot(samples, parameter = "nu", type = "interval")
-plot(samples, parameter = "a", type = "interval")
-plot(samples, parameter = "tnd", type = "interval")
+FittingTimeQRV <- Sys.time() - start.time
+cat("Runtime QRV:", round(as.numeric(FittingTimeQRV,units = "hours"), 2), "hours\n")
 
-plot(samples, parameter = "omega_gamma", type = "density")
-plot(samples, parameter = "omega_theta", type = "density")
-plot(samples, parameter = "s_delta", type = "density")
-plot(samples, parameter = "s_beta", type = "density")
+gg1 <- ppCheck(fitQRV, type = "rtQuantile")
 
-save(samples, samples, file = "dev/Tests-D-Diffusion-RV.RData")
+start.time <- Sys.time()
+fitQfixed <- fitBayesDiffIRT(Data,
+                rt = "rt", resp = "resp", sbj = "sbj",
+                item = "item", model = "q",
+                nChains = 10,  nCores = 10,
+                nWarmup =  1000, nSamples = 1000,
+                refresh = 100)
+FittingTimeQ <- Sys.time() - start.time
+
+gg2 <- ppCheck(fitQfixed, type = "rtQuantile")
+
+
+
+save(fitQRV, FittingTimeQRV, gg1,
+     fitQfixed , FittingTimeQ, gg2,
+
+     file = "dev/Tests-Q-Diffusion-RV.RData")

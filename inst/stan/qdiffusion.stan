@@ -1,6 +1,6 @@
 // To-do q-diffusion model
 // with non-centralized parameters
-// lower bounds at 1e-6!
+// lower bounds at 1e-8!
 
 functions {
   real resp_sign(int r) {
@@ -13,32 +13,32 @@ data {
   int<lower=1> nPerson;    // number of persons
   int<lower=1> nItem;      // number of items
 
-  vector<lower=1e-6>[nPerson] tauUpper;
+  vector<lower=1e-8>[nPerson] tauUpper;
 
   array[nObs] int<lower=1, upper=nPerson> person; // Subject identifier
   array[nObs] int<lower=1, upper=nItem> item; // item identifier
-  vector<lower=1e-6>[nObs] rt; // reaction times vector
+  vector<lower=1e-8>[nObs] rt; // reaction times vector
   array[nObs] int<lower=0, upper=1> resp; // 0 = rejected, 1 = accepted
 
   int<lower=1, upper=3> omega_theta_prior_family; // prior on omega_theta
   real omega_theta_prior_par1;
-  real<lower=1e-6> omega_theta_prior_par2;
+  real<lower=1e-8> omega_theta_prior_par2;
 
   int<lower=1, upper=3> omega_gamma_prior_family;
   real omega_gamma_prior_par1;
-  real<lower=1e-6> omega_gamma_prior_par2;
+  real<lower=1e-8> omega_gamma_prior_par2;
 
   int<lower=1, upper=2> nu_prior_family;
   real nu_prior_par1;
-  real<lower=1e-6> nu_prior_par2;
+  real<lower=1e-8> nu_prior_par2;
 
   int<lower=1, upper=3> a_prior_family;
   real a_prior_par1;
-  real<lower=1e-6> a_prior_par2;
+  real<lower=1e-8> a_prior_par2;
 
   int<lower=1, upper=3> tnd_prior_family;
   real tnd_prior_par1;
-  real<lower=1e-6> tnd_prior_par2;
+  real<lower=1e-8> tnd_prior_par2;
 
 }
 
@@ -46,24 +46,24 @@ parameters {
   // Drift parameterization, also on the log scale
   vector[nPerson] z_theta; // for sammpling
   vector<lower=0.01>[nItem] nu;          // item drift effects
-  real<lower=1e-6> omega_theta; // standard deviation of person drift effects (on the log scale)
+  real<lower=1e-8> omega_theta; // standard deviation of person drift effects (on the log scale)
 
   // Boundary separation parameterization on log scale
   vector[nPerson] z_gamma; // sample
   vector<lower=0.01>[nItem] a;     // item boundary effects
-  real<lower=1e-6> omega_gamma; // standard deviation of person boundary effects (on the log scale)
+  real<lower=1e-8> omega_gamma; // standard deviation of person boundary effects (on the log scale)
 
   // Nondecision time person parameter
-  vector<lower=1e-6, upper=tauUpper>[nPerson] tnd;
+  vector<lower=1e-8, upper=tauUpper>[nPerson] tnd;
 }
 
 transformed parameters{
   vector[nPerson] log_theta;
-  vector<lower=1e-6>[nPerson] theta;
+  vector<lower=1e-8>[nPerson] theta;
   log_theta = omega_theta * z_theta; //  person drift
   theta = exp(log_theta);
   vector[nPerson] log_gamma;
-  vector<lower=1e-6>[nPerson] gamma;
+  vector<lower=1e-8>[nPerson] gamma;
   log_gamma = omega_gamma * z_gamma;
   gamma = exp(log_gamma); // boundary effects, assumed to be lognormal, logmean set to 0
 }
@@ -122,9 +122,9 @@ model {
     int p = person[n];
     int i = item[n];
 
-    real delta = theta[p] / nu[i];  // that's the specific thing of the q diffusion model!
-    real alpha = gamma[p] / a[i];
-    real delta_eff = resp_sign(resp[n]) * delta;
+    real alpha = exp(log_gamma[p] - log(a[i]));
+    real delta_eff = resp_sign(resp[n]) * exp(log_theta[p] - log(nu[i]));
+
 
     rt[n] ~ wiener(alpha, tnd[p], 0.5, delta_eff);
   }

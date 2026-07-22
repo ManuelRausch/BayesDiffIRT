@@ -1,0 +1,27 @@
+{
+    "id": "DA14A0A7",
+    "path": "C:/Users/marausch/AAU/Projekte/RaschRT/BayesDiffIRT/inst/stan/Q-DIRT-RV.stan",
+    "project_path": "inst/stan/Q-DIRT-RV.stan",
+    "type": "stan",
+    "hash": "2610885688",
+    "contents": "",
+    "dirty": false,
+    "created": 1784667630593.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "147,22",
+        "scrollLine": "147"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1784731201,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1784731201798,
+    "read_only": false,
+    "read_only_alternatives": []
+}

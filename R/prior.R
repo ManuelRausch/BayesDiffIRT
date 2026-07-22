@@ -200,8 +200,8 @@ defaultPriors <- function(model = "d") {
       newPrior(quote(normal(0, 2.5)), "nu"),
       newPrior(quote(lognormal(0, .25)), "a"),
       newPrior(quote(lognormal(-1.25, 0.3)), "tnd"),
-      newPrior(quote(lognormal(-0.5 * log(2), sqrt(2))), "s_delta"),
-      newPrior(quote(beta(0.25, 0.01)), "s_beta")
+      newPrior(quote(lognormal(-0.5 * log(2), 0.75)), "s_delta"),
+      newPrior(quote(beta(1, 5)), "s_beta")
     ))
   }
 
@@ -222,8 +222,8 @@ defaultPriors <- function(model = "d") {
       newPrior(quote(lognormal(0, 0.75)), "nu"),
       newPrior(quote(lognormal(0, .25)), "a"),
       newPrior(quote(lognormal(-1.25, 0.3)), "tnd"),
-      newPrior(quote(lognormal(-0.5 * log(2), sqrt(2))), "s_delta"),
-      newPrior(quote(beta(0.25, 0.01)), "s_beta")
+      newPrior(quote(lognormal(-0.5 * log(2), 0.75)), "s_delta"),
+      newPrior(quote(beta(1, 5)), "s_beta")
     ))
   }
 

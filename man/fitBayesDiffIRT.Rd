@@ -19,7 +19,7 @@ fitBayesDiffIRT(
   nSamples = 1000,
   adaptDelta = 0.95,
   maxTreeDepth = 12,
-  init = NULL,
+  inits = NULL,
   refresh = 200,
   diagnostic.warnings = TRUE,
   na.rm = TRUE,
@@ -82,7 +82,7 @@ increase computation time. Defaults to 0.95.}
 Increasing this value may help when transitions hit the maximum tree depth,
 but can increase computation time. Defaults to 12.}
 
-\item{init}{Initial values passed to Stan. See
+\item{inits}{Initial values passed to Stan. See
 \link[cmdstanr:model-method-sample]{cmdstanr::model-method-sample} for supported formats. Defaults to NULL.}
 
 \item{refresh}{Integer. Number of iterations between progress messages printed

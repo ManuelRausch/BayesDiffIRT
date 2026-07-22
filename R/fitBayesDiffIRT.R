@@ -43,7 +43,7 @@
 #' @param maxTreeDepth Integer. Maximum tree depth for the NUTS sampler.
 #' Increasing this value may help when transitions hit the maximum tree depth,
 #' but can increase computation time. Defaults to 12.
-#' @param init Initial values passed to Stan. See
+#' @param inits Initial values passed to Stan. See
 #' [cmdstanr::model-method-sample] for supported formats. Defaults to NULL.
 #' @param refresh Integer. Number of iterations between progress messages printed
 #' by Stan. Use 0 to suppress sampling progress output. Defaults to 200.
@@ -169,7 +169,7 @@ fitBayesDiffIRT <- function(
     nSamples = 1000,
     adaptDelta = 0.95,
     maxTreeDepth = 12,
-    init = NULL,
+    inits = NULL,
     refresh = 200,
     diagnostic.warnings = TRUE,
     na.rm = TRUE,
@@ -185,7 +185,7 @@ fitBayesDiffIRT <- function(
 
   # 1) validate data
   data <- validateData(data, rt, resp,
-                        sbj, item, na.rm = na.rm)
+                       sbj, item, na.rm = na.rm)
 
   # 2) Complete priors
 
@@ -195,10 +195,10 @@ fitBayesDiffIRT <- function(
 
   stanData <-
     makeStanData(data, rt = rt, resp = resp,
-                   sbj = sbj, item = item,
-                   priors = priors)
+                 sbj = sbj, item = item,
+                 priors = priors)
 
-  # 4) Compile + sample (cmdstanr)
+  # 4) Compile
 
   stanFile <- switch(
     model,
@@ -217,30 +217,37 @@ fitBayesDiffIRT <- function(
 
   mod <- cmdstan_model(fullNameStanFile,
                        compile = TRUE, quiet = TRUE)
-  fit <- mod$sample(data = stanData,
-                    seed = seed,
-                    chains = nChains,
-                    parallel_chains = nCores,
-                    iter_warmup = nWarmup,
-                    iter_sampling = nSamples,
-                    adapt_delta = adaptDelta,
-                    max_treedepth = maxTreeDepth,
-                    init = init,
-                    refresh = refresh,
+
+  # 5) define initial values
+
+  if(is.null(inits)){
+    initsList <- lapply(1:nChains, makeInitsWrapper,
+                      stanData=stanData, model=model)
+  }  else{
+    initsList <- inits
+  }
+
+  # 6) sample
+
+  fit <- mod$sample(data = stanData, seed = seed,
+                    chains = nChains, parallel_chains = nCores,
+                    iter_warmup = nWarmup, iter_sampling = nSamples,
+                    adapt_delta = adaptDelta, max_treedepth = maxTreeDepth,
+                    init = initsList, refresh = refresh, step_size = 0.5,
                     ...)
 
-  # 5) Postprocess:
+  # 7) Postprocess:
   diag <- checkStanDiagnostics(fit, maxTreeDepth)
   if(diagnostic.warnings) warnStanDiagnostics(diag)
 
-  # 6) Construct return object
+  # 8) Construct return object
   newBayesDiffIRTfit(
     fit = fit,
     stanData = stanData,
     model = model,
     call = call,
-    diag = diag # divergences, rhats, etc.
-    )
+    diag = diag, # divergences, rhats, etc.
+    inits = inits)
 }
 
 newBayesDiffIRTfit <- function(
@@ -291,5 +298,42 @@ warnStanDiagnostics <- function(x) {
   invisible(x)
 }
 
+# stan
+makeInits <- function(stanData, model) {
 
+  model <- match.arg(model, c("d", "dRV", "q", "qRV"))
 
+  ## Parameters shared between all models
+    # avoid extreme values as initial values!
+  inits <- list(
+    z_theta = runif(stanData$nPerson, -1.65, 1.65),
+    z_gamma = runif(stanData$nPerson, -1.65, 1.65),
+    omega_gamma = runif(1, 0.1, 0.5),
+    a = runif(stanData$nItem, 0.5, 1.5),
+    tnd = stanData$tauUpper *
+      runif(stanData$nPerson, min = 0.1, max = 0.9))
+
+  ## D-Diffusion models
+  if (model %in% c("d", "dRV")) {
+    inits$omega_theta <- runif(1, 0.1, 2)
+    inits$nu <- runif(stanData$nItem, -1.65, 1.65)
+  }
+
+  ## Q-diffusion models
+  if (model %in% c("q", "qRV")) {
+    inits$omega_theta <- runif(1, 0.1, 1)
+    inits$nu <- runif(stanData$nItem, 0.5, 1.5)
+  }
+
+  ## Between -trial variability parameters
+  if (model %in% c("dRV", "qRV")) {
+    inits$s_delta <- runif(1, 0.5, 1.5)
+    inits$s_beta  <- runif(1, 0.05, 0.45)
+  }
+
+  inits
+}
+
+makeInitsWrapper <- function(chain_id, stanData, model){
+  makeInits(stanData=stanData, model=model)
+}
